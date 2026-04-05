@@ -2,7 +2,10 @@
   <div class="moment-card" @click="goToSession">
     <div class="moment-card__img" :style="{ background: session?.thumbnailGradient }">
       <span class="moment-card__time-label">{{ label }}</span>
-      <button class="moment-card__play">▶ {{ t('home.play') }}</button>
+      <button type="button" class="moment-card__play">
+        <Icon icon="lucide:play" class="app-icon app-icon--sm" aria-hidden="true" />
+        {{ t('home.play') }}
+      </button>
     </div>
     <div class="moment-card__body">
       <p class="moment-card__sub">{{ t('home.moment_title') }}</p>
@@ -52,6 +55,7 @@ function goToSession() {
 .moment-card__play {
   margin-left: auto; padding: 10px 20px;
   background: rgba(255,255,255,0.9); border: none; border-radius: 100px;
+  display: inline-flex; align-items: center; gap: 6px;
   font-size: 13px; font-weight: 600; color: var(--text-primary); cursor: pointer;
   transition: all var(--duration-fast);
 }

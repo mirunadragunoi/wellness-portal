@@ -5,37 +5,47 @@
         <div class="sos-panel">
           <!-- Header -->
           <div class="sos-header">
-            <div class="sos-badge">🆘</div>
+            <div class="sos-badge">
+              <Icon icon="lucide:life-buoy" class="app-icon app-icon--3xl app-icon--primary" aria-hidden="true" />
+            </div>
             <h2 class="sos-title">{{ t('sos.title') }}</h2>
             <p class="sos-subtitle">{{ t('sos.subtitle') }}</p>
-            <button class="sos-close" @click="close">✕</button>
+            <button type="button" class="sos-close" :aria-label="t('common.close')" @click="close">
+              <Icon icon="lucide:x" class="app-icon app-icon--sm" />
+            </button>
           </div>
 
           <!-- Options -->
           <div v-if="activeMode === null" class="sos-options">
-            <button class="sos-option" @click="activeMode = 'breathing'">
-              <span class="sos-option__icon">💨</span>
+            <button type="button" class="sos-option" @click="activeMode = 'breathing'">
+              <span class="sos-option__icon">
+                <Icon icon="lucide:wind" class="app-icon app-icon--lg app-icon--primary" aria-hidden="true" />
+              </span>
               <div class="sos-option__text">
                 <strong>{{ t('sos.option1_title') }}</strong>
                 <span>{{ t('sos.option1_desc') }}</span>
               </div>
-              <span class="sos-option__arrow">→</span>
+              <Icon icon="lucide:chevron-right" class="sos-option__arrow app-icon app-icon--md app-icon--muted" aria-hidden="true" />
             </button>
-            <button class="sos-option" @click="activeMode = 'grounding'">
-              <span class="sos-option__icon">🌱</span>
+            <button type="button" class="sos-option" @click="activeMode = 'grounding'">
+              <span class="sos-option__icon">
+                <Icon icon="lucide:sprout" class="app-icon app-icon--lg app-icon--primary" aria-hidden="true" />
+              </span>
               <div class="sos-option__text">
                 <strong>{{ t('sos.option2_title') }}</strong>
                 <span>{{ t('sos.option2_desc') }}</span>
               </div>
-              <span class="sos-option__arrow">→</span>
+              <Icon icon="lucide:chevron-right" class="sos-option__arrow app-icon app-icon--md app-icon--muted" aria-hidden="true" />
             </button>
-            <button class="sos-option" @click="goToSession">
-              <span class="sos-option__icon">🧘</span>
+            <button type="button" class="sos-option" @click="goToSession">
+              <span class="sos-option__icon">
+                <Icon icon="lucide:headphones" class="app-icon app-icon--lg app-icon--primary" aria-hidden="true" />
+              </span>
               <div class="sos-option__text">
                 <strong>{{ t('sos.option3_title') }}</strong>
                 <span>{{ t('sos.option3_desc') }}</span>
               </div>
-              <span class="sos-option__arrow">→</span>
+              <Icon icon="lucide:chevron-right" class="sos-option__arrow app-icon app-icon--md app-icon--muted" aria-hidden="true" />
             </button>
           </div>
 
@@ -90,7 +100,10 @@
           </div>
 
           <!-- Back -->
-          <button v-if="activeMode" class="sos-back" @click="resetMode">← Back</button>
+          <button v-if="activeMode" type="button" class="sos-back" @click="resetMode">
+            <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
+            {{ t('common.back') }}
+          </button>
         </div>
       </div>
     </Transition>
@@ -173,7 +186,7 @@ function goToSession() {
   padding: 40px 32px 24px;
   border-bottom: 1px solid var(--border-subtle);
 }
-.sos-badge { font-size: 40px; margin-bottom: 12px; }
+.sos-badge { margin-bottom: 12px; display: flex; justify-content: center; }
 .sos-title { font-family: var(--font-display); font-size: 32px; font-weight: 400; color: var(--text-primary); }
 .sos-subtitle { font-size: 15px; color: var(--text-secondary); margin-top: 8px; }
 .sos-close {
@@ -196,11 +209,11 @@ function goToSession() {
   transition: all var(--duration-normal) var(--ease-smooth);
 }
 .sos-option:hover { border-color: var(--sky-300); background: var(--sky-50); transform: translateX(4px); }
-.sos-option__icon { font-size: 28px; flex-shrink: 0; }
+.sos-option__icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 .sos-option__text { flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .sos-option__text strong { font-size: 15px; font-weight: 600; color: var(--text-primary); }
 .sos-option__text span   { font-size: 13px; color: var(--text-secondary); }
-.sos-option__arrow { color: var(--text-muted); font-size: 18px; flex-shrink: 0; }
+.sos-option__arrow { flex-shrink: 0; }
 
 /* Breathing */
 .sos-breathing { padding: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
@@ -251,7 +264,11 @@ function goToSession() {
 .sos-check p { font-size: 16px; font-weight: 500; color: var(--text-primary); }
 .sos-check__btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-.sos-back { display: block; margin: 0 24px 24px; background: none; border: none; color: var(--text-secondary); font-size: 14px; cursor: pointer; padding: 8px 0; }
+.sos-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin: 0 24px 24px; background: none; border: none; color: var(--text-secondary);
+  font-size: 14px; cursor: pointer; padding: 8px 0; font-family: var(--font-body);
+}
 .sos-back:hover { color: var(--sky-600); }
 
 /* Transitions */

@@ -7,7 +7,7 @@
     <div class="audio-player__inner">
       <!-- Cover art -->
       <div class="audio-player__cover" :style="{ background: session?.thumbnailGradient }">
-        <span class="audio-player__cover-emoji">{{ typeEmoji }}</span>
+        <Icon :icon="coverIcon" class="audio-player__cover-icon app-icon app-icon--3xl" />
       </div>
 
       <!-- Track info -->
@@ -33,8 +33,8 @@
         <button class="ctrl-btn ctrl-btn--sm" @click="player.skipBack()" title="Back 15s">
           ⟨15
         </button>
-        <button class="ctrl-btn ctrl-btn--play" @click="toggle">
-          <span>{{ playerStore.isPlaying ? '⏸' : '▶' }}</span>
+        <button type="button" class="ctrl-btn ctrl-btn--play" @click="toggle" :aria-label="playerStore.isPlaying ? 'Pause' : 'Play'">
+          <Icon :icon="playerStore.isPlaying ? 'lucide:pause' : 'lucide:play'" class="app-icon app-icon--xl" />
         </button>
         <button class="ctrl-btn ctrl-btn--sm" @click="player.skipForward()" title="Forward 15s">
           15⟩
@@ -43,7 +43,7 @@
 
       <!-- Volume -->
       <div class="audio-player__volume">
-        <span class="volume-icon">{{ playerStore.volume > 0.5 ? '🔊' : playerStore.volume > 0 ? '🔉' : '🔇' }}</span>
+        <Icon :icon="volumeIcon" class="volume-icon app-icon app-icon--md app-icon--muted" aria-hidden="true" />
         <input
           class="volume-slider"
           type="range" min="0" max="1" step="0.01"
@@ -59,6 +59,7 @@
 import { ref, computed } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import { sessionTypeIcon } from '@/constants/appIcons'
 
 const props = defineProps({ session: Object })
 const playerStore  = usePlayerStore()
@@ -66,8 +67,14 @@ const { toggle, seek } = useAudioPlayer()
 const player       = usePlayerStore()
 const progressRef  = ref(null)
 
-const typeEmojiMap = { meditation: '🧘', 'sleep-story': '🌙', soundscape: '🎵', motivational: '⚡', breathing: '💨' }
-const typeEmoji    = computed(() => typeEmojiMap[props.session?.type] || '🧘')
+const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
+
+const volumeIcon = computed(() => {
+  const v = playerStore.volume
+  if (v > 0.5) return 'lucide:volume-2'
+  if (v > 0) return 'lucide:volume-1'
+  return 'lucide:volume-x'
+})
 
 function onProgressClick(e) {
   const rect = progressRef.value?.getBoundingClientRect()
@@ -79,9 +86,10 @@ function onProgressClick(e) {
 
 <style scoped>
 .audio-player {
-  position: relative; min-height: 100vh;
+  position: relative; min-height: var(--app-min-height);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .audio-player__bg {
   position: absolute; inset: -40px;
@@ -106,7 +114,7 @@ function onProgressClick(e) {
   box-shadow: var(--shadow-xl);
   animation: breathe-idle 8s ease-in-out infinite;
 }
-.audio-player__cover-emoji { font-size: 80px; }
+.audio-player__cover-icon { color: rgba(255,255,255,0.95); opacity: 0.95; }
 
 .audio-player__info { text-align: center; }
 .audio-player__title {

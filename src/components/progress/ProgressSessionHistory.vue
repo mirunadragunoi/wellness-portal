@@ -3,7 +3,9 @@
     <h3 class="session-history__title">{{ t('progress.recent_sessions') }}</h3>
     <div v-if="progressStore.recentSessions.length" class="session-history__list">
       <div v-for="s in progressStore.recentSessions" :key="s.id + s.completedAt" class="history-item">
-        <div class="history-item__icon">{{ typeEmoji(s.type) }}</div>
+        <div class="history-item__icon">
+          <Icon :icon="sessionTypeIcon(s.type)" class="app-icon app-icon--md app-icon--primary" />
+        </div>
         <div class="history-item__info">
           <p class="history-item__title">{{ s.title }}</p>
           <p class="history-item__meta">{{ formatDate(s.completedAt) }} · {{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</p>
@@ -18,13 +20,12 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
+import { sessionTypeIcon } from '@/constants/appIcons'
 import dayjs from 'dayjs'
 
 const { t }         = useI18n()
 const progressStore = useProgressStore()
 
-const typeEmojiMap = { meditation: '🧘', 'sleep-story': '🌙', soundscape: '🎵', motivational: '⚡', breathing: '💨' }
-const typeEmoji = (type) => typeEmojiMap[type] || '🧘'
 const formatDate = (iso) => dayjs(iso).format('MMM D, YYYY')
 
 const catColors = {
@@ -54,7 +55,7 @@ const catStyle = (cat) => {
   transition: all var(--duration-fast);
 }
 .history-item:hover { border-color: var(--sky-200); transform: translateX(3px); }
-.history-item__icon { font-size: 24px; flex-shrink: 0; }
+.history-item__icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 .history-item__info { flex: 1; min-width: 0; }
 .history-item__title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .history-item__meta  { font-size: 13px; color: var(--text-muted); }

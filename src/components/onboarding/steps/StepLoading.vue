@@ -2,7 +2,7 @@
   <div class="step-loading">
     <div class="loading-orb" :class="{ 'loading-orb--done': phase >= 3 }">
       <span v-if="phase < 3" class="loading-orb__spinner" />
-      <span v-else class="loading-orb__check">✓</span>
+      <Icon v-else icon="lucide:check" class="loading-orb__check app-icon app-icon--2xl" />
     </div>
 
     <TransitionGroup name="message" tag="div" class="loading-messages">
@@ -67,7 +67,7 @@ onMounted(() => {
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-.loading-orb__check { font-size: 48px; color: #059669; }
+.loading-orb__check { color: #059669; }
 
 .loading-messages { display: flex; flex-direction: column; gap: 10px; text-align: center; min-height: 80px; }
 .loading-msg { font-size: 16px; color: var(--text-secondary); }

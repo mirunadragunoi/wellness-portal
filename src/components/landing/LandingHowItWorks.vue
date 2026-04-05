@@ -11,7 +11,9 @@
           <div class="step__number">{{ i + 1 }}</div>
           <h3 class="step__title">{{ t(step.titleKey) }}</h3>
           <p class="step__desc">{{ t(step.descKey) }}</p>
-          <div v-if="i < steps.length - 1" class="step__connector" aria-hidden="true">→</div>
+          <div v-if="i < steps.length - 1" class="step__connector" aria-hidden="true">
+            <Icon icon="lucide:chevron-right" class="app-icon app-icon--md app-icon--muted" />
+          </div>
         </div>
       </div>
     </div>
@@ -73,7 +75,7 @@ const steps = [
 .step__desc { font-size: 15px; color: var(--text-secondary); line-height: 1.65; max-width: 280px; margin: 0 auto; }
 .step__connector {
   position: absolute; top: 27px; right: -24px;
-  color: var(--sky-300); font-size: 20px;
+  display: flex; align-items: center; color: var(--sky-300);
 }
 
 @media (max-width: 768px) {

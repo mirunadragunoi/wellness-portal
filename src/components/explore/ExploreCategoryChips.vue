@@ -10,7 +10,7 @@
       v-for="cat in categories"
       :key="cat.id"
       :active="modelValue === cat.id"
-      :emoji="cat.emoji"
+      :icon="cat.icon"
       :color="cat.color"
       @click="emit('update:modelValue', cat.id)"
     >

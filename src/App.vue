@@ -1,5 +1,9 @@
 <template>
-  <div class="app" :data-theme="userStore.darkMode ? 'dark' : 'light'">
+  <div
+    class="app"
+    :class="{ 'app--authenticated': authStore.isLoggedIn }"
+    :data-theme="userStore.darkMode ? 'dark' : 'light'"
+  >
 
     <!-- Authenticated layout -->
     <template v-if="authStore.isLoggedIn">
@@ -12,6 +16,8 @@
           </Transition>
         </RouterView>
       </main>
+
+      <AppFooter />
 
       <!-- Mobile bottom navigation -->
       <AppBottomBar />
@@ -35,6 +41,7 @@
           <component :is="Component" />
         </Transition>
       </RouterView>
+      <AppFooter />
     </template>
 
     <!-- Global toast notifications -->
@@ -52,6 +59,7 @@ import { usePlayerStore } from '@/stores/player'
 import { useUIStore }     from '@/stores/ui'
 
 import AppNavbarAuth  from '@/components/layout/AppNavbarAuth.vue'
+import AppFooter      from '@/components/layout/AppFooter.vue'
 import AppBottomBar   from '@/components/layout/AppBottomBar.vue'
 import AppMiniPlayer  from '@/components/layout/AppMiniPlayer.vue'
 import AppSOSButton   from '@/components/layout/AppSOSButton.vue'
@@ -81,7 +89,7 @@ watch(() => userStore.darkMode, applyTheme)
 <style>
 /* These styles are global, not scoped */
 .app {
-  min-height: 100vh;
+  min-height: var(--app-min-height);
   display: flex;
   flex-direction: column;
   background: var(--bg-base);
@@ -90,14 +98,15 @@ watch(() => userStore.darkMode, applyTheme)
 }
 
 .app-main {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .app-main--auth {
-  /* Space for sticky navbar at top, bottom bar + mini player on mobile */
-  padding-bottom: env(safe-area-inset-bottom);
+  /* Bottom safe area; page views use --page-pad-bottom-auth for nav / mini player */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Page transition */
@@ -117,4 +126,11 @@ watch(() => userStore.darkMode, applyTheme)
 /* Fade */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
 .fade-enter-from, .fade-leave-to       { opacity: 0; }
+
+/* Footer clears fixed bottom nav on mobile when logged in */
+@media (max-width: 768px) {
+  .app--authenticated .footer {
+    margin-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px));
+  }
+}
 </style>

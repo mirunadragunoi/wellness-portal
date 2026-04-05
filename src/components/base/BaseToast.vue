@@ -9,7 +9,7 @@
           :class="`toast--${toast.type}`"
           @click="uiStore.removeToast(toast.id)"
         >
-          <span class="toast__icon">{{ icons[toast.type] }}</span>
+          <Icon :icon="toastIcons[toast.type] || toastIcons.info" class="toast__icon app-icon app-icon--sm" />
           <span class="toast__message">{{ toast.message }}</span>
         </div>
       </TransitionGroup>
@@ -20,7 +20,12 @@
 <script setup>
 import { useUIStore } from '@/stores/ui'
 const uiStore = useUIStore()
-const icons = { success: '✓', error: '✕', info: 'ℹ', warning: '⚠' }
+const toastIcons = {
+  success: 'lucide:check',
+  error: 'lucide:x',
+  info: 'lucide:info',
+  warning: 'lucide:triangle-alert'
+}
 </script>
 
 <style scoped>
@@ -56,7 +61,11 @@ const icons = { success: '✓', error: '✕', info: 'ℹ', warning: '⚠' }
 .toast--info    { background: var(--sky-50); color: var(--sky-700); border: 1px solid var(--sky-200); }
 .toast--warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
 
-.toast__icon { font-size: 13px; font-weight: 700; }
+.toast__icon { flex-shrink: 0; }
+.toast--success .toast__icon { color: #059669; }
+.toast--error .toast__icon   { color: #dc2626; }
+.toast--info .toast__icon    { color: var(--sky-600); }
+.toast--warning .toast__icon { color: #d97706; }
 
 .toast-enter-active, .toast-leave-active {
   transition: all 0.3s var(--ease-smooth);

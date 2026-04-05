@@ -3,7 +3,10 @@
     <div class="breathing-view__inner">
       <!-- Header -->
       <div class="breathing-view__header">
-        <RouterLink to="/home" class="breathing-view__back">← Back</RouterLink>
+        <RouterLink to="/home" class="breathing-view__back">
+          <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
+          {{ t('common.back') }}
+        </RouterLink>
         <div class="breathing-view__info">
           <h1 class="breathing-view__title">{{ config.title }}</h1>
           <p class="breathing-view__desc">{{ config.description }}</p>
@@ -39,7 +42,9 @@
       <!-- Complete overlay -->
       <Transition name="fade">
         <div v-if="isComplete" class="breathing-complete">
-          <div class="breathing-complete__check">✓</div>
+          <div class="breathing-complete__check">
+            <Icon icon="lucide:check" class="app-icon app-icon--2xl" aria-hidden="true" />
+          </div>
           <h2>Session Complete</h2>
           <p>Great work. You've completed {{ Math.round(totalDuration / 60) }} minutes of mindful breathing.</p>
           <div class="breathing-complete__btns">
@@ -54,11 +59,13 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useBreathing } from '@/composables/useBreathing'
 import BreathingCircle   from '@/components/breathing/BreathingCircle.vue'
 import BreathingControls from '@/components/breathing/BreathingControls.vue'
 import BaseProgressBar   from '@/components/base/BaseProgressBar.vue'
 
+const { t }  = useI18n()
 const route  = useRoute()
 const typeId = route.params.type || 'box'
 
@@ -72,9 +79,9 @@ const {
 
 <style scoped>
 .breathing-view {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  min-height: var(--app-min-height); display: flex; align-items: center; justify-content: center;
   background: var(--bg-base); padding: 24px;
-  position: relative; overflow: hidden;
+  position: relative; overflow-x: hidden;
 }
 .breathing-view::before {
   content: ''; position: absolute; top: -20%; left: -10%;
@@ -89,7 +96,8 @@ const {
 }
 .breathing-view__header { text-align: center; width: 100%; }
 .breathing-view__back {
-  display: inline-block; font-size: 14px; color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; color: var(--text-muted);
   text-decoration: none; margin-bottom: 20px;
 }
 .breathing-view__back:hover { color: var(--sky-600); }
@@ -111,7 +119,7 @@ const {
   width: 80px; height: 80px; border-radius: 50%;
   background: linear-gradient(135deg, #d1fae5, #6ee7b7);
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px; color: #059669;
+  color: #059669;
   animation: bounceIn 0.6s var(--ease-bounce);
 }
 .breathing-complete h2 { font-family: var(--font-display); font-size: 36px; font-weight: 400; color: var(--text-primary); }

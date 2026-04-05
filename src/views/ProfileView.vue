@@ -11,7 +11,10 @@
           <div class="profile-card">
             <div class="profile-avatar-section">
               <div class="profile-avatar-wrap">
-                <span class="profile-avatar-emoji">{{ avatarEmojis[userStore.avatar] || '🧘' }}</span>
+                <Icon
+                  :icon="AVATAR_ICONS[userStore.avatar] || AVATAR_ICONS['avatar-1']"
+                  class="profile-avatar-icon app-icon app-icon--2xl app-icon--primary"
+                />
               </div>
               <div>
                 <p v-if="!editing" class="profile-name">{{ userStore.firstName || 'Your name' }}</p>
@@ -25,11 +28,14 @@
               <p class="avatar-picker__label">{{ t('profile.avatar_label') }}</p>
               <div class="avatar-picker__grid">
                 <button
-                  v-for="(emoji, key) in avatarEmojis" :key="key"
+                  v-for="key in avatarKeys" :key="key"
+                  type="button"
                   class="avatar-opt"
                   :class="{ 'avatar-opt--active': userStore.avatar === key }"
                   @click="userStore.avatar = key"
-                >{{ emoji }}</button>
+                >
+                  <Icon :icon="AVATAR_ICONS[key]" class="app-icon app-icon--md app-icon--primary" />
+                </button>
               </div>
             </div>
 
@@ -47,7 +53,7 @@
           <!-- Stats mini -->
           <div class="profile-card profile-stats">
             <div class="profile-stat" v-for="s in miniStats" :key="s.label">
-              <span class="profile-stat__icon">{{ s.icon }}</span>
+              <Icon :icon="s.icon" class="profile-stat__icon app-icon app-icon--lg app-icon--primary" />
               <span class="profile-stat__val">{{ s.value }}</span>
               <span class="profile-stat__label">{{ s.label }}</span>
             </div>
@@ -65,9 +71,13 @@
                 v-for="obj in userStore.objectives" :key="obj"
                 class="goal-chip"
               >
-                {{ objectiveEmoji(obj) }} {{ obj }}
+                <Icon :icon="ONBOARDING_OBJECTIVE_ICONS[obj] || 'lucide:circle'" class="goal-chip__icon app-icon app-icon--xs app-icon--primary" />
+                {{ obj }}
               </span>
-              <RouterLink to="/onboarding" class="goal-chip goal-chip--edit">Edit goals →</RouterLink>
+              <RouterLink to="/onboarding" class="goal-chip goal-chip--edit">
+                {{ t('profile.edit_goals') }}
+                <Icon icon="lucide:chevron-right" class="goal-chip__chev app-icon app-icon--xs" />
+              </RouterLink>
             </div>
           </div>
 
@@ -81,13 +91,15 @@
                 @click="router.push({ name: 'session', params: { id: s.id } })"
               >
                 <div class="fav-item__img" :style="{ background: s.thumbnailGradient }">
-                  <span>{{ typeEmoji(s.type) }}</span>
+                  <Icon :icon="sessionTypeIcon(s.type)" class="app-icon app-icon--md" style="color: rgba(255,255,255,0.95)" />
                 </div>
                 <div class="fav-item__info">
                   <p class="fav-item__title">{{ s.title }}</p>
                   <p class="fav-item__meta">{{ Math.round(s.duration / 60) }} min · {{ s.category }}</p>
                 </div>
-                <button class="fav-item__remove" @click.stop="progressStore.toggleFavorite(s.id)" title="Remove">✕</button>
+                <button type="button" class="fav-item__remove" @click.stop="progressStore.toggleFavorite(s.id)" :title="t('common.close')">
+                  <Icon icon="lucide:x" class="app-icon app-icon--sm" />
+                </button>
               </div>
             </div>
             <p v-else class="profile-empty">{{ t('profile.no_favorites') }}</p>
@@ -156,7 +168,10 @@ import { useProgressStore } from '@/stores/progress'
 import { setLocale }        from '@/i18n/index'
 import { sessions }         from '@/data/sessions'
 import BaseModal from '@/components/base/BaseModal.vue'
+import { AVATAR_ICONS, ONBOARDING_OBJECTIVE_ICONS, sessionTypeIcon } from '@/constants/appIcons'
 import dayjs from 'dayjs'
+
+const avatarKeys = Object.keys(AVATAR_ICONS)
 
 const { t }         = useI18n()
 const router        = useRouter()
@@ -173,15 +188,10 @@ const memberSince = computed(() =>
   userStore.memberSince ? dayjs(userStore.memberSince).format('MMMM YYYY') : '—'
 )
 
-const avatarEmojis = {
-  'avatar-1': '🧘', 'avatar-2': '🌸', 'avatar-3': '🌿',
-  'avatar-4': '✨', 'avatar-5': '🦋', 'avatar-6': '🌊'
-}
-
 const miniStats = computed(() => [
-  { icon: '🧘', value: progressStore.totalSessions, label: 'Sessions'     },
-  { icon: '⏱',  value: progressStore.totalTimeFormatted, label: 'Total time'  },
-  { icon: '🔥', value: progressStore.streakDays + 'd', label: 'Streak'     }
+  { icon: 'lucide:headphones', value: progressStore.totalSessions, label: 'Sessions' },
+  { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted, label: 'Total time' },
+  { icon: 'lucide:flame',      value: progressStore.streakDays + 'd', label: 'Streak' }
 ])
 
 const favoriteSessions = computed(() =>
@@ -196,20 +206,15 @@ function changeLanguage() { setLocale(selectedLang.value); userStore.language = 
 function confirmLogout()  { showLogout.value = true }
 function logout()         { authStore.logout(); router.push({ name: 'landing' }) }
 
-const objEmojis = { stress: '🌊', sleep: '🌙', focus: '🎯', mood: '😊', meditate: '🧘', growth: '✨' }
-const objectiveEmoji = (obj) => objEmojis[obj] || '•'
-
-const typeEmojiMap = { meditation: '🧘', 'sleep-story': '🌙', soundscape: '🎵', motivational: '⚡', breathing: '💨' }
-const typeEmoji    = (type) => typeEmojiMap[type] || '🧘'
 </script>
 
 <style scoped>
-.profile-view { padding: 40px 0 120px; min-height: 100vh; }
+.profile-view { padding: 40px 0 var(--page-pad-bottom-auth); min-height: var(--app-min-height); }
 .profile-view__title {
   font-family: var(--font-display); font-size: clamp(32px,4vw,48px);
   font-weight: 300; color: var(--text-primary); letter-spacing: -0.5px; margin-bottom: 32px;
 }
-.profile-view__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.profile-view__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
 
 /* Cards */
 .profile-card {
@@ -225,7 +230,7 @@ const typeEmoji    = (type) => typeEmojiMap[type] || '🧘'
 .profile-avatar-wrap {
   width: 72px; height: 72px; border-radius: 50%;
   background: var(--sky-100); border: 3px solid var(--sky-200);
-  display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .profile-name       { font-family: var(--font-display); font-size: 24px; font-weight: 500; color: var(--text-primary); }
 .profile-name-input {
@@ -239,7 +244,7 @@ const typeEmoji    = (type) => typeEmojiMap[type] || '🧘'
 .avatar-picker__grid  { display: flex; gap: 8px; flex-wrap: wrap; }
 .avatar-opt {
   width: 44px; height: 44px; border-radius: 50%;
-  background: var(--bg-muted); border: 2px solid transparent; font-size: 22px;
+  background: var(--bg-muted); border: 2px solid transparent;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all var(--duration-fast);
 }
@@ -251,22 +256,26 @@ const typeEmoji    = (type) => typeEmojiMap[type] || '🧘'
 /* Stats mini */
 .profile-stats { flex-direction: row; gap: 0; padding: 20px; justify-content: space-around; }
 .profile-stat  { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.profile-stat__icon  { font-size: 22px; }
+.profile-stat__icon { color: var(--sky-600); }
 .profile-stat__val   { font-family: var(--font-display); font-size: 24px; font-weight: 300; color: var(--text-primary); }
 .profile-stat__label { font-size: 12px; color: var(--text-muted); }
 
 /* Goals */
 .profile-goals { display: flex; flex-wrap: wrap; gap: 8px; }
 .goal-chip {
+  display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 14px; border-radius: 100px;
   background: var(--sky-100); color: var(--sky-700);
   font-size: 13px; font-weight: 500; text-transform: capitalize;
 }
+.goal-chip__icon { flex-shrink: 0; }
 .goal-chip--edit {
+  display: inline-flex; align-items: center; gap: 4px;
   background: var(--bg-muted); color: var(--text-secondary);
   text-decoration: none; font-weight: 500;
   transition: all var(--duration-fast);
 }
+.goal-chip__chev { color: var(--text-muted); flex-shrink: 0; }
 .goal-chip--edit:hover { background: var(--sky-100); color: var(--sky-700); }
 
 /* Favorites */
@@ -280,12 +289,16 @@ const typeEmoji    = (type) => typeEmojiMap[type] || '🧘'
 .fav-item:hover { background: var(--sky-50); }
 .fav-item__img {
   width: 44px; height: 44px; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .fav-item__info  { flex: 1; min-width: 0; }
 .fav-item__title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fav-item__meta  { font-size: 12px; color: var(--text-muted); }
-.fav-item__remove { background: none; border: none; cursor: pointer; font-size: 14px; color: var(--text-muted); padding: 4px; border-radius: 50%; transition: all var(--duration-fast); }
+.fav-item__remove {
+  background: none; border: none; cursor: pointer; color: var(--text-muted);
+  padding: 6px; border-radius: 50%; transition: all var(--duration-fast);
+  display: flex; align-items: center; justify-content: center;
+}
 .fav-item__remove:hover { background: #fee2e2; color: #dc2626; }
 .profile-empty { font-size: 14px; color: var(--text-muted); }
 

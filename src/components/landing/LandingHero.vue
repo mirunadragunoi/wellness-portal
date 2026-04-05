@@ -1,8 +1,11 @@
 <template>
   <section class="hero">
-    <!-- Background blobs -->
-    <div class="hero__blob hero__blob--1" />
-    <div class="hero__blob hero__blob--2" />
+    <!-- Blobs clipped here only so .hero never becomes its own scroll container
+         (overflow-x:hidden on the section forces overflow-y:auto in many browsers). -->
+    <div class="hero__blobs" aria-hidden="true">
+      <div class="hero__blob hero__blob--1" />
+      <div class="hero__blob hero__blob--2" />
+    </div>
 
     <div class="hero__content container">
       <!-- Text side -->
@@ -32,7 +35,13 @@
         <!-- Social proof mini -->
         <div class="hero__proof anim-fade-up-4">
           <div class="hero__proof-avatars">
-            <span v-for="e in ['🧘','🌸','🌿','✨','🦋']" :key="e" class="hero__proof-avatar">{{ e }}</span>
+            <span
+              v-for="(ic, idx) in proofIcons"
+              :key="idx"
+              class="hero__proof-avatar"
+            >
+              <Icon :icon="ic" class="app-icon app-icon--sm" />
+            </span>
           </div>
           <span class="hero__proof-text">Joined by <strong>12,000+</strong> people finding their calm</span>
         </div>
@@ -51,13 +60,16 @@
 
         <!-- Floating cards -->
         <div class="hero__card hero__card--streak">
-          🔥 <strong>21 day streak</strong>
+          <Icon icon="lucide:flame" class="hero__card-icon app-icon app-icon--sm" />
+          <strong>21 day streak</strong>
         </div>
         <div class="hero__card hero__card--mood">
-          😊 <span>Feeling <strong>Bright</strong></span>
+          <Icon icon="lucide:smile" class="hero__card-icon app-icon app-icon--sm" />
+          <span>Feeling <strong>Bright</strong></span>
         </div>
         <div class="hero__card hero__card--session">
-          ▶ 5 min Calm Session
+          <Icon icon="lucide:play" class="hero__card-icon app-icon app-icon--sm" />
+          5 min Calm Session
         </div>
       </div>
     </div>
@@ -66,17 +78,34 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
+
+const proofIcons = [
+  'lucide:user-round',
+  'lucide:heart',
+  'lucide:leaf',
+  'lucide:sparkles',
+  'lucide:feather'
+]
 </script>
 
 <style scoped>
 .hero {
-  min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 120px 0 80px;
+  /* Top padding clears fixed public navbar; no full-viewport min-height — one page scroll only */
+  padding: clamp(88px, 12vh, 120px) 0 clamp(48px, 8vh, 80px);
   position: relative;
+  overflow: visible;
+}
+
+.hero__blobs {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .hero__blob {
@@ -99,8 +128,8 @@ const { t } = useI18n()
 
 .hero__content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
   align-items: center;
   position: relative;
   z-index: 1;
@@ -169,7 +198,7 @@ const { t } = useI18n()
   background: var(--sky-100);
   border: 2px solid white;
   display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
+  color: var(--sky-700);
   margin-left: -8px;
 }
 .hero__proof-avatar:first-child { margin-left: 0; }
@@ -243,6 +272,7 @@ const { t } = useI18n()
   white-space: nowrap;
   animation: float-slow 6s ease-in-out infinite;
 }
+.hero__card-icon { flex-shrink: 0; color: var(--sky-600); }
 .hero__card--streak { top: 10%;  left: -5%;  animation-delay: 0s; }
 .hero__card--mood   { bottom: 20%; left: -8%; animation-delay: 2s; }
 .hero__card--session { top: 15%; right: -5%; animation-delay: 4s; font-size: 12px; }

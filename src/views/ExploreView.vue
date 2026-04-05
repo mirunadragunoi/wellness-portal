@@ -26,7 +26,7 @@
               />
             </div>
             <div v-else class="explore-view__empty">
-              <span>🔍</span>
+              <Icon icon="lucide:search" class="app-icon app-icon--2xl app-icon--muted" />
               <p>{{ t('explore.no_results') }}</p>
             </div>
           </Transition>
@@ -101,7 +101,7 @@ function playSession(session) {
 </script>
 
 <style scoped>
-.explore-view { padding: 40px 0 120px; min-height: 100vh; }
+.explore-view { padding: 40px 0 var(--page-pad-bottom-auth); min-height: var(--app-min-height); }
 .explore-view__header {
   display: flex; align-items: center; gap: 20px;
   margin-bottom: 24px; flex-wrap: wrap;
@@ -113,11 +113,11 @@ function playSession(session) {
 .explore-view__header > :last-child { flex: 1; min-width: 240px; }
 
 .explore-view__body {
-  display: grid; grid-template-columns: 260px 1fr;
+  display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
   gap: 28px; margin-top: 28px; align-items: start;
 }
 .sessions-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
   gap: 20px;
 }
 .explore-view__empty {
@@ -127,7 +127,7 @@ function playSession(session) {
 .explore-view__empty span { font-size: 40px; }
 .explore-view__empty p    { color: var(--text-secondary); font-size: 16px; }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .explore-view__body { grid-template-columns: 1fr; }
   .explore-view__filters { order: -1; }
 }

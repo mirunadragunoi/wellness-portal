@@ -4,7 +4,10 @@
     <OnboardingProgressBar v-if="step < 8" :current="step" :total="7" />
 
     <!-- Back button -->
-    <button v-if="step > 1 && step < 8" class="onboarding__back" @click="step--">← Back</button>
+    <button v-if="step > 1 && step < 8" type="button" class="onboarding__back" @click="step--">
+      <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
+      {{ t('common.back') }}
+    </button>
 
     <!-- Steps -->
     <Transition name="step" mode="out-in">
@@ -21,6 +24,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 
 import OnboardingProgressBar from '@/components/onboarding/OnboardingProgressBar.vue'
@@ -33,6 +37,7 @@ import StepLearningPace  from '@/components/onboarding/steps/StepLearningPace.vu
 import StepDuration      from '@/components/onboarding/steps/StepDuration.vue'
 import StepLoading       from '@/components/onboarding/steps/StepLoading.vue'
 
+const { t }     = useI18n()
 const router    = useRouter()
 const userStore = useUserStore()
 const step      = ref(1)
@@ -64,13 +69,14 @@ function finish() {
 
 <style scoped>
 .onboarding {
-  min-height: 100vh; background: var(--bg-base);
+  min-height: var(--app-min-height); background: var(--bg-base);
   display: flex; flex-direction: column; position: relative;
 }
 .onboarding__back {
   position: absolute; top: 64px; left: 24px;
   background: none; border: none; cursor: pointer;
-  font-size: 14px; color: var(--text-secondary);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; color: var(--text-secondary); font-family: var(--font-body);
   transition: color var(--duration-fast);
 }
 .onboarding__back:hover { color: var(--sky-600); }

@@ -12,6 +12,8 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Avoid horizontal clip when grids / flex children hit min-content width */
+  overflow-x: hidden;
 }
 
 body {
@@ -27,10 +29,25 @@ body {
 }
 
 #app {
-  min-height: 100vh;
+  min-height: var(--app-min-height);
   display: flex;
   flex-direction: column;
 }
+
+/* Iconify (Lucide) sizing — use with <Icon class="app-icon app-icon--md" /> */
+.app-icon {
+  display: block;
+  flex-shrink: 0;
+}
+.app-icon--xs { width: 14px; height: 14px; }
+.app-icon--sm { width: 18px; height: 18px; }
+.app-icon--md { width: 22px; height: 22px; }
+.app-icon--lg { width: 28px; height: 28px; }
+.app-icon--xl { width: 36px; height: 36px; }
+.app-icon--2xl { width: 48px; height: 48px; }
+.app-icon--3xl { width: 64px; height: 64px; }
+.app-icon--muted { color: var(--text-muted); }
+.app-icon--primary { color: var(--sky-600); }
 
 img, video {
   max-width: 100%;
@@ -83,7 +100,7 @@ ul, ol {
 /* ── Container ── */
 .container {
   width: 100%;
-  max-width: var(--container-max);
+  max-width: min(var(--container-max), 100%);
   margin: 0 auto;
   padding: 0 var(--container-pad);
 }
@@ -135,12 +152,16 @@ ul, ol {
 .slide-up-enter-from { opacity: 0; transform: translateY(20px); }
 .slide-up-leave-to   { opacity: 0; transform: translateY(-10px); }
 
+/* ── Tablet / small laptop ── */
+@media (max-width: 1024px) {
+  .section {
+    padding: 72px 0;
+  }
+}
+
 /* ── Mobile layout adjustments ── */
 @media (max-width: 768px) {
-  :root {
-    --container-pad: 20px;
-  }
   .section {
-    padding: 60px 0;
+    padding: 56px 0;
   }
 }

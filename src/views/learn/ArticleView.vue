@@ -1,7 +1,10 @@
 <template>
   <div class="article-view">
     <div class="container">
-      <RouterLink to="/learn" class="article-view__back">← {{ t('learn.title') }}</RouterLink>
+      <RouterLink to="/learn" class="article-view__back">
+        <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
+        {{ t('learn.title') }}
+      </RouterLink>
 
       <div v-if="article" class="article-view__layout">
         <!-- Article -->
@@ -17,11 +20,17 @@
             <span class="article-content__dot">·</span>
             <span class="article-content__date">{{ formatDate(article.datePublished) }}</span>
             <button
+              type="button"
               class="article-content__bookmark"
               :class="{ active: isBookmarked }"
               @click="isBookmarked = !isBookmarked"
             >
-              {{ isBookmarked ? '🔖 Bookmarked' : '🏷️ Bookmark' }}
+              <Icon
+                :icon="isBookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'"
+                class="article-content__bookmark-icon app-icon app-icon--sm"
+                aria-hidden="true"
+              />
+              {{ isBookmarked ? t('learn.bookmarked') : t('learn.bookmark') }}
             </button>
           </div>
 
@@ -34,7 +43,10 @@
 
           <!-- Footer -->
           <div class="article-content__footer">
-            <RouterLink to="/learn" class="article-footer-btn">← More articles</RouterLink>
+            <RouterLink to="/learn" class="article-footer-btn">
+              <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
+              {{ t('learn.more_articles') }}
+            </RouterLink>
           </div>
         </article>
 
@@ -43,7 +55,10 @@
           <div class="article-sidebar__card">
             <h3 class="article-sidebar__title">Ready to practice?</h3>
             <p class="article-sidebar__body">Put what you've learned into action with a guided session.</p>
-            <RouterLink to="/explore" class="article-sidebar__btn">Browse Sessions →</RouterLink>
+            <RouterLink to="/explore" class="article-sidebar__btn">
+              {{ t('learn.browse_sessions') }}
+              <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
+            </RouterLink>
           </div>
 
           <!-- Related articles -->
@@ -68,7 +83,10 @@
       <!-- 404 -->
       <div v-else class="article-view__not-found">
         <p>Article not found.</p>
-        <RouterLink to="/learn">← Back to Learn</RouterLink>
+        <RouterLink to="/learn" class="article-view__back article-view__back--center">
+          <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
+          {{ t('learn.back_to_learn') }}
+        </RouterLink>
       </div>
     </div>
   </div>
@@ -96,13 +114,14 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 </script>
 
 <style scoped>
-.article-view { padding: 40px 0 120px; min-height: 100vh; }
+.article-view { padding: 40px 0 var(--page-pad-bottom-auth); min-height: var(--app-min-height); }
 .article-view__back {
-  display: inline-block;
+  display: inline-flex; align-items: center; gap: 6px;
   font-size: 14px; color: var(--text-muted);
   text-decoration: none; margin-bottom: 32px;
   transition: color var(--duration-fast);
 }
+.article-view__back--center { margin-bottom: 0; justify-content: center; }
 .article-view__back:hover { color: var(--sky-600); }
 
 .article-view__layout {
@@ -133,10 +152,12 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 .article-content__dot { color: var(--border-default); }
 .article-content__bookmark {
   margin-left: auto; background: var(--bg-muted); border: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 14px; border-radius: 100px;
   font-size: 13px; font-weight: 500; color: var(--text-secondary);
   transition: all var(--duration-fast);
 }
+.article-content__bookmark-icon { flex-shrink: 0; }
 .article-content__bookmark:hover { background: var(--sky-100); color: var(--sky-700); }
 .article-content__bookmark.active { background: var(--sky-100); color: var(--sky-700); }
 
@@ -166,6 +187,7 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 
 .article-content__footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border-subtle); }
 .article-footer-btn {
+  display: inline-flex; align-items: center; gap: 6px;
   font-size: 15px; color: var(--sky-600); text-decoration: none; font-weight: 500;
 }
 .article-footer-btn:hover { text-decoration: underline; }
@@ -179,7 +201,8 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 .article-sidebar__title { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: white; margin-bottom: 10px; }
 .article-sidebar__body  { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 20px; }
 .article-sidebar__btn {
-  display: inline-flex; padding: 10px 22px; border-radius: 100px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 22px; border-radius: 100px;
   background: white; color: var(--sky-700); font-size: 14px; font-weight: 600;
   text-decoration: none; transition: all var(--duration-fast);
 }

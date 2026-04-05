@@ -1,7 +1,7 @@
 <template>
   <div class="pre-play">
     <div class="pre-play__cover" :style="{ background: session?.thumbnailGradient }">
-      <span class="pre-play__type-emoji">{{ typeEmoji }}</span>
+      <Icon :icon="coverIcon" class="pre-play__type-icon app-icon app-icon--3xl" />
     </div>
 
     <div class="pre-play__content">
@@ -13,8 +13,8 @@
       <p class="pre-play__desc">{{ session?.description }}</p>
 
       <div class="pre-play__actions">
-        <button class="pre-play__play-btn" @click="emit('play')">
-          <span class="pre-play__play-icon">▶</span>
+        <button type="button" class="pre-play__play-btn" @click="emit('play')">
+          <Icon icon="lucide:play" class="pre-play__play-icon app-icon app-icon--md" />
           {{ t('player.play') }}
         </button>
         <button
@@ -23,7 +23,7 @@
           @click="emit('favorite')"
           :title="isFavorite ? t('player.remove_favorite') : t('player.add_favorite')"
         >
-          {{ isFavorite ? '❤️' : '🤍' }}
+          <Icon :icon="isFavorite ? 'mdi:heart' : 'lucide:heart'" class="app-icon app-icon--md" />
         </button>
       </div>
     </div>
@@ -34,6 +34,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
+import { sessionTypeIcon } from '@/constants/appIcons'
 
 const { t } = useI18n()
 const props = defineProps({ session: Object })
@@ -41,8 +42,7 @@ const emit  = defineEmits(['play', 'favorite'])
 const progressStore = useProgressStore()
 
 const isFavorite = computed(() => progressStore.isFavorite(props.session?.id))
-const typeEmojiMap = { meditation: '🧘', 'sleep-story': '🌙', soundscape: '🎵', motivational: '⚡', breathing: '💨' }
-const typeEmoji   = computed(() => typeEmojiMap[props.session?.type] || '🧘')
+const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
 const durationLabel = computed(() => {
   const m = Math.round((props.session?.duration || 0) / 60)
   return `${m} ${t('explore.min')}`
@@ -57,7 +57,7 @@ const durationLabel = computed(() => {
   display: flex; align-items: center; justify-content: center;
   box-shadow: var(--shadow-xl);
 }
-.pre-play__type-emoji { font-size: 80px; }
+.pre-play__type-icon { color: rgba(255,255,255,0.95); }
 .pre-play__content { width: 100%; text-align: center; }
 .pre-play__category-badge {
   display: inline-block; padding: 4px 14px; border-radius: 100px;
@@ -81,13 +81,15 @@ const durationLabel = computed(() => {
   transition: all var(--duration-normal) var(--ease-smooth);
 }
 .pre-play__play-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(14,165,233,0.45); }
-.pre-play__play-icon { font-size: 16px; }
+.pre-play__play-icon { color: white; flex-shrink: 0; }
 .pre-play__fav-btn {
   width: 52px; height: 52px; border-radius: 50%;
   background: var(--bg-surface); border: 1.5px solid var(--border-default);
-  font-size: 22px; cursor: pointer;
+  color: var(--text-muted);
+  cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all var(--duration-fast) var(--ease-bounce);
 }
-.pre-play__fav-btn:hover { transform: scale(1.15); }
+.pre-play__fav-btn:hover { transform: scale(1.15); color: #e11d48; }
+.pre-play__fav-btn--active { color: #e11d48; border-color: #fecdd3; background: #fff1f2; }
 </style>

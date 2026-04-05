@@ -2,7 +2,11 @@
   <div class="mood-card">
     <!-- Already checked in -->
     <div v-if="moodStore.moodCheckedToday" class="mood-done">
-      <span class="mood-done__emoji">{{ currentMood?.emoji }}</span>
+      <Icon
+        v-if="currentMood?.icon"
+        :icon="currentMood.icon"
+        class="mood-done__icon app-icon app-icon--2xl app-icon--primary"
+      />
       <div class="mood-done__text">
         <span class="mood-done__label">{{ t('home.mood_today') }}</span>
         <strong class="mood-done__value">{{ currentMood?.label }}</strong>
@@ -24,7 +28,7 @@
           @mouseleave="hoveredMood = null"
           @click="checkIn(m.id)"
         >
-          <span class="mood-btn__emoji">{{ m.emoji }}</span>
+          <Icon :icon="m.icon" class="mood-btn__icon app-icon app-icon--lg app-icon--muted" />
           <span class="mood-btn__label">{{ t(`home.mood_${m.id}`) }}</span>
         </button>
       </div>
@@ -73,13 +77,14 @@ function checkIn(id) {
 .mood-btn:hover, .mood-btn--hover {
   background: var(--sky-50); border-color: var(--sky-200); transform: translateY(-3px);
 }
-.mood-btn__emoji { font-size: 28px; }
+.mood-btn__icon { color: var(--text-secondary); }
+.mood-btn:hover .mood-btn__icon, .mood-btn--hover .mood-btn__icon { color: var(--sky-600); }
 .mood-btn__label { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
 
 .mood-done {
   display: flex; align-items: center; gap: 16px;
 }
-.mood-done__emoji { font-size: 40px; }
+.mood-done__icon { flex-shrink: 0; }
 .mood-done__text { flex: 1; }
 .mood-done__label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 2px; }
 .mood-done__value { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--text-primary); }

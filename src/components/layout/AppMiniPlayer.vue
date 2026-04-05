@@ -6,7 +6,11 @@
         class="mini-player__thumb"
         :style="{ background: playerStore.currentSession?.thumbnailGradient || 'var(--sky-200)' }"
       >
-        <span v-if="!playerStore.currentSession?.thumbnail">🧘</span>
+        <Icon
+          v-if="!playerStore.currentSession?.thumbnail"
+          :icon="thumbIcon"
+          class="app-icon app-icon--md"
+        />
       </div>
 
       <!-- Info -->
@@ -17,22 +21,27 @@
 
       <!-- Controls -->
       <div class="mini-player__controls" @click.stop>
-        <button class="mini-player__btn" @click="toggle" :aria-label="playerStore.isPlaying ? 'Pause' : 'Play'">
-          {{ playerStore.isPlaying ? '⏸' : '▶' }}
+        <button type="button" class="mini-player__btn" @click="toggle" :aria-label="playerStore.isPlaying ? 'Pause' : 'Play'">
+          <Icon :icon="playerStore.isPlaying ? 'lucide:pause' : 'lucide:play'" class="app-icon app-icon--sm" />
         </button>
-        <button class="mini-player__btn mini-player__btn--close" @click="playerStore.close()" aria-label="Close">✕</button>
+        <button type="button" class="mini-player__btn mini-player__btn--close" @click="playerStore.close()" aria-label="Close">
+          <Icon icon="lucide:x" class="app-icon app-icon--xs" />
+        </button>
       </div>
     </div>
   </Transition>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePlayerStore } from '@/stores/player'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import BaseProgressBar from '@/components/base/BaseProgressBar.vue'
+import { sessionTypeIcon } from '@/constants/appIcons'
 
 const playerStore = usePlayerStore()
+const thumbIcon = computed(() => sessionTypeIcon(playerStore.currentSession?.type))
 const router      = useRouter()
 const { toggle }  = useAudioPlayer()
 
@@ -71,7 +80,7 @@ function goToPlayer() {
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  color: rgba(255,255,255,0.92);
   overflow: hidden;
 }
 
@@ -88,13 +97,12 @@ function goToPlayer() {
   border-radius: 50%;
   background: var(--sky-100);
   color: var(--sky-700);
-  font-size: 14px;
   display: flex; align-items: center; justify-content: center;
   border: none; cursor: pointer;
   transition: all var(--duration-fast);
 }
 .mini-player__btn:hover { background: var(--sky-200); }
-.mini-player__btn--close { background: var(--bg-muted); color: var(--text-muted); font-size: 12px; }
+.mini-player__btn--close { background: var(--bg-muted); color: var(--text-muted); }
 
 .mini-player-enter-active, .mini-player-leave-active {
   transition: all var(--duration-normal) var(--ease-smooth);

@@ -9,7 +9,9 @@
         <div v-for="card in previewCards" :key="card.id" class="preview-card">
           <div class="preview-card__img" :style="{ background: card.gradient }">
             <span class="preview-card__badge" :class="`badge--${card.category}`">{{ card.categoryLabel }}</span>
-            <button class="preview-card__play" @click="$router.push('/signup')">▶</button>
+            <button type="button" class="preview-card__play" aria-label="Play" @click="$router.push('/signup')">
+              <Icon icon="lucide:play" class="app-icon app-icon--md" />
+            </button>
           </div>
           <div class="preview-card__body">
             <h4 class="preview-card__title">{{ card.title }}</h4>
@@ -23,7 +25,10 @@
       </div>
 
       <div class="preview__cta">
-        <RouterLink to="/signup" class="btn">See all sessions →</RouterLink>
+        <RouterLink to="/signup" class="btn">
+          See all sessions
+          <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
+        </RouterLink>
       </div>
     </div>
   </section>
@@ -92,7 +97,7 @@ const previewCards = [
 
 .preview__cta { text-align: center; margin-top: 40px; }
 .btn {
-  display: inline-flex; align-items: center; padding: 12px 28px;
+  display: inline-flex; align-items: center; gap: 6px; padding: 12px 28px;
   border-radius: 100px; background: var(--bg-surface);
   border: 1.5px solid var(--border-default); color: var(--sky-600);
   font-family: var(--font-body); font-size: 15px; font-weight: 500;

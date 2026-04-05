@@ -1,12 +1,12 @@
 <template>
   <nav class="bottom-bar">
     <RouterLink to="/home"    class="bottom-bar__item" :class="{ active: route.name === 'home' }">
-      <span class="bottom-bar__icon">🏠</span>
+      <Icon icon="lucide:home" class="bottom-bar__icon app-icon app-icon--md" />
       <span class="bottom-bar__label">{{ t('nav.home') }}</span>
     </RouterLink>
 
     <RouterLink to="/explore" class="bottom-bar__item" :class="{ active: route.name === 'explore' }">
-      <span class="bottom-bar__icon">🔍</span>
+      <Icon icon="lucide:search" class="bottom-bar__icon app-icon app-icon--md" />
       <span class="bottom-bar__label">{{ t('nav.explore') }}</span>
     </RouterLink>
 
@@ -16,12 +16,12 @@
     </button>
 
     <RouterLink to="/learn"   class="bottom-bar__item" :class="{ active: route.name === 'learn' }">
-      <span class="bottom-bar__icon">📖</span>
+      <Icon icon="lucide:book-open" class="bottom-bar__icon app-icon app-icon--md" />
       <span class="bottom-bar__label">{{ t('nav.learn') }}</span>
     </RouterLink>
 
     <RouterLink to="/profile" class="bottom-bar__item" :class="{ active: route.name === 'profile' }">
-      <span class="bottom-bar__icon">👤</span>
+      <Icon icon="lucide:user" class="bottom-bar__icon app-icon app-icon--md" />
       <span class="bottom-bar__label">{{ t('nav.profile') }}</span>
     </RouterLink>
   </nav>
@@ -64,7 +64,8 @@ const uiStore = useUIStore()
   padding: 8px 0;
 }
 .bottom-bar__item.active { color: var(--sky-600); }
-.bottom-bar__icon  { font-size: 20px; }
+.bottom-bar__icon { opacity: 0.85; }
+.bottom-bar__item.active .bottom-bar__icon { opacity: 1; color: var(--sky-600); }
 .bottom-bar__label { font-size: 10px; font-weight: 500; }
 
 /* SOS center */

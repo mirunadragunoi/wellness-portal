@@ -2,7 +2,7 @@
   <div class="streak-card">
     <div class="streak-card__top">
       <div class="streak-main">
-        <span class="streak-fire">🔥</span>
+        <Icon icon="lucide:flame" class="streak-fire app-icon app-icon--xl" aria-hidden="true" />
         <div class="streak-info">
           <span class="streak-number">{{ progressStore.streakDays }}</span>
           <span class="streak-label">{{ t('home.streak_label') }}</span>
@@ -54,7 +54,7 @@ const isToday = (date) => dayjs(date).isSame(dayjs(), 'day')
 }
 .streak-card__top { display: flex; align-items: center; justify-content: space-between; }
 .streak-main { display: flex; align-items: center; gap: 14px; }
-.streak-fire { font-size: 36px; }
+.streak-fire { color: #ea580c; flex-shrink: 0; }
 .streak-info { display: flex; flex-direction: column; gap: 2px; }
 .streak-number { font-family: var(--font-display); font-size: 36px; font-weight: 300; color: var(--text-primary); line-height: 1; }
 .streak-label  { font-size: 13px; color: var(--text-muted); font-weight: 500; }

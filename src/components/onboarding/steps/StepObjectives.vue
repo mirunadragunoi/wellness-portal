@@ -9,7 +9,7 @@
         :class="{ 'obj-card--active': selected.includes(obj.id) }"
         @click="toggle(obj.id)"
       >
-        <span class="obj-card__emoji">{{ obj.emoji }}</span>
+        <Icon :icon="ONBOARDING_OBJECTIVE_ICONS[obj.id]" class="obj-card__icon app-icon app-icon--lg app-icon--primary" />
         <span class="obj-card__label">{{ t(obj.labelKey) }}</span>
       </button>
     </div>
@@ -22,17 +22,19 @@
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ONBOARDING_OBJECTIVE_ICONS } from '@/constants/appIcons'
+
 const { t } = useI18n()
 const emit = defineEmits(['next'])
 const selected = ref([])
 
 const objectives = [
-  { id: 'stress',   emoji: '🌊', labelKey: 'onboarding.obj_stress'   },
-  { id: 'sleep',    emoji: '🌙', labelKey: 'onboarding.obj_sleep'    },
-  { id: 'focus',    emoji: '🎯', labelKey: 'onboarding.obj_focus'    },
-  { id: 'mood',     emoji: '😊', labelKey: 'onboarding.obj_mood'     },
-  { id: 'meditate', emoji: '🧘', labelKey: 'onboarding.obj_meditate' },
-  { id: 'growth',   emoji: '✨', labelKey: 'onboarding.obj_growth'   }
+  { id: 'stress',   labelKey: 'onboarding.obj_stress'   },
+  { id: 'sleep',    labelKey: 'onboarding.obj_sleep'    },
+  { id: 'focus',    labelKey: 'onboarding.obj_focus'    },
+  { id: 'mood',     labelKey: 'onboarding.obj_mood'     },
+  { id: 'meditate', labelKey: 'onboarding.obj_meditate' },
+  { id: 'growth',   labelKey: 'onboarding.obj_growth'   }
 ]
 
 function toggle(id) {
@@ -55,7 +57,7 @@ function toggle(id) {
 }
 .obj-card:hover { border-color: var(--sky-300); background: var(--sky-50); transform: translateY(-2px); }
 .obj-card--active { border-color: var(--sky-500); background: var(--sky-50); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
-.obj-card__emoji { font-size: 32px; }
+.obj-card__icon { flex-shrink: 0; }
 .obj-card__label { font-size: 14px; font-weight: 500; color: var(--text-primary); text-align: center; }
 .step__btn {
   width: 100%; max-width: 360px; padding: 16px;

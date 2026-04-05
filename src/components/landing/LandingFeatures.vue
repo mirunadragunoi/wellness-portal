@@ -9,7 +9,9 @@
 
       <div class="features__grid">
         <div v-for="card in cards" :key="card.key" class="feature-card">
-          <div class="feature-card__icon" :class="`feature-card__icon--${card.color}`">{{ card.emoji }}</div>
+          <div class="feature-card__icon" :class="`feature-card__icon--${card.color}`">
+            <Icon :icon="card.icon" class="app-icon app-icon--lg" />
+          </div>
           <h3 class="feature-card__title">{{ t(card.titleKey) }}</h3>
           <p class="feature-card__desc">{{ t(card.descKey) }}</p>
         </div>
@@ -20,13 +22,15 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { FEATURE_CARD_ICONS } from '@/constants/appIcons'
+
 const { t } = useI18n()
 
 const cards = [
-  { key: 'meditation', emoji: '🧘', color: 'blue',   titleKey: 'features.card1_title', descKey: 'features.card1_desc' },
-  { key: 'breathing',  emoji: '🌬️', color: 'green',  titleKey: 'features.card2_title', descKey: 'features.card2_desc' },
-  { key: 'tracking',   emoji: '📊', color: 'amber',  titleKey: 'features.card3_title', descKey: 'features.card3_desc' },
-  { key: 'personal',   emoji: '✨', color: 'purple', titleKey: 'features.card4_title', descKey: 'features.card4_desc' }
+  { key: 'meditation', icon: FEATURE_CARD_ICONS.meditation, color: 'blue',   titleKey: 'features.card1_title', descKey: 'features.card1_desc' },
+  { key: 'breathing',  icon: FEATURE_CARD_ICONS.breathing,  color: 'green',  titleKey: 'features.card2_title', descKey: 'features.card2_desc' },
+  { key: 'tracking',   icon: FEATURE_CARD_ICONS.tracking,   color: 'amber',  titleKey: 'features.card3_title', descKey: 'features.card3_desc' },
+  { key: 'personal',   icon: FEATURE_CARD_ICONS.personal,   color: 'purple', titleKey: 'features.card4_title', descKey: 'features.card4_desc' }
 ]
 </script>
 
@@ -60,12 +64,12 @@ const cards = [
 .feature-card__icon {
   width: 52px; height: 52px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 24px; margin-bottom: 20px;
+  margin-bottom: 20px;
 }
-.feature-card__icon--blue   { background: var(--sky-100); }
-.feature-card__icon--green  { background: var(--sage-light); }
-.feature-card__icon--amber  { background: var(--warm-100); }
-.feature-card__icon--purple { background: var(--purple-soft); }
+.feature-card__icon--blue   { background: var(--sky-100);    color: var(--sky-700); }
+.feature-card__icon--green  { background: var(--sage-light); color: #3f6212; }
+.feature-card__icon--amber  { background: var(--warm-100);  color: #92400e; }
+.feature-card__icon--purple { background: var(--purple-soft); color: #5b21b6; }
 
 .feature-card__title {
   font-family: var(--font-display);

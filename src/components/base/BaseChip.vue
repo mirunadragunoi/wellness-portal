@@ -5,7 +5,7 @@
     :style="active && color ? { background: color + '22', color, borderColor: color + '55' } : {}"
     @click="emit('click')"
   >
-    <span v-if="emoji" class="chip__emoji">{{ emoji }}</span>
+    <Icon v-if="icon" :icon="icon" class="chip__icon app-icon app-icon--sm" />
     <slot />
   </button>
 </template>
@@ -14,7 +14,7 @@
 defineProps({
   active: { type: Boolean, default: false },
   small:  { type: Boolean, default: false },
-  emoji:  { type: String,  default: '' },
+  icon:   { type: String,  default: '' },
   color:  { type: String,  default: '' }
 })
 const emit = defineEmits(['click'])
@@ -49,5 +49,6 @@ const emit = defineEmits(['click'])
   border-color: var(--sky-300);
 }
 .chip--small { padding: 6px 12px; font-size: 13px; }
-.chip__emoji { font-size: 15px; }
+.chip__icon { color: var(--text-secondary); }
+.chip--active .chip__icon { color: inherit; }
 </style>

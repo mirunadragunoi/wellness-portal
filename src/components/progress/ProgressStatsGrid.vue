@@ -1,7 +1,7 @@
 <template>
   <div class="stats-grid">
     <div v-for="stat in stats" :key="stat.label" class="stat-card">
-      <span class="stat-card__icon">{{ stat.icon }}</span>
+      <Icon :icon="stat.icon" class="stat-card__icon app-icon app-icon--xl" />
       <span class="stat-card__value">{{ stat.value }}</span>
       <span class="stat-card__label">{{ t(stat.labelKey) }}</span>
     </div>
@@ -17,10 +17,10 @@ const { t }         = useI18n()
 const progressStore = useProgressStore()
 
 const stats = computed(() => [
-  { icon: '🧘', value: progressStore.totalSessions,        labelKey: 'progress.total_sessions' },
-  { icon: '⏱',  value: progressStore.totalTimeFormatted,   labelKey: 'progress.total_time'     },
-  { icon: '🔥', value: `${progressStore.streakDays}d`,     labelKey: 'progress.current_streak' },
-  { icon: '🏆', value: `${progressStore.longestStreak}d`,  labelKey: 'progress.longest_streak' }
+  { icon: 'lucide:headphones', value: progressStore.totalSessions,        labelKey: 'progress.total_sessions' },
+  { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted,   labelKey: 'progress.total_time'     },
+  { icon: 'lucide:flame',      value: `${progressStore.streakDays}d`,     labelKey: 'progress.current_streak' },
+  { icon: 'lucide:trophy',     value: `${progressStore.longestStreak}d`,  labelKey: 'progress.longest_streak' }
 ])
 </script>
 
@@ -34,7 +34,7 @@ const stats = computed(() => [
   border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
   text-align: center;
 }
-.stat-card__icon  { font-size: 28px; }
+.stat-card__icon { color: var(--sky-600); }
 .stat-card__value { font-family: var(--font-display); font-size: 32px; font-weight: 300; color: var(--text-primary); line-height: 1; }
 .stat-card__label { font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
 

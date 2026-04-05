@@ -1,3 +1,5 @@
+import { CATEGORY_ICONS } from '@/constants/appIcons'
+
 // ═══════════════════════════════════════════════
 // PHRASES OF THE DAY
 // ═══════════════════════════════════════════════
@@ -95,12 +97,12 @@ export const breathingTypes = {
 // ═══════════════════════════════════════════════
 
 export const categories = [
-  { id: 'stress',      label: 'Stress',      emoji: '🌊', color: '#0ea5e9', bg: '#e0f2fe' },
-  { id: 'anxiety',     label: 'Anxiety',     emoji: '🌸', color: '#8b5cf6', bg: '#ede9fe' },
-  { id: 'sleep',       label: 'Sleep',       emoji: '🌙', color: '#3730a3', bg: '#e0e7ff' },
-  { id: 'focus',       label: 'Focus',       emoji: '🎯', color: '#b45309', bg: '#fef3c7' },
-  { id: 'mindfulness', label: 'Mindfulness', emoji: '🧘', color: '#16a34a', bg: '#d4e6d0' },
-  { id: 'energy',      label: 'Energy',      emoji: '⚡', color: '#f59e0b', bg: '#fef9c3' }
+  { id: 'stress',      label: 'Stress',      icon: CATEGORY_ICONS.stress,      color: '#0ea5e9', bg: '#e0f2fe' },
+  { id: 'anxiety',     label: 'Anxiety',     icon: CATEGORY_ICONS.anxiety,     color: '#8b5cf6', bg: '#ede9fe' },
+  { id: 'sleep',       label: 'Sleep',       icon: CATEGORY_ICONS.sleep,       color: '#3730a3', bg: '#e0e7ff' },
+  { id: 'focus',       label: 'Focus',       icon: CATEGORY_ICONS.focus,       color: '#b45309', bg: '#fef3c7' },
+  { id: 'mindfulness', label: 'Mindfulness', icon: CATEGORY_ICONS.mindfulness, color: '#16a34a', bg: '#d4e6d0' },
+  { id: 'energy',      label: 'Energy',      icon: CATEGORY_ICONS.energy,      color: '#f59e0b', bg: '#fef9c3' }
 ]
 
 // Map onboarding objectives → categories

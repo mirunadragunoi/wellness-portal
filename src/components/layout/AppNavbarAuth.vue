@@ -2,9 +2,11 @@
   <nav class="navbar-auth" :class="{ 'navbar-auth--scrolled': scrolled }">
     <div class="navbar-auth__inner">
       <!-- Logo -->
-      <RouterLink to="/home" class="navbar-auth__logo">
-        <div class="logo-icon">🌿</div>
-        <span class="logo-text">Serenity</span>
+      <RouterLink :to="{ name: 'landing' }" class="navbar-auth__logo">
+        <div class="logo-icon">
+          <Icon :icon="BRAND_ICON" class="logo-icon__svg app-icon app-icon--md" />
+        </div>
+        <span class="logo-text">{{ t('brand.name') }}</span>
       </RouterLink>
 
       <!-- Desktop Nav -->
@@ -34,10 +36,14 @@
       <!-- Right: Avatar + streak -->
       <div class="navbar-auth__right">
         <div class="streak-pill" title="Current streak">
-          🔥 {{ progressStore.streakDays }}
+          <Icon icon="lucide:flame" class="app-icon app-icon--sm" aria-hidden="true" />
+          {{ progressStore.streakDays }}
         </div>
         <RouterLink to="/profile" class="avatar-btn">
-          <span class="avatar-emoji">{{ avatarEmojis[userStore.avatar] || '🧘' }}</span>
+          <Icon
+            :icon="AVATAR_ICONS[userStore.avatar] || AVATAR_ICONS['avatar-1']"
+            class="avatar-btn__icon app-icon app-icon--md app-icon--primary"
+          />
         </RouterLink>
       </div>
     </div>
@@ -50,17 +56,13 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useProgressStore } from '@/stores/progress'
+import { AVATAR_ICONS, BRAND_ICON } from '@/constants/appIcons'
 
 const { t } = useI18n()
 const route = useRoute()
 const userStore    = useUserStore()
 const progressStore = useProgressStore()
 const scrolled = ref(false)
-
-const avatarEmojis = {
-  'avatar-1': '🧘', 'avatar-2': '🌸', 'avatar-3': '🌿',
-  'avatar-4': '✨', 'avatar-5': '🦋', 'avatar-6': '🌊'
-}
 
 function onScroll() { scrolled.value = window.scrollY > 10 }
 onMounted(() => window.addEventListener('scroll', onScroll))
@@ -80,7 +82,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  padding: 0 var(--container-pad);
   height: var(--navbar-height);
   background: rgba(240, 249, 255, 0.92);
   backdrop-filter: blur(20px);
@@ -101,8 +103,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   border-radius: 10px;
   background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+  color: white;
 }
+.logo-icon__svg { color: inherit; }
 .logo-text {
   font-family: var(--font-display);
   font-size: 22px;
@@ -118,7 +121,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 }
 .nav-link {
   display: block;
-  padding: 8px 16px;
+  padding: 8px clamp(10px, 1.2vw, 16px);
   border-radius: 100px;
   font-size: 14px;
   font-weight: 500;
@@ -138,7 +141,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .streak-pill {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 6px 14px;
   background: var(--warm-100);
   border-radius: 100px;
@@ -153,7 +156,6 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   border-radius: 50%;
   background: var(--sky-100);
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
   text-decoration: none;
   border: 2px solid var(--sky-200);
   transition: all var(--duration-fast);
@@ -163,8 +165,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   transform: scale(1.05);
 }
 
+@media (max-width: 1024px) {
+  .navbar-auth__links { gap: 0; }
+  .nav-link { font-size: 13px; }
+}
+
 @media (max-width: 768px) {
-  .navbar-auth__inner { padding: 0 16px; }
   .navbar-auth__links { display: none; }
 }
 </style>

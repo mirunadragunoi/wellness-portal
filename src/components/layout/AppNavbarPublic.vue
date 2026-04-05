@@ -3,8 +3,10 @@
     <div class="navbar__inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar__logo">
-        <div class="navbar__logo-icon">🌿</div>
-        <span class="navbar__logo-text">Serenity</span>
+        <div class="navbar__logo-icon">
+          <Icon :icon="BRAND_ICON" class="app-icon app-icon--md" />
+        </div>
+        <span class="navbar__logo-text">{{ t('brand.name') }}</span>
       </RouterLink>
 
       <!-- Desktop links -->
@@ -44,6 +46,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { BRAND_ICON } from '@/constants/appIcons'
 
 const { t } = useI18n()
 const scrolled    = ref(false)
@@ -66,7 +69,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 48px;
+  padding: 16px var(--container-pad);
   background: rgba(240, 249, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -94,7 +97,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   border-radius: 12px;
   background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
+  color: white;
 }
 .navbar__logo-text {
   font-family: var(--font-display);
@@ -190,7 +193,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 }
 
 @media (max-width: 768px) {
-  .navbar__inner { padding: 14px 20px; }
+  .navbar__inner { padding-top: 14px; padding-bottom: 14px; }
   .navbar__links, .navbar__actions { display: none; }
   .navbar__burger { display: flex; }
 }

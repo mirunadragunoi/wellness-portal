@@ -4,9 +4,13 @@
     <div class="session-card__img" :style="{ background: session.thumbnailGradient }">
       <span class="session-card__badge" :style="badgeStyle">{{ session.category }}</span>
       <div class="session-card__play-overlay">
-        <button class="play-btn" @click.stop="emit('play', session)">▶</button>
+        <button type="button" class="play-btn" aria-label="Play" @click.stop="emit('play', session)">
+          <Icon icon="lucide:play" class="app-icon app-icon--lg" />
+        </button>
       </div>
-      <span class="session-card__type">{{ typeEmoji }}</span>
+      <span class="session-card__type">
+        <Icon :icon="sessionTypeIcon(session.type)" class="app-icon app-icon--sm" />
+      </span>
     </div>
 
     <!-- Body -->
@@ -26,7 +30,10 @@
       @click.stop="emit('favorite', session.id)"
       :aria-label="t('player.add_favorite')"
     >
-      {{ isFavorite ? '❤️' : '🤍' }}
+      <Icon
+        :icon="isFavorite ? 'mdi:heart' : 'lucide:heart'"
+        class="session-card__fav-icon app-icon app-icon--md"
+      />
     </button>
   </div>
 </template>
@@ -35,6 +42,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
+import { sessionTypeIcon } from '@/constants/appIcons'
 
 const { t } = useI18n()
 const props = defineProps({ session: { type: Object, required: true } })
@@ -55,9 +63,6 @@ const badgeStyle = computed(() => {
   const c = categoryColors[props.session.category] || { bg: '#f1f5f9', color: '#475569' }
   return { background: c.bg, color: c.color }
 })
-
-const typeEmojiMap = { meditation: '🧘', 'sleep-story': '🌙', soundscape: '🎵', motivational: '⚡', breathing: '💨' }
-const typeEmoji = computed(() => typeEmojiMap[props.session.type] || '🧘')
 
 const durationLabel = computed(() => {
   const m = Math.round(props.session.duration / 60)
@@ -94,13 +99,20 @@ const durationLabel = computed(() => {
 .play-btn {
   width: 52px; height: 52px; border-radius: 50%;
   background: rgba(255,255,255,0.95); border: none; cursor: pointer;
-  font-size: 18px; display: flex; align-items: center; justify-content: center;
-  padding-left: 3px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--sky-800);
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   transition: transform var(--duration-fast) var(--ease-bounce);
 }
 .play-btn:hover { transform: scale(1.1); }
-.session-card__type { position: absolute; bottom: 10px; right: 10px; font-size: 18px; }
+.session-card__type {
+  position: absolute; bottom: 10px; right: 10px;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: rgba(255,255,255,0.92);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--sky-700);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
 
 .session-card__body { padding: 14px 14px 40px; }
 .session-card__title {
@@ -111,11 +123,13 @@ const durationLabel = computed(() => {
 
 .session-card__fav {
   position: absolute; bottom: 12px; right: 12px;
-  background: none; border: none; cursor: pointer; font-size: 18px;
+  background: none; border: none; cursor: pointer;
   transition: transform var(--duration-fast) var(--ease-bounce);
   padding: 4px;
+  color: var(--text-muted);
 }
-.session-card__fav:hover { transform: scale(1.3); }
-.session-card__fav--active { animation: fav-pop 0.3s var(--ease-bounce); }
+.session-card__fav-icon { color: inherit; }
+.session-card__fav--active { color: #e11d48; animation: fav-pop 0.3s var(--ease-bounce); }
+.session-card__fav:hover { transform: scale(1.15); color: #e11d48; }
 @keyframes fav-pop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.4); } }
 </style>

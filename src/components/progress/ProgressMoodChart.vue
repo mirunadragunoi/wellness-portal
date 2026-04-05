@@ -9,7 +9,11 @@
       <div class="mood-bars">
         <div v-for="day in moodStore.last7Days" :key="day.date" class="mood-bar-wrap">
           <div class="mood-bar-col">
-            <span v-if="day.emoji" class="mood-bar-emoji">{{ day.emoji }}</span>
+            <Icon
+              v-if="day.icon"
+              :icon="day.icon"
+              class="mood-bar-icon app-icon app-icon--sm app-icon--muted"
+            />
             <div
               class="mood-bar"
               :style="{
@@ -56,7 +60,7 @@ function moodGradient(value) {
 .mood-bars { display: flex; gap: 8px; align-items: flex-end; height: 120px; }
 .mood-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; height: 100%; }
 .mood-bar-col  { flex: 1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; }
-.mood-bar-emoji { font-size: 16px; }
+.mood-bar-icon { margin-bottom: 2px; }
 .mood-bar {
   width: 100%; max-width: 36px; border-radius: 6px 6px 0 0;
   min-height: 4px; transition: height 0.6s var(--ease-smooth);

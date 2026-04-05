@@ -1,6 +1,7 @@
 <template>
   <div class="landing">
-    <AppNavbarPublic />
+    <!-- Logged-in users already have AppNavbarAuth from App.vue -->
+    <AppNavbarPublic v-if="!authStore.isLoggedIn" />
 
     <main>
       <LandingHero />
@@ -12,11 +13,13 @@
       <LandingFinalCTA />
     </main>
 
-    <AppFooter />
-
     <!-- Quiz float button -->
-    <RouterLink to="/onboarding" class="quiz-float">
-      <span class="quiz-float__icon">✦</span>
+    <RouterLink
+      to="/onboarding"
+      class="quiz-float"
+      :class="{ 'quiz-float--auth-mobile': authStore.isLoggedIn }"
+    >
+      <Icon icon="lucide:sparkles" class="quiz-float__icon app-icon app-icon--md" />
       {{ t('quizFloat') }}
     </RouterLink>
   </div>
@@ -24,8 +27,8 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 import AppNavbarPublic   from '@/components/layout/AppNavbarPublic.vue'
-import AppFooter         from '@/components/layout/AppFooter.vue'
 import LandingHero       from '@/components/landing/LandingHero.vue'
 import LandingFeatures   from '@/components/landing/LandingFeatures.vue'
 import LandingHowItWorks from '@/components/landing/LandingHowItWorks.vue'
@@ -34,11 +37,21 @@ import LandingMetrics    from '@/components/landing/LandingMetrics.vue'
 import LandingTestimonials from '@/components/landing/LandingTestimonials.vue'
 import LandingFinalCTA   from '@/components/landing/LandingFinalCTA.vue'
 const { t } = useI18n()
+const authStore = useAuthStore()
 </script>
 
 <style scoped>
-.landing { min-height: 100vh; display: flex; flex-direction: column; }
-main { flex: 1; }
+/* flex: 1 alone = flex-basis 0%, which can cap <main> to the viewport and clip sections below the hero */
+.landing {
+  min-height: var(--app-min-height);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+main {
+  flex: 1 0 auto;
+  min-height: min-content;
+}
 
 .quiz-float {
   position: fixed; bottom: 32px; left: 32px; z-index: 60;
@@ -55,5 +68,10 @@ main { flex: 1; }
 
 @media (max-width: 640px) {
   .quiz-float { bottom: 20px; left: 20px; right: 20px; justify-content: center; }
+}
+@media (max-width: 768px) {
+  .quiz-float--auth-mobile {
+    bottom: calc(var(--bottom-bar-height) + 12px + env(safe-area-inset-bottom, 0px));
+  }
 }
 </style>

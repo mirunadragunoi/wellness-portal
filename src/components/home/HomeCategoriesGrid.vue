@@ -8,7 +8,7 @@
         class="cat-btn"
         :style="{ background: cat.bg, color: cat.color }"
       >
-        <span class="cat-btn__emoji">{{ cat.emoji }}</span>
+        <Icon :icon="cat.icon" class="cat-btn__icon app-icon app-icon--sm" />
         <span class="cat-btn__label">{{ cat.label }}</span>
       </RouterLink>
     </div>
@@ -41,5 +41,5 @@ const userCategories = computed(() => {
   border: none; cursor: pointer;
 }
 .cat-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); filter: brightness(0.95); }
-.cat-btn__emoji { font-size: 18px; }
+.cat-btn__icon { opacity: 0.95; }
 </style>

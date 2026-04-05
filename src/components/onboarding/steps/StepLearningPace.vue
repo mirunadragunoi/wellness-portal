@@ -7,7 +7,7 @@
         class="pace-card" :class="{ 'pace-card--active': selected === opt.id }"
         @click="selected = opt.id"
       >
-        <span class="pace-card__emoji">{{ opt.emoji }}</span>
+        <Icon :icon="ONBOARDING_PACE_ICONS[opt.id]" class="pace-card__icon app-icon app-icon--lg app-icon--primary" />
         <strong class="pace-card__label">{{ t(opt.labelKey) }}</strong>
         <span class="pace-card__desc">{{ t(opt.descKey) }}</span>
       </button>
@@ -21,13 +21,15 @@
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ONBOARDING_PACE_ICONS } from '@/constants/appIcons'
+
 const { t } = useI18n()
 const emit = defineEmits(['next'])
 const selected = ref('')
 const options = [
-  { id: 'fast',     emoji: '⚡', labelKey: 'onboarding.pace_fast',     descKey: 'onboarding.pace_fast_desc'     },
-  { id: 'balanced', emoji: '🌊', labelKey: 'onboarding.pace_balanced', descKey: 'onboarding.pace_balanced_desc' },
-  { id: 'slow',     emoji: '🌸', labelKey: 'onboarding.pace_slow',     descKey: 'onboarding.pace_slow_desc'     }
+  { id: 'fast',     labelKey: 'onboarding.pace_fast',     descKey: 'onboarding.pace_fast_desc'     },
+  { id: 'balanced', labelKey: 'onboarding.pace_balanced', descKey: 'onboarding.pace_balanced_desc' },
+  { id: 'slow',     labelKey: 'onboarding.pace_slow',     descKey: 'onboarding.pace_slow_desc'     }
 ]
 </script>
 
@@ -43,7 +45,7 @@ const options = [
 }
 .pace-card:hover { border-color: var(--sky-300); background: var(--sky-50); transform: translateY(-3px); }
 .pace-card--active { border-color: var(--sky-500); background: var(--sky-50); box-shadow: 0 0 0 3px rgba(14,165,233,0.12); }
-.pace-card__emoji { font-size: 32px; }
+.pace-card__icon { flex-shrink: 0; }
 .pace-card__label { font-size: 16px; font-weight: 600; color: var(--text-primary); }
 .pace-card__desc  { font-size: 13px; color: var(--text-secondary); text-align: center; }
 .step-btn {

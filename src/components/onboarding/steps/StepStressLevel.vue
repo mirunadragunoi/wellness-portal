@@ -7,7 +7,7 @@
         class="option" :class="{ 'option--active': selected === opt.id }"
         @click="selected = opt.id"
       >
-        <span class="option__emoji">{{ opt.emoji }}</span>
+        <Icon :icon="ONBOARDING_STRESS_ICONS[opt.id]" class="option__icon app-icon app-icon--md app-icon--primary" />
         <span class="option__label">{{ t(opt.labelKey) }}</span>
       </button>
     </div>
@@ -20,14 +20,16 @@
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ONBOARDING_STRESS_ICONS } from '@/constants/appIcons'
+
 const { t } = useI18n()
 const emit = defineEmits(['next'])
 const selected = ref('')
 const options = [
-  { id: 'always',    emoji: '😰', labelKey: 'onboarding.stress_always'    },
-  { id: 'often',     emoji: '😟', labelKey: 'onboarding.stress_often'     },
-  { id: 'sometimes', emoji: '😐', labelKey: 'onboarding.stress_sometimes' },
-  { id: 'rarely',    emoji: '😌', labelKey: 'onboarding.stress_rarely'    }
+  { id: 'always',    labelKey: 'onboarding.stress_always'    },
+  { id: 'often',     labelKey: 'onboarding.stress_often'     },
+  { id: 'sometimes', labelKey: 'onboarding.stress_sometimes' },
+  { id: 'rarely',    labelKey: 'onboarding.stress_rarely'    }
 ]
 </script>
 
@@ -44,7 +46,7 @@ const options = [
 }
 .option:hover { border-color: var(--sky-300); background: var(--sky-50); transform: translateX(4px); }
 .option--active { border-color: var(--sky-500); background: var(--sky-50); box-shadow: 0 0 0 3px rgba(14,165,233,0.12); }
-.option__emoji { font-size: 26px; flex-shrink: 0; }
+.option__icon { flex-shrink: 0; }
 .option__label { font-size: 16px; font-weight: 500; color: var(--text-primary); }
 .step-btn {
   width: 100%; max-width: 360px; padding: 16px; border-radius: 100px; border: none; cursor: pointer;

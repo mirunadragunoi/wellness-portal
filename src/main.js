@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import { Icon } from '@iconify/vue'
 
 import App    from './App.vue'
 import router from './router/index.js'
@@ -19,6 +20,7 @@ pinia.use(piniaPluginPersistedstate)
 
 // Bootstrap app
 const app = createApp(App)
+app.component('Icon', Icon)
 
 app.use(pinia)
 app.use(router)

@@ -1,12 +1,14 @@
 <template>
   <div class="post-session">
-    <div class="post-session__check">✓</div>
+    <div class="post-session__check">
+      <Icon icon="lucide:check" class="app-icon app-icon--2xl" />
+    </div>
     <h2 class="post-session__title">{{ t('player.completed_title') }}</h2>
     <p class="post-session__body">{{ t('player.completed_body', { title: session?.title }) }}</p>
 
     <!-- Streak update -->
     <div class="post-session__streak">
-      <span class="streak-fire">🔥</span>
+      <Icon icon="lucide:flame" class="streak-fire app-icon app-icon--xl" aria-hidden="true" />
       <div>
         <p class="streak-value">{{ progressStore.streakDays }} {{ t('common.days') }}</p>
         <p class="streak-label">{{ t('player.streak_updated') }}</p>
@@ -18,7 +20,7 @@
       <p class="post-session__mood-q">{{ t('player.post_mood_prompt') }}</p>
       <div class="mood-options">
         <button v-for="m in moodOptions" :key="m.id" class="mood-btn" @click="checkMood(m.id)">
-          <span>{{ m.emoji }}</span>
+          <Icon :icon="m.icon" class="app-icon app-icon--md app-icon--muted" />
           <span>{{ t(`home.mood_${m.id}`) }}</span>
         </button>
       </div>
@@ -84,7 +86,7 @@ function checkMood(id) {
   width: 80px; height: 80px; border-radius: 50%;
   background: linear-gradient(135deg, #d1fae5, #6ee7b7);
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px; color: #059669;
+  color: #059669;
   animation: bounceIn 0.6s var(--ease-bounce);
 }
 @keyframes bounceIn { 0% { transform: scale(0.3); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
@@ -97,7 +99,7 @@ function checkMood(id) {
   border-radius: var(--radius-lg); padding: 20px 28px;
   width: 100%;
 }
-.streak-fire  { font-size: 36px; }
+.streak-fire { color: #ea580c; flex-shrink: 0; }
 .streak-value { font-family: var(--font-display); font-size: 28px; font-weight: 300; color: var(--text-primary); }
 .streak-label { font-size: 14px; color: var(--text-secondary); }
 

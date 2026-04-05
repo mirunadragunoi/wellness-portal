@@ -28,8 +28,9 @@
         </Transition>
 
         <!-- Back nav -->
-        <button class="session-view__back" @click="goBack">
-          <span>←</span> {{ t('common.back') }}
+        <button type="button" class="session-view__back" @click="goBack">
+          <Icon icon="lucide:arrow-left" class="app-icon app-icon--sm" aria-hidden="true" />
+          {{ t('common.back') }}
         </button>
       </div>
 
@@ -86,7 +87,7 @@ function goBack() {
 
 <style scoped>
 .session-view {
-  min-height: 100vh;
+  min-height: var(--app-min-height);
   display: flex;
   flex-direction: column;
 }
@@ -125,7 +126,7 @@ function goBack() {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  min-height: 100vh;
+  min-height: var(--app-min-height);
   color: var(--text-secondary);
 }
 .session-view__explore-btn {

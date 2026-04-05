@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import dayjs from 'dayjs'
+import { MOOD_ICONS } from '@/constants/appIcons'
 
 export const useMoodStore = defineStore('mood', {
   state: () => ({
     todayMood: null,
     moodCheckedToday: false,
     lastCheckinDate: null,
-    moodHistory: [] // [{ date: 'YYYY-MM-DD', mood: 'bright', emoji: '😊' }]
+    moodHistory: [] // [{ date, mood, value }]
   }),
 
   getters: {
@@ -16,11 +17,12 @@ export const useMoodStore = defineStore('mood', {
       for (let i = 6; i >= 0; i--) {
         const date = dayjs().subtract(i, 'day').format('YYYY-MM-DD')
         const entry = state.moodHistory.find(m => m.date === date)
+        const opt = entry?.mood ? moodOptions.find(m => m.id === entry.mood) : null
         days.push({
           date,
           label: dayjs().subtract(i, 'day').format('ddd'),
           mood: entry?.mood || null,
-          emoji: entry?.emoji || null,
+          icon: opt?.icon || null,
           value: entry ? moodValues[entry.mood] : null
         })
       }
@@ -39,7 +41,7 @@ export const useMoodStore = defineStore('mood', {
 
       // Update or add to history
       const existingIdx = this.moodHistory.findIndex(m => m.date === today)
-      const entry = { date: today, mood, emoji: moodData?.emoji || '😐', value: moodValues[mood] }
+      const entry = { date: today, mood, value: moodValues[mood] }
 
       if (existingIdx >= 0) {
         this.moodHistory[existingIdx] = entry
@@ -65,11 +67,11 @@ export const useMoodStore = defineStore('mood', {
 })
 
 export const moodOptions = [
-  { id: 'low',     emoji: '😔', label: 'Low',     color: '#94a3b8' },
-  { id: 'foggy',   emoji: '😐', label: 'Foggy',   color: '#64748b' },
-  { id: 'okay',    emoji: '🙂', label: 'Okay',    color: '#38bdf8' },
-  { id: 'bright',  emoji: '😊', label: 'Bright',  color: '#0ea5e9' },
-  { id: 'glowing', emoji: '🤩', label: 'Glowing', color: '#f59e0b' }
+  { id: 'low',     icon: MOOD_ICONS.low,     label: 'Low',     color: '#94a3b8' },
+  { id: 'foggy',   icon: MOOD_ICONS.foggy,   label: 'Foggy',   color: '#64748b' },
+  { id: 'okay',    icon: MOOD_ICONS.okay,    label: 'Okay',    color: '#38bdf8' },
+  { id: 'bright',  icon: MOOD_ICONS.bright,  label: 'Bright',  color: '#0ea5e9' },
+  { id: 'glowing', icon: MOOD_ICONS.glowing, label: 'Glowing', color: '#f59e0b' }
 ]
 
 export const moodValues = {

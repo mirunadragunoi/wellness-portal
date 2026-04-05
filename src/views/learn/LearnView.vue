@@ -36,7 +36,7 @@
           />
         </div>
         <div v-else class="learn-view__empty">
-          <span>📖</span>
+          <Icon icon="lucide:book-open" class="app-icon app-icon--2xl app-icon--muted" />
           <p>{{ t('learn.no_results') }}</p>
         </div>
       </Transition>
@@ -86,8 +86,8 @@ function toggleBookmark(id) {
 
 <style scoped>
 .learn-view {
-  padding: 40px 0 120px;
-  min-height: 100vh;
+  padding: 40px 0 var(--page-pad-bottom-auth);
+  min-height: var(--app-min-height);
 }
 .learn-view__header {
   display: flex;
@@ -137,7 +137,7 @@ function toggleBookmark(id) {
 
 .learn-view__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 24px;
 }
 .learn-view__empty {

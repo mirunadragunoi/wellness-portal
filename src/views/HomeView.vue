@@ -30,7 +30,7 @@
                 class="quick-b-btn"
                 :style="{ background: b.bg, color: b.color }"
               >
-                <span>💨</span>
+                <Icon icon="lucide:wind" class="app-icon app-icon--sm" />
                 <span>{{ b.label }}</span>
               </RouterLink>
             </div>
@@ -71,12 +71,12 @@ const breathingShortcuts = [
 
 <style scoped>
 .home-view {
-  padding: 40px 0 120px;
-  min-height: 100vh;
+  padding: 40px 0 var(--page-pad-bottom-auth);
+  min-height: var(--app-min-height);
 }
 .home-view__grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
   gap: 32px;
   align-items: start;
 }
@@ -99,12 +99,11 @@ const breathingShortcuts = [
 }
 .quick-b-btn:hover { filter: brightness(0.95); transform: translateX(3px); }
 
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
   .home-view__grid { grid-template-columns: 1fr; }
   .home-view__aside { position: static; }
 }
 @media (max-width: 640px) {
   .home-view__two-col { grid-template-columns: 1fr; }
-  .home-view { padding-bottom: 80px; }
 }
 </style>

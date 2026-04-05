@@ -2,7 +2,9 @@
   <div class="step-proof">
     <div class="proof-visual">
       <div class="proof-community">
-        <span v-for="e in avatars" :key="e" class="proof-avatar">{{ e }}</span>
+        <span v-for="(icon, i) in COMMUNITY_PROOF_ICONS" :key="i" class="proof-avatar">
+          <Icon :icon="icon" class="app-icon app-icon--lg app-icon--primary" />
+        </span>
       </div>
     </div>
     <h2 class="proof-title">{{ t('onboarding.step4_title') }}</h2>
@@ -13,9 +15,10 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { COMMUNITY_PROOF_ICONS } from '@/constants/appIcons'
+
 const { t } = useI18n()
 const emit = defineEmits(['next'])
-const avatars = ['🧘','🌸','🌿','✨','🦋','🌊','💚','🌺','🌀','💫','🍃','🌙']
 </script>
 
 <style scoped>
@@ -26,7 +29,7 @@ const avatars = ['🧘','🌸','🌿','✨','🦋','🌊','💚','🌺','🌀','
   width: 52px; height: 52px; border-radius: 50%;
   background: var(--sky-100); border: 2px solid white;
   display: flex; align-items: center; justify-content: center;
-  font-size: 24px; box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
   animation: float-slow 4s ease-in-out infinite;
 }
 .proof-avatar:nth-child(odd) { animation-duration: 5s; }

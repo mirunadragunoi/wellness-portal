@@ -1,4 +1,7 @@
 {
+  "brand": {
+    "name": "Wellness portal"
+  },
   "nav": {
     "explore": "Explore",
     "learn": "Learn",
@@ -57,7 +60,7 @@
     "m1_label": "report less stress after just 2 weeks of daily practice",
     "m2_value": "12k+",
     "m2_label": "people have found their calm using our guided sessions",
-    "m3_value": "4.8★",
+    "m3_value": "4.8",
     "m3_label": "average rating from our community of practitioners"
   },
   "testimonials": {
@@ -86,7 +89,7 @@
     "contact": "Contact",
     "terms": "Terms",
     "privacy": "Privacy",
-    "copy": "© 2026 Serenity. All rights reserved."
+    "copy": "© 2026 Wellness portal. All rights reserved."
   },
   "quizFloat": "Take the Wellness Quiz",
   "auth": {
@@ -121,7 +124,7 @@
     "stress_sometimes": "Sometimes",
     "stress_rarely": "Rarely",
     "step4_title": "You're in good company",
-    "step4_body": "Serenity has helped thousands of people reduce stress and sleep better.",
+    "step4_body": "Wellness portal has helped thousands of people reduce stress and sleep better.",
     "step5_title": "Your experience with meditation?",
     "exp_new": "Brand new",
     "exp_tried": "I've tried it",
@@ -173,7 +176,7 @@
     "streak_label": "Day Streak",
     "streak_weeks": "{n} of 7 days completed",
     "recommended_title": "Recommended for you",
-    "see_all": "See all →",
+    "see_all": "See all",
     "moment_title": "Moment of the Day",
     "phrase_title": "Phrase of the Day",
     "categories_title": "Your Categories",
@@ -250,6 +253,9 @@
     "read_time": "{n} min read",
     "bookmark": "Bookmark",
     "bookmarked": "Bookmarked",
+    "more_articles": "More articles",
+    "browse_sessions": "Browse sessions",
+    "back_to_learn": "Back to Learn",
     "no_results": "No articles found."
   },
   "progress": {
@@ -275,6 +281,7 @@
     "name_label": "Name",
     "phone_label": "Phone number",
     "objectives_label": "Your goals",
+    "edit_goals": "Edit goals",
     "favorites_title": "Favorites",
     "no_favorites": "No favorites yet.",
     "account_title": "Account",

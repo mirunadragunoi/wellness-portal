@@ -32,7 +32,7 @@ const { t } = useI18n()
 </script>
 
 <style scoped>
-.progress-view { padding: 40px 0 120px; min-height: 100vh; }
+.progress-view { padding: 40px 0 var(--page-pad-bottom-auth); min-height: var(--app-min-height); }
 .progress-view__header { margin-bottom: 32px; }
 .progress-view__title {
   font-family: var(--font-display);
@@ -42,7 +42,7 @@ const { t } = useI18n()
 .progress-view__grid  { display: flex; flex-direction: column; gap: 32px; }
 .progress-view__two-col {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 28px;
   align-items: start;
 }

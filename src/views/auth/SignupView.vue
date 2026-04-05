@@ -1,6 +1,9 @@
 <template>
   <div class="auth-page">
-    <RouterLink to="/" class="auth-page__logo">🌿 Serenity</RouterLink>
+    <RouterLink to="/" class="auth-page__logo">
+      <Icon :icon="BRAND_ICON" class="auth-page__logo-icon app-icon app-icon--lg" />
+      {{ t('brand.name') }}
+    </RouterLink>
 
     <div class="auth-card">
       <h1 class="auth-card__title">{{ t('auth.signup_title') }}</h1>
@@ -52,6 +55,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { BRAND_ICON } from '@/constants/appIcons'
 
 const { t }    = useI18n()
 const router   = useRouter()
@@ -80,15 +84,18 @@ async function submit() {
 
 <style scoped>
 .auth-page {
-  min-height: 100vh; display: flex; flex-direction: column;
+  min-height: var(--app-min-height); display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   background: var(--bg-base); padding: 24px;
   gap: 32px;
+  box-sizing: border-box;
 }
 .auth-page__logo {
+  display: inline-flex; align-items: center; gap: 12px;
   font-family: var(--font-display); font-size: 28px; font-weight: 500;
   color: var(--text-primary); text-decoration: none;
 }
+.auth-page__logo-icon { color: var(--sky-600); flex-shrink: 0; }
 .auth-card {
   width: 100%; max-width: 440px;
   background: var(--bg-surface); border: 1px solid var(--border-subtle);

@@ -9,11 +9,16 @@
       <div class="article-card__meta">
         <span class="article-card__time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
         <button
+          type="button"
           class="article-card__bookmark"
           :class="{ active: bookmarked }"
+          :aria-label="bookmarked ? t('learn.bookmarked') : t('learn.bookmark')"
           @click.prevent="emit('bookmark', article.id)"
         >
-          {{ bookmarked ? '🔖' : '🏷️' }}
+          <Icon
+            :icon="bookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'"
+            class="app-icon app-icon--md"
+          />
         </button>
       </div>
     </div>
@@ -57,8 +62,11 @@ const emit = defineEmits(['bookmark'])
 .article-card__meta { display: flex; align-items: center; justify-content: space-between; }
 .article-card__time { font-size: 13px; color: var(--text-muted); }
 .article-card__bookmark {
-  background: none; border: none; cursor: pointer; font-size: 18px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
   transition: transform var(--duration-fast) var(--ease-bounce); padding: 4px;
 }
+.article-card__bookmark.active { color: var(--sky-600); }
 .article-card__bookmark:hover { transform: scale(1.3); }
 </style>
