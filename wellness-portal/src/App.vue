@@ -1,0 +1,120 @@
+<template>
+  <div class="app" :data-theme="userStore.darkMode ? 'dark' : 'light'">
+
+    <!-- Authenticated layout -->
+    <template v-if="authStore.isLoggedIn">
+      <AppNavbarAuth />
+
+      <main class="app-main app-main--auth">
+        <RouterView v-slot="{ Component }">
+          <Transition name="page" mode="out-in">
+            <component :is="Component" />
+          </Transition>
+        </RouterView>
+      </main>
+
+      <!-- Mobile bottom navigation -->
+      <AppBottomBar />
+
+      <!-- Persistent mini player (shown when session is playing + not on session page) -->
+      <AppMiniPlayer v-if="playerStore.isVisible && !isSessionPage" />
+
+      <!-- SOS floating button (desktop) -->
+      <AppSOSButton />
+
+      <!-- SOS overlay -->
+      <Transition name="fade">
+        <AppSOSOverlay v-if="uiStore.sosOpen" />
+      </Transition>
+    </template>
+
+    <!-- Public layout -->
+    <template v-else>
+      <RouterView v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
+    </template>
+
+    <!-- Global toast notifications -->
+    <BaseToast />
+  </div>
+</template>
+
+<script setup>
+import { computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { useAuthStore }   from '@/stores/auth'
+import { useUserStore }   from '@/stores/user'
+import { usePlayerStore } from '@/stores/player'
+import { useUIStore }     from '@/stores/ui'
+
+import AppNavbarAuth  from '@/components/layout/AppNavbarAuth.vue'
+import AppBottomBar   from '@/components/layout/AppBottomBar.vue'
+import AppMiniPlayer  from '@/components/layout/AppMiniPlayer.vue'
+import AppSOSButton   from '@/components/layout/AppSOSButton.vue'
+import AppSOSOverlay  from '@/components/layout/AppSOSOverlay.vue'
+import BaseToast      from '@/components/base/BaseToast.vue'
+
+const authStore   = useAuthStore()
+const userStore   = useUserStore()
+const playerStore = usePlayerStore()
+const uiStore     = useUIStore()
+const route       = useRoute()
+
+const isSessionPage = computed(() => route.name === 'session')
+
+// Apply dark mode class on mount and on change
+function applyTheme() {
+  document.documentElement.setAttribute(
+    'data-theme',
+    userStore.darkMode ? 'dark' : 'light'
+  )
+}
+
+onMounted(applyTheme)
+watch(() => userStore.darkMode, applyTheme)
+</script>
+
+<style>
+/* These styles are global, not scoped */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main--auth {
+  /* Space for sticky navbar at top, bottom bar + mini player on mobile */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Page transition */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Fade */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
+.fade-enter-from, .fade-leave-to       { opacity: 0; }
+</style>
