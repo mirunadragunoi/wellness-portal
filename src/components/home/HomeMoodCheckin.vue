@@ -61,6 +61,7 @@ function checkIn(id) {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 24px 28px;
+  min-width: 0;
 }
 .mood-prompt__q {
   font-family: var(--font-display); font-size: 20px; font-weight: 400;
@@ -94,4 +95,36 @@ function checkIn(id) {
   padding: 6px 14px; cursor: pointer; transition: all var(--duration-fast);
 }
 .mood-done__change:hover { background: var(--sky-100); }
+
+@media (max-width: 640px) {
+  .mood-card {
+    padding: 16px;
+  }
+  .mood-prompt__q {
+    font-size: 18px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+  .mood-prompt__options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .mood-btn {
+    min-width: 0;
+    padding: 10px 8px;
+  }
+  .mood-btn__label {
+    font-size: 10px;
+  }
+  .mood-done {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .mood-done__change {
+    width: 100%;
+    text-align: center;
+  }
+}
 </style>

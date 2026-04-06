@@ -16,6 +16,7 @@ const phrase = getPhraseOfDay()
   background: linear-gradient(135deg, var(--sky-600), var(--sky-700));
   border-radius: var(--radius-lg); padding: 32px;
   position: relative; overflow: hidden;
+  min-width: 0;
 }
 .phrase-card::before {
   content: '';
@@ -33,4 +34,22 @@ const phrase = getPhraseOfDay()
   position: relative; z-index: 1;
 }
 .phrase-card__author { font-size: 14px; color: rgba(255,255,255,0.7); position: relative; z-index: 1; }
+
+@media (max-width: 640px) {
+  .phrase-card {
+    padding: 18px 16px;
+  }
+  .phrase-card__quote {
+    font-size: 54px;
+    margin-bottom: 8px;
+  }
+  .phrase-card__text {
+    font-size: 17px;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+  .phrase-card__author {
+    font-size: 13px;
+  }
+}
 </style>

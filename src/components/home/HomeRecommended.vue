@@ -123,4 +123,20 @@ function goToSession(session) {
 .session-card__body { padding: 14px; }
 .session-card__title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; line-height: 1.3; }
 .session-card__meta  { display: flex; gap: 6px; font-size: 12px; color: var(--text-muted); }
+
+@media (max-width: 640px) {
+  .recommended__header {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+  .recommended__title {
+    font-size: 20px;
+  }
+  .session-card {
+    width: 172px;
+  }
+  .session-card__img {
+    height: 116px;
+  }
+}
 </style>

@@ -51,6 +51,7 @@ const isToday = (date) => dayjs(date).isSame(dayjs(), 'day')
   border-radius: var(--radius-lg);
   padding: 24px 28px;
   display: flex; flex-direction: column; gap: 20px;
+  min-width: 0;
 }
 .streak-card__top { display: flex; align-items: center; justify-content: space-between; }
 .streak-main { display: flex; align-items: center; gap: 14px; }
@@ -84,4 +85,31 @@ const isToday = (date) => dayjs(date).isSame(dayjs(), 'day')
 }
 .streak-day__label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; }
 .streak-summary { font-size: 13px; color: var(--text-secondary); text-align: center; margin: 0; }
+
+@media (max-width: 640px) {
+  .streak-card {
+    padding: 16px;
+    gap: 14px;
+  }
+  .streak-card__top {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .streak-number {
+    font-size: 28px;
+  }
+  .streak-longest__value {
+    font-size: 13px;
+  }
+  .streak-week {
+    gap: 2px;
+  }
+  .streak-day__dot {
+    width: 24px;
+    height: 24px;
+  }
+  .streak-day__label {
+    font-size: 10px;
+  }
+}
 </style>

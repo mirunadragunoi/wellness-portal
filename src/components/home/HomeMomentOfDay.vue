@@ -40,6 +40,7 @@ function goToSession() {
   border-radius: var(--radius-lg); overflow: hidden;
   cursor: pointer; transition: all var(--duration-normal) var(--ease-smooth);
   display: flex; flex-direction: column;
+  min-width: 0;
 }
 .moment-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
 
@@ -65,4 +66,25 @@ function goToSession() {
 .moment-card__sub   { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
 .moment-card__title { font-family: var(--font-display); font-size: 24px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px; }
 .moment-card__meta  { font-size: 14px; color: var(--text-secondary); }
+
+@media (max-width: 640px) {
+  .moment-card__img {
+    height: 132px;
+    padding: 12px;
+  }
+  .moment-card__play {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .moment-card__body {
+    padding: 14px;
+  }
+  .moment-card__title {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .moment-card__meta {
+    font-size: 13px;
+  }
+}
 </style>
