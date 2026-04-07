@@ -4,6 +4,7 @@
       <h2 class="section-title">{{ t('metrics.title_1') }} <em>{{ t('metrics.title_em') }}</em></h2>
       <div class="metrics__grid">
         <div v-for="m in metrics" :key="m.valueKey" class="metric">
+          <div class="metric__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(2,132,199,0.05), rgba(2,132,199,0.35)), url(${m.image})` }" />
           <div class="metric__value">
             {{ t(m.valueKey) }}
             <Icon v-if="m.star" icon="mdi:star" class="metric__star app-icon app-icon--md" aria-hidden="true" />
@@ -17,11 +18,12 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 const metrics = [
-  { valueKey: 'metrics.m1_value', labelKey: 'metrics.m1_label' },
-  { valueKey: 'metrics.m2_value', labelKey: 'metrics.m2_label' },
-  { valueKey: 'metrics.m3_value', labelKey: 'metrics.m3_label', star: true }
+  { valueKey: 'metrics.m1_value', labelKey: 'metrics.m1_label', image: LANDING_IMAGES.metric1 },
+  { valueKey: 'metrics.m2_value', labelKey: 'metrics.m2_label', image: LANDING_IMAGES.metric2 },
+  { valueKey: 'metrics.m3_value', labelKey: 'metrics.m3_label', image: LANDING_IMAGES.metric3, star: true }
 ]
 </script>
 
@@ -46,7 +48,20 @@ const metrics = [
   grid-template-columns: repeat(3, 1fr);
   gap: 48px;
 }
-.metric { text-align: center; }
+.metric {
+  text-align: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+.metric__media {
+  height: 120px;
+  margin-bottom: 14px;
+  background-size: cover;
+  background-position: center;
+}
 .metric__value {
   font-family: var(--font-display);
   font-size: clamp(48px, 6vw, 72px);

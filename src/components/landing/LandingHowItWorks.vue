@@ -8,6 +8,7 @@
 
       <div class="steps-grid">
         <div v-for="(step, i) in steps" :key="i" class="step">
+          <div class="step__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.32)), url(${step.image})` }" />
           <div class="step__number">{{ i + 1 }}</div>
           <h3 class="step__title">{{ t(step.titleKey) }}</h3>
           <p class="step__desc">{{ t(step.descKey) }}</p>
@@ -22,12 +23,13 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 
 const steps = [
-  { titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc' },
-  { titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc' },
-  { titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc' }
+  { titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc', image: LANDING_IMAGES.howStep1 },
+  { titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc', image: LANDING_IMAGES.howStep2 },
+  { titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc', image: LANDING_IMAGES.howStep3 }
 ]
 </script>
 
@@ -60,6 +62,13 @@ const steps = [
   position: relative; z-index: 1;
 }
 .step { text-align: center; position: relative; }
+.step__media {
+  height: 124px;
+  border-radius: var(--radius);
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 16px;
+}
 .step__number {
   width: 56px; height: 56px; border-radius: 50%;
   background: linear-gradient(135deg, var(--sky-100), var(--sky-200));

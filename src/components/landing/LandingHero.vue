@@ -1,5 +1,5 @@
 <template>
-  <section class="hero">
+  <section class="hero" :style="{ backgroundImage: `linear-gradient(120deg, rgba(240,249,255,0.78), rgba(240,249,255,0.54)), url(${heroMain})` }">
     <!-- Blobs clipped here only so .hero never becomes its own scroll container
          (overflow-x:hidden on the section forces overflow-y:auto in many browsers). -->
     <div class="hero__blobs" aria-hidden="true">
@@ -36,23 +36,26 @@
         <div class="hero__proof anim-fade-up-4">
           <div class="hero__proof-avatars">
             <span
-              v-for="(ic, idx) in proofIcons"
+              v-for="(avatar, idx) in proofAvatars"
               :key="idx"
               class="hero__proof-avatar"
             >
-              <Icon :icon="ic" class="app-icon app-icon--sm" />
+              <img :src="avatar" alt="" />
             </span>
           </div>
           <span class="hero__proof-text">Joined by <strong>12,000+</strong> people finding their calm</span>
         </div>
       </div>
 
+      <!-- Mobile-only photo block (prevents awkward crop behind text) -->
+      <div class="hero__mobile-media" :style="{ backgroundImage: `url(${heroMain})` }" aria-hidden="true" />
+
       <!-- Visual side -->
       <div class="hero__visual anim-fade-up-2">
         <div class="hero__orb-wrapper">
           <div class="hero__orb-ring hero__orb-ring--1" />
           <div class="hero__orb-ring hero__orb-ring--2" />
-          <div class="hero__orb">
+          <div class="hero__orb" :style="{ backgroundImage: `linear-gradient(120deg, rgba(186,230,253,0.45), rgba(14,165,233,0.2)), url(${heroOrbBg})` }">
             <span class="hero__orb-text">Breathe...</span>
             <span class="hero__orb-hint">Inhale · Hold · Exhale</span>
           </div>
@@ -60,14 +63,17 @@
 
         <!-- Floating cards -->
         <div class="hero__card hero__card--streak">
+          <div class="hero__card-thumb" :style="{ backgroundImage: `url(${heroProof1})` }" />
           <Icon icon="lucide:flame" class="hero__card-icon app-icon app-icon--sm" />
           <strong>21 day streak</strong>
         </div>
         <div class="hero__card hero__card--mood">
+          <div class="hero__card-thumb" :style="{ backgroundImage: `url(${heroProof2})` }" />
           <Icon icon="lucide:smile" class="hero__card-icon app-icon app-icon--sm" />
           <span>Feeling <strong>Bright</strong></span>
         </div>
         <div class="hero__card hero__card--session">
+          <div class="hero__card-thumb" :style="{ backgroundImage: `url(${heroMain})` }" />
           <Icon icon="lucide:play" class="hero__card-icon app-icon app-icon--sm" />
           5 min Calm Session
         </div>
@@ -78,16 +84,12 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { heroMain, heroOrbBg, heroProof1, heroProof2 } = LANDING_IMAGES
 
-const proofIcons = [
-  'lucide:user-round',
-  'lucide:heart',
-  'lucide:leaf',
-  'lucide:sparkles',
-  'lucide:feather'
-]
+const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1, heroProof2]
 </script>
 
 <style scoped>
@@ -98,6 +100,19 @@ const proofIcons = [
   padding: clamp(88px, 12vh, 120px) 0 clamp(48px, 8vh, 80px);
   position: relative;
   overflow: visible;
+  background-size: cover;
+  background-position: 62% center;
+  background-color: #dbeafe;
+  background-blend-mode: normal;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(240,249,255,0.48) 0%, rgba(240,249,255,0.22) 55%, rgba(240,249,255,0.12) 100%);
+  backdrop-filter: saturate(1.18) contrast(1.06);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero__blobs {
@@ -135,6 +150,15 @@ const proofIcons = [
   z-index: 1;
 }
 
+.hero__text {
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: var(--radius-lg);
+  padding: clamp(16px, 2.4vw, 28px);
+}
+.hero__mobile-media { display: none; }
+
 /* Text */
 .hero__badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -159,6 +183,7 @@ const proofIcons = [
   color: var(--text-primary);
   margin-bottom: 24px;
   letter-spacing: -1.5px;
+  text-shadow: 0 2px 10px rgba(255,255,255,0.26);
 }
 .hero__title em { font-style: italic; color: var(--sky-600); font-weight: 400; }
 
@@ -167,6 +192,7 @@ const proofIcons = [
   color: var(--text-secondary);
   margin-bottom: 36px;
   max-width: 480px;
+  text-shadow: 0 1px 8px rgba(255,255,255,0.28);
 }
 
 .hero__ctas { display: flex; gap: 16px; align-items: center; margin-bottom: 32px; }
@@ -195,11 +221,14 @@ const proofIcons = [
 .hero__proof-avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: var(--sky-100);
   border: 2px solid white;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--sky-700);
+  overflow: hidden;
   margin-left: -8px;
+}
+.hero__proof-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .hero__proof-avatar:first-child { margin-left: 0; }
 .hero__proof-text { font-size: 13px; color: var(--text-secondary); }
@@ -225,12 +254,8 @@ const proofIcons = [
 .hero__orb {
   width: 300px; height: 300px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%,
-    rgba(186,230,253,0.85) 0%,
-    rgba(125,211,252,0.5) 40%,
-    rgba(14,165,233,0.15) 70%,
-    transparent 100%
-  );
+  background-size: cover;
+  background-position: center;
   animation: breathe 8s ease-in-out infinite;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -273,6 +298,15 @@ const proofIcons = [
   animation: float-slow 6s ease-in-out infinite;
 }
 .hero__card-icon { flex-shrink: 0; color: var(--sky-600); }
+.hero__card-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--sky-100);
+  flex-shrink: 0;
+}
 .hero__card--streak { top: 10%;  left: -5%;  animation-delay: 0s; }
 .hero__card--mood   { bottom: 20%; left: -8%; animation-delay: 2s; }
 .hero__card--session { top: 15%; right: -5%; animation-delay: 4s; font-size: 12px; }
@@ -283,20 +317,55 @@ const proofIcons = [
 }
 
 @media (max-width: 960px) {
-  .hero__content { grid-template-columns: 1fr; gap: 48px; }
-  .hero__visual { height: 320px; }
+  .hero {
+    background-image: none !important;
+    background-position: center;
+  }
+  .hero::after {
+    background: linear-gradient(180deg, rgba(240,249,255,0.62) 0%, rgba(240,249,255,0.46) 52%, rgba(240,249,255,0.32) 100%);
+  }
+  .hero__content { grid-template-columns: 1fr; gap: 20px; }
+  .hero__mobile-media {
+    display: block;
+    height: 280px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--sky-200);
+    box-shadow: var(--shadow-md);
+    background-size: cover;
+    background-position: 56% 18%;
+  }
+  .hero__visual { display: none; }
   .hero__orb { width: 220px; height: 220px; }
   .hero__orb-ring--1 { width: 270px; height: 270px; }
   .hero__orb-ring--2 { width: 320px; height: 320px; }
   .hero__card { display: none; }
 }
 @media (max-width: 640px) {
-  .hero { padding: 100px 0 60px; }
+  .hero {
+    padding: 96px 0 56px;
+    background-position: center;
+  }
+  .hero::after {
+    background: linear-gradient(180deg, rgba(240,249,255,0.72) 0%, rgba(240,249,255,0.58) 55%, rgba(240,249,255,0.46) 100%);
+  }
+  .hero__text {
+    padding: 14px;
+    border-radius: var(--radius);
+  }
+  .hero__mobile-media {
+    height: 230px;
+    border-radius: var(--radius);
+    background-position: 54% 16%;
+  }
   .hero__ctas { flex-direction: column; align-items: stretch; }
   .btn--lg { padding: 14px 28px; font-size: 16px; text-align: center; }
   .hero__visual { height: 260px; }
   .hero__orb { width: 180px; height: 180px; }
   .hero__orb-ring--1 { width: 220px; height: 220px; }
   .hero__orb-ring--2 { width: 260px; height: 260px; }
+}
+
+@media (max-width: 420px) {
+  .hero__mobile-media { height: 205px; background-position: 52% 14%; }
 }
 </style>

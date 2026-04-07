@@ -9,6 +9,7 @@
 
       <div class="features__grid">
         <div v-for="card in cards" :key="card.key" class="feature-card">
+          <div class="feature-card__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.08), rgba(15,23,42,0.28)), url(${card.image})` }" />
           <div class="feature-card__icon" :class="`feature-card__icon--${card.color}`">
             <Icon :icon="card.icon" class="app-icon app-icon--lg" />
           </div>
@@ -23,14 +24,15 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { FEATURE_CARD_ICONS } from '@/constants/appIcons'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
 
 const cards = [
-  { key: 'meditation', icon: FEATURE_CARD_ICONS.meditation, color: 'blue',   titleKey: 'features.card1_title', descKey: 'features.card1_desc' },
-  { key: 'breathing',  icon: FEATURE_CARD_ICONS.breathing,  color: 'green',  titleKey: 'features.card2_title', descKey: 'features.card2_desc' },
-  { key: 'tracking',   icon: FEATURE_CARD_ICONS.tracking,   color: 'amber',  titleKey: 'features.card3_title', descKey: 'features.card3_desc' },
-  { key: 'personal',   icon: FEATURE_CARD_ICONS.personal,   color: 'purple', titleKey: 'features.card4_title', descKey: 'features.card4_desc' }
+  { key: 'meditation', icon: FEATURE_CARD_ICONS.meditation, color: 'blue',   image: LANDING_IMAGES.featureMeditation, titleKey: 'features.card1_title', descKey: 'features.card1_desc' },
+  { key: 'breathing',  icon: FEATURE_CARD_ICONS.breathing,  color: 'green',  image: LANDING_IMAGES.featureBreathing,  titleKey: 'features.card2_title', descKey: 'features.card2_desc' },
+  { key: 'tracking',   icon: FEATURE_CARD_ICONS.tracking,   color: 'amber',  image: LANDING_IMAGES.featureTracking,   titleKey: 'features.card3_title', descKey: 'features.card3_desc' },
+  { key: 'personal',   icon: FEATURE_CARD_ICONS.personal,   color: 'purple', image: LANDING_IMAGES.featurePlan,       titleKey: 'features.card4_title', descKey: 'features.card4_desc' }
 ]
 </script>
 
@@ -44,7 +46,7 @@ const cards = [
 }
 
 .feature-card {
-  padding: 36px 28px;
+  padding: 0 28px 30px;
   border-radius: var(--radius-lg);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -60,6 +62,12 @@ const cards = [
 }
 .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--sky-200); }
 .feature-card:hover::before { opacity: 1; }
+.feature-card__media {
+  height: 120px;
+  margin: 0 -28px 18px;
+  background-size: cover;
+  background-position: center;
+}
 
 .feature-card__icon {
   width: 52px; height: 52px; border-radius: 14px;

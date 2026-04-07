@@ -7,7 +7,7 @@
 
       <div class="preview__grid">
         <div v-for="card in previewCards" :key="card.id" class="preview-card">
-          <div class="preview-card__img" :style="{ background: card.gradient }">
+          <div class="preview-card__img" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.35)), url(${card.image})` }">
             <span class="preview-card__badge" :class="`badge--${card.category}`">{{ card.categoryLabel }}</span>
             <button type="button" class="preview-card__play" aria-label="Play" @click="$router.push('/signup')">
               <Icon icon="lucide:play" class="app-icon app-icon--md" />
@@ -36,13 +36,14 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 
 const previewCards = [
-  { id: 1, title: '5 Minutes for Calm',    type: 'Meditation',  category: 'stress',      categoryLabel: 'Stress',      duration: 300,  gradient: 'linear-gradient(135deg, #bae6fd, #93c5fd)' },
-  { id: 2, title: 'Ocean Night Story',      type: 'Sleep Story', category: 'sleep',       categoryLabel: 'Sleep',       duration: 1200, gradient: 'linear-gradient(135deg, #c7d2fe, #a5b4fc)' },
-  { id: 3, title: 'Morning Gratitude',      type: 'Meditation',  category: 'mindfulness', categoryLabel: 'Mindfulness', duration: 600,  gradient: 'linear-gradient(135deg, #d4e6d0, #a7c4a0)' },
-  { id: 4, title: 'Deep Focus Flow',        type: 'Meditation',  category: 'focus',       categoryLabel: 'Focus',       duration: 900,  gradient: 'linear-gradient(135deg, #fef3c7, #fde68a)' }
+  { id: 1, title: '5 Minutes for Calm', type: 'Meditation', category: 'stress', categoryLabel: 'Stress', duration: 300, image: LANDING_IMAGES.preview1 },
+  { id: 2, title: 'Ocean Night Story', type: 'Sleep Story', category: 'sleep', categoryLabel: 'Sleep', duration: 1200, image: LANDING_IMAGES.preview2 },
+  { id: 3, title: 'Morning Gratitude', type: 'Meditation', category: 'mindfulness', categoryLabel: 'Mindfulness', duration: 600, image: LANDING_IMAGES.preview3 },
+  { id: 4, title: 'Deep Focus Flow', type: 'Meditation', category: 'focus', categoryLabel: 'Focus', duration: 900, image: LANDING_IMAGES.preview4 }
 ]
 </script>
 
@@ -68,6 +69,8 @@ const previewCards = [
   width: 100%; height: 160px;
   position: relative;
   display: flex; align-items: center; justify-content: center;
+  background-size: cover;
+  background-position: center;
 }
 .preview-card__badge {
   position: absolute; top: 12px; left: 12px;
