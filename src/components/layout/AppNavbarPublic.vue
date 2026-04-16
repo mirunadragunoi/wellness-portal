@@ -3,9 +3,6 @@
     <div class="navbar__inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar__logo">
-        <div class="navbar__logo-icon">
-          <Icon :icon="BRAND_ICON" class="app-icon app-icon--md" />
-        </div>
         <span class="navbar__logo-text">{{ t('brand.name') }}</span>
       </RouterLink>
 
@@ -46,7 +43,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { BRAND_ICON } from '@/constants/appIcons'
 
 const { t } = useI18n()
 const scrolled    = ref(false)
@@ -89,15 +85,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .navbar__logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
-}
-.navbar__logo-icon {
-  width: 40px; height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
-  display: flex; align-items: center; justify-content: center;
-  color: white;
 }
 .navbar__logo-text {
   font-family: var(--font-display);

@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
       return true
     },
 
-    async login(phone, accessCode) {
+    async login(accessCode) {
       await new Promise(r => setTimeout(r, 800))
 
       const codeValid = VALID_CODES.includes(accessCode.toUpperCase().trim())
@@ -34,7 +34,6 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('INVALID_CODE')
       }
 
-      this.phone = phone
       this.token = 'mock-token-' + Date.now()
       this.isLoggedIn = true
       return true

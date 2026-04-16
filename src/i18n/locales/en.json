@@ -94,9 +94,9 @@
   "quizFloat": "Take the Wellness Quiz",
   "auth": {
     "signup_title": "Create your account",
-    "signup_subtitle": "Enter your phone number and the access code you received.",
+    "signup_subtitle": "Enter your phone number and access code to start your personalized journey.",
     "login_title": "Welcome back",
-    "login_subtitle": "Log in with your phone number and access code.",
+    "login_subtitle": "Log in using your access code.",
     "phone_label": "Phone number",
     "phone_placeholder": "+40 700 000 000",
     "code_label": "Access code",

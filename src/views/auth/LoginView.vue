@@ -1,17 +1,9 @@
 <template>
   <div class="auth-page">
-    <RouterLink to="/" class="auth-page__logo">
-      <Icon :icon="BRAND_ICON" class="auth-page__logo-icon app-icon app-icon--lg" />
-      {{ t('brand.name') }}
-    </RouterLink>
     <div class="auth-card">
       <h1 class="auth-card__title">{{ t('auth.login_title') }}</h1>
       <p class="auth-card__sub">{{ t('auth.login_subtitle') }}</p>
       <form class="auth-form" @submit.prevent="submit">
-        <div class="field">
-          <label class="field__label">{{ t('auth.phone_label') }}</label>
-          <input v-model="phone" type="tel" class="field__input" :placeholder="t('auth.phone_placeholder')" required />
-        </div>
         <div class="field">
           <label class="field__label">{{ t('auth.code_label') }}</label>
           <input v-model="code" type="text" class="field__input" :placeholder="t('auth.code_placeholder')" required style="text-transform:uppercase;letter-spacing:2px" />
@@ -37,13 +29,11 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
-import { BRAND_ICON } from '@/constants/appIcons'
 
 const { t }    = useI18n()
 const router   = useRouter()
 const auth     = useAuthStore()
 const user     = useUserStore()
-const phone    = ref('')
 const code     = ref('')
 const error    = ref('')
 const loading  = ref(false)
@@ -51,7 +41,7 @@ const loading  = ref(false)
 async function submit() {
   error.value = ''; loading.value = true
   try {
-    await auth.login(phone.value, code.value)
+    await auth.login(code.value)
     router.push(user.onboardingCompleted ? { name: 'home' } : { name: 'onboarding' })
   } catch {
     error.value = t('auth.invalid_code')
@@ -60,13 +50,7 @@ async function submit() {
 </script>
 
 <style scoped>
-.auth-page { min-height: var(--app-min-height); display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--bg-base); padding:24px; gap:32px; box-sizing:border-box; }
-.auth-page__logo {
-  display: inline-flex; align-items: center; gap: 12px;
-  font-family: var(--font-display); font-size: 28px; font-weight: 500;
-  color: var(--text-primary); text-decoration: none;
-}
-.auth-page__logo-icon { color: var(--sky-600); flex-shrink: 0; }
+.auth-page { min-height: var(--app-min-height); display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--bg-base); padding:24px; box-sizing:border-box; }
 .auth-card { width:100%; max-width:440px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:40px; box-shadow:var(--shadow-md); }
 .auth-card__title { font-family:var(--font-display); font-size:32px; font-weight:400; color:var(--text-primary); margin-bottom:8px; }
 .auth-card__sub   { font-size:15px; color:var(--text-secondary); margin-bottom:32px; line-height:1.6; }
