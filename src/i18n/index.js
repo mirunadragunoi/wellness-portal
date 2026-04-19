@@ -1,7 +1,10 @@
 import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
+import { getBrandConfig } from '@/config/brand'
 
-const savedLocale = localStorage.getItem('wellness-locale') || 'en'
+const brand = getBrandConfig()
+const localeStorageKey = `${brand.storagePrefix}-locale`
+const savedLocale = localStorage.getItem(localeStorageKey) || 'en'
 
 export const i18n = createI18n({
   legacy: false,
@@ -13,7 +16,7 @@ export const i18n = createI18n({
 
 export function setLocale(locale) {
   i18n.global.locale.value = locale
-  localStorage.setItem('wellness-locale', locale)
+  localStorage.setItem(localeStorageKey, locale)
   document.documentElement.setAttribute('lang', locale)
 }
 

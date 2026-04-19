@@ -3,6 +3,7 @@
     class="app"
     :class="{ 'app--authenticated': authStore.isLoggedIn }"
     :data-theme="userStore.darkMode ? 'dark' : 'light'"
+    :data-brand="brand.key"
   >
 
     <!-- Authenticated layout -->
@@ -57,6 +58,7 @@ import { useAuthStore }   from '@/stores/auth'
 import { useUserStore }   from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
 import { useUIStore }     from '@/stores/ui'
+import { getBrandConfig } from '@/config/brand'
 
 import AppNavbarAuth  from '@/components/layout/AppNavbarAuth.vue'
 import AppFooter      from '@/components/layout/AppFooter.vue'
@@ -71,6 +73,7 @@ const userStore   = useUserStore()
 const playerStore = usePlayerStore()
 const uiStore     = useUIStore()
 const route       = useRoute()
+const brand       = getBrandConfig()
 
 const isSessionPage = computed(() => route.name === 'session')
 

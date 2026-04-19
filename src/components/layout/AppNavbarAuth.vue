@@ -3,9 +3,6 @@
     <div class="navbar-auth__inner">
       <!-- Logo -->
       <RouterLink :to="{ name: 'landing' }" class="navbar-auth__logo">
-        <div class="logo-icon">
-          <Icon :icon="BRAND_ICON" class="logo-icon__svg app-icon app-icon--md" />
-        </div>
         <span class="logo-text">{{ t('brand.name') }}</span>
       </RouterLink>
 
@@ -56,7 +53,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useProgressStore } from '@/stores/progress'
-import { AVATAR_ICONS, BRAND_ICON } from '@/constants/appIcons'
+import { AVATAR_ICONS } from '@/constants/appIcons'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -95,17 +92,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .navbar-auth__logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
 }
-.logo-icon {
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
-  display: flex; align-items: center; justify-content: center;
-  color: white;
-}
-.logo-icon__svg { color: inherit; }
 .logo-text {
   font-family: var(--font-display);
   font-size: 22px;
