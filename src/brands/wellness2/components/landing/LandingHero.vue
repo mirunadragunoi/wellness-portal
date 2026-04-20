@@ -55,7 +55,7 @@
     </div>
 
     <!-- RIGHT PANEL: full-bleed photo -->
-    <div class="hero__right" :style="{ backgroundImage: `url(${heroMain})` }">
+    <div class="hero__right" :style="{ backgroundImage: `url(${heroPanelImage})` }">
       <div class="hero__right-overlay" />
     </div>
   </section>
@@ -64,6 +64,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { LANDING_IMAGES } from '@/constants/landingImages'
+import heroPanelImage from '@/assets/landing/hero-main-wellness2-forest.png'
 const { t } = useI18n()
 const { heroMain, heroProof1, heroProof2 } = LANDING_IMAGES
 const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1]
