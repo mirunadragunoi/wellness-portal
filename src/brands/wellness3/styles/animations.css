@@ -1,0 +1,147 @@
+/* ═══════════════════════════════════════════════
+   WELLNESS PORTAL v3 — "Midnight Bloom"
+   Animations
+   Înlocuiește: src/styles/animations.css
+   ═══════════════════════════════════════════════ */
+
+/* ── Page / element entrance ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.animate-fade-up   { animation: fadeUp  0.35s var(--ease-smooth) both; }
+.animate-fade-in   { animation: fadeIn  0.30s var(--ease-smooth) both; }
+.animate-slide-down{ animation: slideDown 0.25s var(--ease-smooth) both; }
+.page-in           { animation: fadeUp  0.35s var(--ease-smooth) both; }
+
+/* ── Breathing circle (Breathing exercise + Home moment of day) ── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.70; }
+  50%       { transform: scale(1.20); opacity: 1.00; }
+}
+@keyframes breathe-ring {
+  0%, 100% { transform: scale(1);    opacity: 0.25; }
+  50%       { transform: scale(1.40); opacity: 0.06; }
+}
+
+/* Aplică pe elementele cercului de respirație */
+.breath-core {
+  border-radius: 50%;
+  animation: breathe var(--breath-dur, 5s) ease-in-out infinite;
+}
+.breath-ring1 {
+  border-radius: 50%;
+  border: 1px solid rgba(167, 139, 250, 0.20);
+  animation: breathe-ring var(--breath-dur, 5s) ease-in-out infinite;
+}
+.breath-ring2 {
+  border-radius: 50%;
+  border: 1px solid rgba(45, 212, 191, 0.15);
+  animation: breathe-ring var(--breath-dur, 5s) ease-in-out infinite 0.5s;
+}
+
+/* ── Pulse glow (Now Playing card, CTA card) ── */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 30px rgba(167,139,250,0.15); }
+  50%       { box-shadow: 0 0 70px rgba(167,139,250,0.45),
+                          0 0 100px rgba(45,212,191,0.12); }
+}
+.pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* ── Floating (badge-uri, elemente hero) ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ── Slow spin (breathing exercise ring outer) ── */
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+/* ── Gradient shimmer (skeleton loading) ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% auto;
+  animation: shimmer 1.8s linear infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Loading dots (onboarding, player) ── */
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40%           { transform: scale(1); opacity: 1.0; }
+}
+.dot-bounce {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--violet);
+  animation: dotBounce 1.4s ease-in-out infinite;
+}
+.dot-bounce:nth-child(2) { animation-delay: 0.16s; }
+.dot-bounce:nth-child(3) { animation-delay: 0.32s; }
+
+/* ── Ripple (button click, particle dissolve) ── */
+@keyframes ripple {
+  from { transform: scale(0); opacity: 0.6; }
+  to   { transform: scale(2.5); opacity: 0; }
+}
+
+/* ── Toast slide-in ── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast-enter { animation: toastIn 0.25s var(--ease-smooth) both; }
+
+/* ── Streak flame pop ── */
+@keyframes flamePop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35) rotate(-5deg); }
+  70%  { transform: scale(0.9) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+.flame-pop { animation: flamePop 0.5s var(--ease-bounce); }
+
+/* ── Mood emoji bounce on select ── */
+@keyframes moodSelect {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.mood-selected { animation: moodSelect 0.3s var(--ease-bounce); }
+
+/* ── Transition delay utilities ── */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }

@@ -1,0 +1,130 @@
+/* ═══════════════════════════════════════════════
+   WELLNESS PORTAL v3 — "Midnight Bloom"
+   CSS Design Tokens
+   Înlocuiește: src/styles/variables.css
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --app-min-height: 100vh;
+  --page-pad-bottom-auth: 120px;
+
+  /* ── Brand Colors ── */
+  --violet:     #a78bfa;
+  --violet-dim: rgba(167,139,250,0.15);
+  --teal:       #2dd4bf;
+  --teal-dim:   rgba(45,212,191,0.12);
+  --rose:       #f9a8d4;
+  --rose-dim:   rgba(249,168,212,0.12);
+  --blue:       #7c9fff;
+  --blue-dim:   rgba(124,159,255,0.12);
+  --amber:      #fbbf24;
+  --amber-dim:  rgba(251,191,36,0.12);
+
+  /* ── Backgrounds ── */
+  --bg:         #070d1a;
+  --bg2:        #0d1628;
+  --bg3:        #111f35;
+
+  /* ── Glass surfaces ── */
+  --glass:         rgba(255,255,255,0.055);
+  --glass-hover:   rgba(255,255,255,0.09);
+  --glass-border:  rgba(255,255,255,0.10);
+  --glass-border-hover: rgba(167,139,250,0.35);
+
+  /* ── Semantic ── */
+  --bg-base:      var(--bg);
+  --bg-surface:   var(--bg2);
+  --bg-elevated:  var(--bg3);
+  --bg-muted:     rgba(255,255,255,0.04);
+
+  --text-primary:   #e8edf8;
+  --text-secondary: rgba(232,237,248,0.55);
+  --text-muted:     rgba(232,237,248,0.3);
+
+  /* Alias-uri compatibile cu v2 */
+  --text:   var(--text-primary);
+  --muted:  var(--text-secondary);
+  --faint:  var(--text-muted);
+
+  --border-subtle:  rgba(255,255,255,0.07);
+  --border-default: rgba(255,255,255,0.12);
+  --border-strong:  rgba(167,139,250,0.35);
+
+  --brand-primary: var(--violet);
+  --brand-dark:    #7c5af5;
+  --brand-light:   rgba(167,139,250,0.15);
+
+  /* ── Typography ── */
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body:    'Nunito', system-ui, -apple-system, sans-serif;
+
+  /* Alias compatibil cu codebase-ul existent */
+  --font-d: var(--font-display);
+  --font-b: var(--font-body);
+
+  /* ── Radius ── */
+  --radius-xs:  4px;
+  --radius-sm:  10px;
+  --radius:     16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+  --radius-2xl: 40px;
+  --radius-full: 999px;
+
+  /* Alias-uri scurte (folosite în prototip) */
+  --r-sm:  var(--radius-sm);
+  --r:     var(--radius);
+  --r-lg:  var(--radius-lg);
+  --r-xl:  var(--radius-xl);
+  --r-full: var(--radius-full);
+
+  /* ── Shadows (glass-style, fără offset dur) ── */
+  --shadow-xs: 0 2px 12px rgba(0,0,0,0.25);
+  --shadow-sm: 0 4px 24px rgba(0,0,0,0.30);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.40);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.50), 0 0 40px rgba(167,139,250,0.12);
+  --shadow-xl: 0 32px 80px rgba(0,0,0,0.60), 0 0 60px rgba(167,139,250,0.15);
+  --shadow-glow:        0 0 30px rgba(167,139,250,0.40);
+  --shadow-glow-strong: 0 0 50px rgba(167,139,250,0.60);
+  --shadow-teal-glow:   0 0 24px rgba(45,212,191,0.35);
+
+  /* ── Layout ── */
+  --navbar-height:      66px;
+  --bottom-bar-height:  62px;
+  --mini-player-height: 64px;
+  --container-max:      1200px;
+  --container-pad:      clamp(16px, 3vw, 56px);
+
+  /* Alias-uri scurte */
+  --nb: var(--navbar-height);
+  --bb: var(--bottom-bar-height);
+  --pad: var(--container-pad);
+
+  /* ── Transitions ── */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:    cubic-bezier(0.0, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease: var(--ease-smooth);
+
+  --duration-fast:   160ms;
+  --duration-normal: 300ms;
+  --duration-slow:   560ms;
+}
+
+@supports (height: 100dvh) {
+  :root { --app-min-height: 100dvh; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 58px;
+    --bottom-bar-height: 58px;
+    --page-pad-bottom-auth: calc(
+      var(--bottom-bar-height) + var(--mini-player-height) + 16px +
+      env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+/* ── Dark mode este default (nu există light mode în v3) ── */
+/* Dacă vrei să adaugi light mode în viitor, adaugă [data-theme="light"] */

@@ -1,13 +1,15 @@
 import wellness from './brands/wellness'
 import wellness2 from './brands/wellness2'
+import wellness3 from './brands/wellness3'
 
 const BRAND_MAP = {
   wellness,
-  wellness2
+  wellness2,
+  wellness3
 }
 
 export function getBrandKey() {
-  const key = (import.meta.env.VITE_BRAND || 'wellness').toLowerCase()
+  const key = (import.meta.env.MODE || import.meta.env.VITE_BRAND || 'wellness').toLowerCase()
   return BRAND_MAP[key] ? key : 'wellness'
 }
 

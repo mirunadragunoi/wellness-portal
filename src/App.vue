@@ -5,53 +5,56 @@
     :data-theme="userStore.darkMode ? 'dark' : 'light'"
     :data-brand="brand.key"
   >
+    <canvas v-if="brand.key === 'wellness3'" id="bg-canvas" />
+    <div class="app-content">
 
-    <!-- Authenticated layout -->
-    <template v-if="authStore.isLoggedIn">
-      <AppNavbarAuth />
+      <!-- Authenticated layout -->
+      <template v-if="authStore.isLoggedIn">
+        <AppNavbarAuth />
 
-      <main class="app-main app-main--auth">
+        <main class="app-main app-main--auth">
+          <RouterView v-slot="{ Component }">
+            <Transition name="page" mode="out-in">
+              <component :is="Component" />
+            </Transition>
+          </RouterView>
+        </main>
+
+        <AppFooter />
+
+        <!-- Mobile bottom navigation -->
+        <AppBottomBar />
+
+        <!-- Persistent mini player (shown when session is playing + not on session page) -->
+        <AppMiniPlayer v-if="playerStore.isVisible && !isSessionPage" />
+
+        <!-- SOS floating button (desktop) -->
+        <AppSOSButton />
+
+        <!-- SOS overlay -->
+        <Transition name="fade">
+          <AppSOSOverlay v-if="uiStore.sosOpen" />
+        </Transition>
+      </template>
+
+      <!-- Public layout -->
+      <template v-else>
         <RouterView v-slot="{ Component }">
           <Transition name="page" mode="out-in">
             <component :is="Component" />
           </Transition>
         </RouterView>
-      </main>
+        <AppFooter />
+      </template>
 
-      <AppFooter />
-
-      <!-- Mobile bottom navigation -->
-      <AppBottomBar />
-
-      <!-- Persistent mini player (shown when session is playing + not on session page) -->
-      <AppMiniPlayer v-if="playerStore.isVisible && !isSessionPage" />
-
-      <!-- SOS floating button (desktop) -->
-      <AppSOSButton />
-
-      <!-- SOS overlay -->
-      <Transition name="fade">
-        <AppSOSOverlay v-if="uiStore.sosOpen" />
-      </Transition>
-    </template>
-
-    <!-- Public layout -->
-    <template v-else>
-      <RouterView v-slot="{ Component }">
-        <Transition name="page" mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </RouterView>
-      <AppFooter />
-    </template>
-
-    <!-- Global toast notifications -->
-    <BaseToast />
+      <!-- Global toast notifications -->
+      <BaseToast />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAuthStore }   from '@/stores/auth'
@@ -74,6 +77,7 @@ const playerStore = usePlayerStore()
 const uiStore     = useUIStore()
 const route       = useRoute()
 const brand       = getBrandConfig()
+let cleanupBgOrbs = null
 
 const isSessionPage = computed(() => route.name === 'session')
 
@@ -85,8 +89,15 @@ function applyTheme() {
   )
 }
 
-onMounted(applyTheme)
+onMounted(async () => {
+  applyTheme()
+  if (brand.key === 'wellness3') {
+    const { initBgOrbs } = await import('./brands/wellness3/assets/bg-orbs.js')
+    cleanupBgOrbs = initBgOrbs?.() || null
+  }
+})
 watch(() => userStore.darkMode, applyTheme)
+onBeforeUnmount(() => cleanupBgOrbs?.())
 </script>
 
 <style>

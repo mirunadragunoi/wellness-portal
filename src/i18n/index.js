@@ -1,5 +1,5 @@
 import { createI18n } from 'vue-i18n'
-import en from './locales/en.json'
+import en from '@/i18n/locales/en.json'
 import { getBrandConfig } from '@/config/brand'
 
 const brand = getBrandConfig()
