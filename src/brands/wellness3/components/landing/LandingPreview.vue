@@ -1,31 +1,38 @@
 <template>
   <section class="preview section">
     <div class="container">
-      <span class="section-label">{{ t('preview.label') }}</span>
-      <h2 class="section-title">{{ t('preview.title_1') }} <em>{{ t('preview.title_em') }}</em></h2>
+      <span class="section-label" style="color: var(--blue)">{{ t('preview.label') }}</span>
+      <h2 class="section-title">
+        {{ t('preview.title_1') }}
+        <span class="grad-text">{{ t('preview.title_em') }}</span>
+      </h2>
       <p class="section-subtitle">{{ t('preview.subtitle') }}</p>
 
       <div class="preview__grid">
-        <div v-for="card in previewCards" :key="card.id" class="preview-card">
-          <div class="preview-card__img" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.35)), url(${card.image})` }">
-            <span class="preview-card__badge" :class="`badge--${card.category}`">{{ card.categoryLabel }}</span>
-            <button type="button" class="preview-card__play" aria-label="Play" @click="$router.push('/signup')">
-              <Icon icon="lucide:play" class="app-icon app-icon--md" />
-            </button>
+        <div
+          v-for="card in previewCards"
+          :key="card.id"
+          class="preview-card"
+          @click="$router.push('/signup')"
+        >
+          <div class="preview-card__img" :style="{ background: card.gradient }">
+            <div class="preview-card__overlay" />
+            <span class="preview-card__badge">{{ card.categoryLabel }}</span>
+            <div class="preview-card__play-wrap">
+              <button type="button" class="preview-card__play" aria-label="Play">
+                <Icon icon="lucide:play" class="app-icon app-icon--sm" />
+              </button>
+            </div>
+            <div class="preview-card__meta-bottom">{{ card.type }} · {{ Math.round(card.duration / 60) }} {{ t('explore.min') }}</div>
           </div>
           <div class="preview-card__body">
             <h4 class="preview-card__title">{{ card.title }}</h4>
-            <div class="preview-card__meta">
-              <span>{{ card.type }}</span>
-              <span>·</span>
-              <span>{{ Math.round(card.duration / 60) }} {{ t('explore.min') }}</span>
-            </div>
           </div>
         </div>
       </div>
 
       <div class="preview__cta">
-        <RouterLink to="/signup" class="btn">
+        <RouterLink to="/signup" class="cta-btn">
           See all sessions
           <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
         </RouterLink>
@@ -36,78 +43,166 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { LANDING_IMAGES } from '@/constants/landingImages'
+
 const { t } = useI18n()
 
 const previewCards = [
-  { id: 1, title: '5 Minutes for Calm', type: 'Meditation', category: 'stress', categoryLabel: 'Stress', duration: 300, image: LANDING_IMAGES.preview1 },
-  { id: 2, title: 'Ocean Night Story', type: 'Sleep Story', category: 'sleep', categoryLabel: 'Sleep', duration: 1200, image: LANDING_IMAGES.preview2 },
-  { id: 3, title: 'Morning Gratitude', type: 'Meditation', category: 'mindfulness', categoryLabel: 'Mindfulness', duration: 600, image: LANDING_IMAGES.preview3 },
-  { id: 4, title: 'Deep Focus Flow', type: 'Meditation', category: 'focus', categoryLabel: 'Focus', duration: 900, image: LANDING_IMAGES.preview4 }
+  { id: 1, title: '5 Minutes for Calm',  type: 'Meditation',  categoryLabel: 'Stress',      duration: 300,  gradient: 'linear-gradient(135deg, #312e81, #7c3aed, #2dd4bf)' },
+  { id: 2, title: 'Ocean Night Story',    type: 'Sleep Story', categoryLabel: 'Sleep',       duration: 1200, gradient: 'linear-gradient(135deg, #1e1b4b, #4338ca, #a78bfa)' },
+  { id: 3, title: 'Morning Gratitude',    type: 'Meditation',  categoryLabel: 'Mindfulness', duration: 600,  gradient: 'linear-gradient(135deg, #064e3b, #059669, #34d399)' },
+  { id: 4, title: 'Deep Focus Flow',      type: 'Meditation',  categoryLabel: 'Focus',       duration: 900,  gradient: 'linear-gradient(135deg, #0c4a6e, #0284c7, #7dd3fc)' },
 ]
 </script>
 
 <style scoped>
-.preview { background: var(--bg-base); }
+.preview {
+  background: transparent;
+}
+
+.grad-text {
+  background: linear-gradient(135deg, var(--blue), var(--violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .preview__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 16px;
   margin-top: 48px;
 }
+
 .preview-card {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: var(--radius);
   overflow: hidden;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   cursor: pointer;
+  transition: all 250ms var(--ease-smooth);
 }
-.preview-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.preview-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(167, 139, 250, 0.35);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(167, 139, 250, 0.12);
+}
 
 .preview-card__img {
-  width: 100%; height: 160px;
+  height: 148px;
   position: relative;
-  display: flex; align-items: center; justify-content: center;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
 }
+
+.preview-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(7, 13, 26, 0.65), transparent 55%);
+}
+
 .preview-card__badge {
-  position: absolute; top: 12px; left: 12px;
-  padding: 4px 10px; border-radius: 100px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: rgba(167, 139, 250, 0.18);
+  color: #c4b5fd;
+  border: 1px solid rgba(167, 139, 250, 0.30);
+  backdrop-filter: blur(8px);
 }
-.badge--stress      { background: #dbeafe; color: #1e40af; }
-.badge--sleep       { background: #ede9fe; color: #5b21b6; }
-.badge--mindfulness { background: #dcfce7; color: #166534; }
-.badge--focus       { background: #fef9c3; color: #854d0e; }
+
+.preview-card__play-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 180ms;
+}
+.preview-card:hover .preview-card__play-wrap { opacity: 1; }
 
 .preview-card__play {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: rgba(255,255,255,0.9);
-  border: none; cursor: pointer; font-size: 16px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all var(--duration-fast) var(--ease-bounce);
-  padding-left: 3px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  backdrop-filter: blur(8px);
+  transition: background 160ms, transform 160ms;
 }
-.preview-card:hover .preview-card__play { transform: scale(1.1); background: white; }
-
-.preview-card__body { padding: 16px; }
-.preview-card__title { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
-.preview-card__meta { display: flex; gap: 6px; font-size: 13px; color: var(--text-muted); }
-
-.preview__cta { text-align: center; margin-top: 40px; }
-.btn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 12px 28px;
-  border-radius: 100px; background: var(--bg-surface);
-  border: 1.5px solid var(--border-default); color: var(--sky-600);
-  font-family: var(--font-body); font-size: 15px; font-weight: 500;
-  text-decoration: none; transition: all var(--duration-normal);
+.preview-card__play:hover {
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  transform: scale(1.08);
 }
-.btn:hover { background: var(--sky-50); border-color: var(--sky-300); transform: translateY(-2px); }
 
-@media (max-width: 900px) { .preview__grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px) { .preview__grid { grid-template-columns: 1fr; } }
+.preview-card__meta-bottom {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.preview-card__body {
+  padding: 13px 14px;
+}
+.preview-card__title {
+  font-family: var(--font-d);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: 0.2px;
+}
+
+.preview__cta {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 28px;
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--violet);
+  font-family: var(--font-b);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 200ms var(--ease-smooth);
+  backdrop-filter: blur(12px);
+}
+.cta-btn:hover {
+  background: rgba(167, 139, 250, 0.12);
+  border-color: rgba(167, 139, 250, 0.35);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .preview__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .preview__grid { grid-template-columns: 1fr; }
+}
 </style>

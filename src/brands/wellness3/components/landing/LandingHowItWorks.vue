@@ -1,95 +1,111 @@
 <template>
-  <div class="how-section">
+  <section class="how section">
     <div class="container">
-      <div class="how-section__header">
-        <span class="section-label">{{ t('howItWorks.label') }}</span>
-        <h2 class="section-title">{{ t('howItWorks.title_1') }} <em>{{ t('howItWorks.title_em') }}</em></h2>
+      <div class="how__header">
+        <span class="section-label" style="color: var(--teal)">{{ t('howItWorks.label') }}</span>
+        <h2 class="section-title">
+          {{ t('howItWorks.title_1') }}
+          <span class="grad-text">{{ t('howItWorks.title_em') }}</span>
+        </h2>
       </div>
 
-      <div class="steps-grid">
+      <div class="steps">
         <div v-for="(step, i) in steps" :key="i" class="step">
-          <div class="step__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.32)), url(${step.image})` }" />
-          <div class="step__number">{{ i + 1 }}</div>
-          <h3 class="step__title">{{ t(step.titleKey) }}</h3>
-          <p class="step__desc">{{ t(step.descKey) }}</p>
-          <div v-if="i < steps.length - 1" class="step__connector" aria-hidden="true">
-            <Icon icon="lucide:chevron-right" class="app-icon app-icon--md app-icon--muted" />
+          <div class="step__num">{{ nums[i] }}</div>
+          <div class="step__content">
+            <h3 class="step__title">{{ t(step.titleKey) }}</h3>
+            <p class="step__desc">{{ t(step.descKey) }}</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { LANDING_IMAGES } from '@/constants/landingImages'
+
 const { t } = useI18n()
 
+const nums = ['01', '02', '03']
 const steps = [
-  { titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc', image: LANDING_IMAGES.howStep1 },
-  { titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc', image: LANDING_IMAGES.howStep2 },
-  { titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc', image: LANDING_IMAGES.howStep3 }
+  { titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc' },
+  { titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc' },
+  { titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc' },
 ]
 </script>
 
 <style scoped>
-.how-section {
-  padding: 80px 0;
-  background: var(--bg-base);
+.how {
+  background: transparent;
 }
-.how-section .container {
-  background: var(--bg-surface);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border-subtle);
-  padding: 72px 64px;
-  position: relative; overflow: hidden;
-}
-.how-section .container::after {
-  content: '';
-  position: absolute; top: -80px; right: -80px;
-  width: 250px; height: 250px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(186,230,253,0.3) 0%, transparent 70%);
-  pointer-events: none;
-}
-.how-section__header { text-align: center; margin-bottom: 56px; }
 
-.steps-grid {
+.how__header {
+  margin-bottom: 56px;
+}
+
+.grad-text {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 48px;
-  position: relative; z-index: 1;
+  gap: clamp(28px, 5vw, 48px);
 }
-.step { text-align: center; position: relative; }
-.step__media {
-  height: 124px;
-  border-radius: var(--radius);
-  background-size: cover;
-  background-position: center;
-  margin-bottom: 16px;
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
-.step__number {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--sky-100), var(--sky-200));
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 24px; font-weight: 600;
-  color: var(--sky-600);
-  margin: 0 auto 20px;
+
+.step__num {
+  font-family: var(--font-d);
+  font-size: clamp(44px, 5vw, 52px);
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 18px;
+  opacity: 0.75;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
+
 .step__title {
-  font-family: var(--font-display); font-size: 24px; font-weight: 500;
-  color: var(--text-primary); margin-bottom: 12px;
+  font-family: var(--font-d);
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
 }
-.step__desc { font-size: 15px; color: var(--text-secondary); line-height: 1.65; max-width: 280px; margin: 0 auto; }
-.step__connector {
-  position: absolute; top: 27px; right: -24px;
-  display: flex; align-items: center; color: var(--sky-300);
+
+.step__desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
 }
 
 @media (max-width: 768px) {
-  .how-section .container { padding: 40px 24px; }
-  .steps-grid { grid-template-columns: 1fr; gap: 36px; }
-  .step__connector { display: none; }
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .step {
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .step__num {
+    font-size: 36px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
 }
 </style>

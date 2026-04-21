@@ -1,18 +1,16 @@
 <template>
   <section class="hero">
-    <div class="hero__background" :style="{ backgroundImage: `url(${heroMain})` }" />
-    <div class="hero__overlay" />
-
     <div class="hero__content container">
-      <div class="hero__panel glass">
-        <p class="hero__badge">
-          <span class="hero__badge-dot" />
+      <!-- Left: Text -->
+      <div class="hero__text">
+        <div class="hero__badge">
+          <span class="hero__badge-star">✦</span>
           {{ t('hero.badge') }}
-        </p>
+        </div>
 
         <h1 class="hero__title">
-          {{ t('hero.title_line1') }}
-          <em>{{ t('hero.title_em') }}</em>
+          {{ t('hero.title_line1') }}<br />
+          <span class="hero__title-grad">{{ t('hero.title_em') }}</span><br />
           {{ t('hero.title_line2') }}
         </h1>
 
@@ -22,35 +20,54 @@
           <RouterLink to="/signup" class="hero-btn hero-btn--primary">
             {{ t('hero.cta_primary') }}
           </RouterLink>
-          <RouterLink to="/explore" class="hero-btn hero-btn--ghost">
+          <RouterLink to="/login" class="hero-btn hero-btn--ghost">
             {{ t('hero.cta_secondary') }}
           </RouterLink>
         </div>
 
         <div class="hero__proof">
           <div class="hero__proof-avatars">
-            <span v-for="(avatar, idx) in proofAvatars" :key="idx" class="hero__proof-avatar">
-              <img :src="avatar" alt="" />
-            </span>
+            <span
+              v-for="(color, idx) in proofColors"
+              :key="idx"
+              class="hero__proof-avatar"
+              :style="{ background: `radial-gradient(circle at 35% 35%, ${color}, ${color}88)`, boxShadow: `0 0 10px ${color}55` }"
+            />
           </div>
-          <span class="hero__proof-text"><strong>12,000+</strong> calming journeys started</span>
+          <span class="hero__proof-text">
+            Trusted by <strong>12,000+</strong> members
+          </span>
         </div>
       </div>
 
-      <div class="hero__visual glass">
-        <MindCanvas :size="340" />
+      <!-- Right: Canvas + Now Playing -->
+      <div class="hero__visual">
+        <div class="hero__canvas-wrap">
+          <div class="hero__glow" />
+          <MindCanvas :size="canvasSize" />
+          <p class="hero__breathe-label">Breathe · Be · Still</p>
+        </div>
+
+        <div class="hero__now-playing pulse-glow">
+          <div class="hero__now-playing-label">Now Playing</div>
+          <div class="hero__now-playing-title">Morning Clarity</div>
+          <div class="hero__progress-bar">
+            <div class="hero__progress-fill" />
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="hero-chip hero-chip--streak glass">
+    <!-- Floating chips (desktop only) -->
+    <div class="hero-chip hero-chip--streak glass hide-mobile">
       <Icon icon="lucide:flame" class="app-icon app-icon--sm" />
       <span>21 day streak</span>
     </div>
-    <div class="hero-chip hero-chip--mood glass">
+    <div class="hero-chip hero-chip--mood glass hide-mobile">
       <Icon icon="lucide:smile" class="app-icon app-icon--sm" />
       <span>Feeling Bright</span>
     </div>
-    <div class="hero-chip hero-chip--session glass">
+    <div class="hero-chip hero-chip--session glass hide-mobile">
       <Icon icon="lucide:play" class="app-icon app-icon--sm" />
       <span>5 min Calm Session</span>
     </div>
@@ -58,147 +75,135 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { LANDING_IMAGES } from '@/constants/landingImages'
 import MindCanvas from '@/components/landing/MindCanvas.vue'
 
 const { t } = useI18n()
-const { heroMain, heroProof1, heroProof2 } = LANDING_IMAGES
 
-const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1, heroProof2]
+const proofColors = ['#a78bfa', '#2dd4bf', '#f9a8d4', '#fbbf24']
+
+const canvasSize = computed(() => {
+  if (typeof window === 'undefined') return 370
+  return window.innerWidth < 768 ? 270 : 370
+})
 </script>
 
 <style scoped>
 .hero {
   position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
   overflow: hidden;
-  padding-top: 108px;
-  padding-bottom: 48px;
-  min-height: 86vh;
-  isolation: isolate;
-}
-
-.hero__background,
-.hero__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.hero__background {
-  background-size: cover;
-  background-position: center;
-  filter: saturate(1.1) contrast(1.05);
-}
-
-.hero__overlay {
-  background:
-    radial-gradient(900px 500px at 75% 25%, rgba(167, 139, 250, 0.22), transparent 70%),
-    radial-gradient(700px 440px at 22% 70%, rgba(45, 212, 191, 0.18), transparent 75%),
-    linear-gradient(120deg, rgba(7, 13, 26, 0.68), rgba(7, 13, 26, 0.54));
+  padding: clamp(80px, 10vh, 120px) 0 clamp(48px, 6vh, 80px);
 }
 
 .hero__content {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(20px, 4vw, 44px);
-  align-items: stretch;
-  position: relative;
-  z-index: 2;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
 }
 
-.hero__panel {
-  border-radius: var(--r-xl);
-  padding: clamp(20px, 4.6vw, 38px);
-  border-color: rgba(255, 255, 255, 0.2);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* ── Text side ── */
+.hero__text {
+  animation: fadeUp 0.6s var(--ease) both;
 }
 
 .hero__badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  padding: 7px 16px;
+  border-radius: var(--r-full);
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 18px;
+  color: var(--violet);
+  margin-bottom: 24px;
 }
-.hero__badge-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--teal);
-  box-shadow: 0 0 16px rgba(45, 212, 191, 0.7);
+
+.hero__badge-star {
+  font-size: 10px;
 }
 
 .hero__title {
   font-family: var(--font-d);
-  font-size: clamp(38px, 6vw, 74px);
   font-weight: 400;
-  line-height: 1.04;
-  letter-spacing: 0.01em;
-  color: var(--text-primary);
-  margin-bottom: 16px;
+  line-height: 1.08;
+  font-size: clamp(40px, 5.5vw, 72px);
+  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 24px;
 }
-.hero__title em {
-  display: block;
-  font-style: italic;
-  color: var(--violet);
-  text-shadow: 0 0 26px rgba(167, 139, 250, 0.4);
+
+.hero__title-grad {
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero__subtitle {
-  font-size: 16px;
-  line-height: 1.75;
-  color: var(--text-secondary);
-  max-width: 560px;
-  margin-bottom: 24px;
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 440px;
+  margin-bottom: 36px;
 }
 
 .hero__ctas {
   display: flex;
-  flex-wrap: wrap;
   gap: 12px;
-  align-items: center;
-  margin-bottom: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
 }
 
 .hero-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
-  padding: 0 24px;
+  padding: 14px 32px;
   border-radius: var(--r-full);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  transition: transform var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease), background var(--duration-fast) var(--ease);
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: all 200ms var(--ease);
+  white-space: nowrap;
 }
 
 .hero-btn--primary {
-  color: #070d1a;
   background: linear-gradient(135deg, var(--violet), var(--teal));
-  box-shadow: 0 8px 26px rgba(167, 139, 250, 0.35);
+  color: #070d1a;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+}
+.hero-btn--primary:hover {
+  background: linear-gradient(135deg, #b8a5fc, #4de8d8);
+  box-shadow: 0 0 40px rgba(167, 139, 250, 0.5), 0 0 60px rgba(45, 212, 191, 0.2);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .hero-btn--ghost {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
   border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+}
+.hero-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(167, 139, 250, 0.3);
 }
 
-.hero-btn:hover {
-  transform: translateY(-2px);
-}
-
+/* Proof */
 .hero__proof {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 .hero__proof-avatars {
@@ -209,31 +214,104 @@ const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1, heroProof2]
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid rgba(7, 13, 26, 0.9);
-  overflow: hidden;
-  margin-left: -7px;
-}
-
-.hero__proof-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border: 2px solid var(--bg);
+  margin-left: -8px;
+  flex-shrink: 0;
 }
 .hero__proof-avatar:first-child {
   margin-left: 0;
 }
+
 .hero__proof-text {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--muted);
 }
 
+/* ── Visual side ── */
 .hero__visual {
-  display: grid;
-  place-items: center;
-  min-height: 460px;
-  border-radius: var(--r-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: fadeUp 0.6s var(--ease) 0.15s both;
 }
 
+.hero__canvas-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__glow {
+  position: absolute;
+  width: clamp(260px, 50%, 360px);
+  height: clamp(260px, 50%, 360px);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(167, 139, 250, 0.14) 0%,
+    rgba(45, 212, 191, 0.07) 50%,
+    transparent 70%
+  );
+  filter: blur(24px);
+  pointer-events: none;
+}
+
+.hero__breathe-label {
+  margin-top: -8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(167, 139, 250, 0.5);
+  white-space: nowrap;
+}
+
+/* Now Playing card */
+.hero__now-playing {
+  width: 100%;
+  max-width: 300px;
+  background: rgba(7, 13, 26, 0.85);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.hero__now-playing-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 8px;
+}
+
+.hero__now-playing-title {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.hero__progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+
+.hero__progress-fill {
+  height: 100%;
+  width: 43%;
+  background: linear-gradient(90deg, var(--violet), var(--teal));
+  border-radius: var(--r-full);
+}
+
+/* ── Floating chips ── */
 .hero-chip {
   position: absolute;
   z-index: 3;
@@ -243,58 +321,33 @@ const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1, heroProof2]
   padding: 10px 14px;
   border-radius: var(--r-full);
   font-size: 12px;
-  color: var(--text-primary);
+  color: var(--text);
   border-color: rgba(255, 255, 255, 0.24);
   white-space: nowrap;
 }
+.hero-chip--streak { top: 30%; left: calc(50% - 44px); }
+.hero-chip--mood   { bottom: 18%; left: calc(50% - 48px); }
+.hero-chip--session { top: 34%; right: calc(8% + 10px); }
 
-.hero-chip--streak {
-  top: 30%;
-  left: calc(50% - 44px);
-}
-.hero-chip--mood {
-  bottom: 18%;
-  left: calc(50% - 48px);
-}
-.hero-chip--session {
-  top: 34%;
-  right: calc(8% + 10px);
-}
-
-@media (max-width: 960px) {
+/* ── Responsive ── */
+@media (max-width: 900px) {
   .hero {
     min-height: auto;
-    padding-top: 94px;
-    padding-bottom: 34px;
+    padding: 80px 0 48px;
   }
   .hero__content {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 40px;
   }
-  .hero__visual {
-    min-height: 340px;
-  }
-  .hero-chip {
-    display: none;
-  }
+  .hero__subtitle { font-size: 16px; }
 }
+
 @media (max-width: 640px) {
-  .hero__panel {
-    border-radius: var(--r-lg);
-    padding: 16px;
-  }
-  .hero__title {
-    font-size: clamp(34px, 12vw, 52px);
-  }
   .hero__ctas {
     flex-direction: column;
-    align-items: stretch;
   }
-  .hero-btn {
-    width: 100%;
-  }
-  .hero__visual {
-    min-height: 300px;
-  }
+  .hero-btn { width: 100%; }
+  .hero__subtitle { font-size: 15px; }
+  .hero__now-playing { max-width: 260px; }
 }
 </style>

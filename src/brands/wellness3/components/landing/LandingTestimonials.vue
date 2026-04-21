@@ -3,20 +3,22 @@
     <div class="container">
       <div class="testimonials__header">
         <span class="section-label">{{ t('testimonials.label') }}</span>
-        <h2 class="section-title">{{ t('testimonials.title_1') }} <em>{{ t('testimonials.title_em') }}</em></h2>
+        <h2 class="section-title">
+          {{ t('testimonials.title_1') }}
+          <span class="grad-text">{{ t('testimonials.title_em') }}</span>
+        </h2>
       </div>
       <div class="testimonials__grid">
-        <div v-for="t_ in items" :key="t_.nameKey" class="testimonial">
-          <div class="testimonial__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.1), rgba(15,23,42,0.35)), url(${t_.image})` }" />
+        <div v-for="item in items" :key="item.nameKey" class="testimonial">
           <div class="testimonial__stars" aria-hidden="true">
             <Icon v-for="n in 5" :key="n" icon="mdi:star" class="testimonial__star app-icon app-icon--sm" />
           </div>
-          <p class="testimonial__text">"{{ t(t_.textKey) }}"</p>
+          <p class="testimonial__text">"{{ t(item.textKey) }}"</p>
           <div class="testimonial__author">
-            <div class="testimonial__avatar" :style="{ backgroundImage: `url(${t_.image})` }" />
+            <div class="testimonial__avatar" :style="{ background: item.avatarGrad }" />
             <div>
-              <div class="testimonial__name">{{ t(t_.nameKey) }}</div>
-              <div class="testimonial__role">{{ t(t_.roleKey) }}</div>
+              <div class="testimonial__name">{{ t(item.nameKey) }}</div>
+              <div class="testimonial__role">{{ t(item.roleKey) }}</div>
             </div>
           </div>
         </div>
@@ -27,54 +29,100 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { LANDING_IMAGES } from '@/constants/landingImages'
+
 const { t } = useI18n()
+
 const items = [
-  { textKey: 'testimonials.t1_text', nameKey: 'testimonials.t1_name', roleKey: 'testimonials.t1_role', image: LANDING_IMAGES.testimonial1 },
-  { textKey: 'testimonials.t2_text', nameKey: 'testimonials.t2_name', roleKey: 'testimonials.t2_role', image: LANDING_IMAGES.testimonial2 },
-  { textKey: 'testimonials.t3_text', nameKey: 'testimonials.t3_name', roleKey: 'testimonials.t3_role', image: LANDING_IMAGES.testimonial3 }
+  { textKey: 'testimonials.t1_text', nameKey: 'testimonials.t1_name', roleKey: 'testimonials.t1_role', avatarGrad: 'linear-gradient(135deg, #7c3aed, #2dd4bf)' },
+  { textKey: 'testimonials.t2_text', nameKey: 'testimonials.t2_name', roleKey: 'testimonials.t2_role', avatarGrad: 'linear-gradient(135deg, #0284c7, #a78bfa)' },
+  { textKey: 'testimonials.t3_text', nameKey: 'testimonials.t3_name', roleKey: 'testimonials.t3_role', avatarGrad: 'linear-gradient(135deg, #d97706, #f9a8d4)' },
 ]
 </script>
 
 <style scoped>
-.testimonials { background: var(--bg-base); }
-.testimonials__header { text-align: center; margin-bottom: 48px; }
-.testimonials__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.testimonials {
+  background: transparent;
+}
+
+.testimonials__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.grad-text {
+  background: linear-gradient(135deg, var(--rose), var(--violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.testimonials__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
 
 .testimonial {
-  padding: 0 32px 28px;
-  background: var(--bg-surface);
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
-  display: flex; flex-direction: column; gap: 16px;
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   transition: all var(--duration-normal) var(--ease-smooth);
 }
-.testimonial:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--sky-200); }
-.testimonial__media {
-  margin: 0 -32px 16px;
-  height: 132px;
-  background-size: cover;
-  background-position: center;
+.testimonial:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(167, 139, 250, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .testimonial__stars {
-  display: flex; gap: 3px; color: var(--accent);
+  display: flex;
+  gap: 2px;
 }
-.testimonial__star { width: 16px; height: 16px; }
-.testimonial__text {
-  font-family: var(--font-display); font-size: 18px; font-weight: 400;
-  color: var(--text-primary); line-height: 1.65; font-style: italic; flex: 1;
-}
-.testimonial__author { display: flex; align-items: center; gap: 12px; margin-top: auto; }
-.testimonial__avatar {
-  width: 44px; height: 44px; border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-  border: 2px solid var(--sky-200);
-  flex-shrink: 0;
-}
-.testimonial__name { font-weight: 600; font-size: 15px; color: var(--text-primary); }
-.testimonial__role { font-size: 13px; color: var(--text-muted); }
+.testimonial__star { color: var(--amber); }
 
-@media (max-width: 768px) { .testimonials__grid { grid-template-columns: 1fr; } }
+.testimonial__text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-style: italic;
+  flex: 1;
+}
+
+.testimonial__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testimonial__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.25);
+}
+
+.testimonial__name {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.testimonial__role {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .testimonials__grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
