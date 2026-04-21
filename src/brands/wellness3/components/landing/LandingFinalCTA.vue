@@ -3,6 +3,14 @@
     <div class="container">
       <div class="cta-card">
         <div class="cta-card__glow" />
+        <div class="cta-card__photos">
+          <span
+            v-for="(photo, idx) in ctaPhotos"
+            :key="idx"
+            class="cta-card__photo"
+            :style="{ backgroundImage: `url(${photo})` }"
+          />
+        </div>
         <span class="section-label" style="color: var(--violet)">Begin Today</span>
         <h2 class="cta-card__title">
           {{ t('finalCta.title_1') }}<br />
@@ -18,8 +26,11 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { ctaBg1, ctaBg2, ctaBg3 } = LANDING_IMAGES
+const ctaPhotos = [ctaBg1, ctaBg2, ctaBg3]
 </script>
 
 <style scoped>
@@ -37,6 +48,19 @@ const { t } = useI18n()
   backdrop-filter: blur(20px);
   max-width: 640px;
   margin: 0 auto;
+}
+.cta-card__photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.cta-card__photo {
+  height: 86px;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .cta-card__glow {

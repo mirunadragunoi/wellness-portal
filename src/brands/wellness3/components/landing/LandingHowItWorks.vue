@@ -11,6 +11,7 @@
 
       <div class="steps">
         <div v-for="(step, i) in steps" :key="i" class="step">
+          <div class="step__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(7,13,26,0.2), rgba(7,13,26,0.72)), url(${step.image})` }" />
           <div class="step__num">{{ nums[i] }}</div>
           <div class="step__content">
             <h3 class="step__title">{{ t(step.titleKey) }}</h3>
@@ -24,14 +25,16 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { howStep1, howStep2, howStep3 } = LANDING_IMAGES
 
 const nums = ['01', '02', '03']
 const steps = [
-  { titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc' },
-  { titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc' },
-  { titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc' },
+  { titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc', image: howStep1 },
+  { titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc', image: howStep2 },
+  { titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc', image: howStep3 },
 ]
 </script>
 
@@ -61,6 +64,14 @@ const steps = [
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+.step__media {
+  width: 100%;
+  height: 120px;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  background-size: cover;
+  background-position: center;
 }
 
 .step__num {
@@ -99,8 +110,13 @@ const steps = [
   }
   .step {
     flex-direction: row;
-    gap: 16px;
+    gap: 14px;
     align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .step__media {
+    height: 110px;
+    margin-bottom: 0;
   }
   .step__num {
     font-size: 36px;

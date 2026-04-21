@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar" :class="{ 'navbar--scrolled': scrolled }">
-    <div class="navbar__inner container glass">
+    <div class="navbar__inner container">
       <RouterLink to="/" class="navbar__logo">
         <span class="navbar__logo-text">{{ t('brand.name') }}</span>
       </RouterLink>
@@ -65,11 +65,15 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: var(--r-lg);
-  border-color: rgba(167, 139, 250, 0.24);
+  background: rgba(7, 13, 26, 0.82);
+  border: 1px solid rgba(167, 139, 250, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: all var(--duration-normal) var(--ease-smooth);
 }
 .navbar--scrolled .navbar__inner {
-  border-color: rgba(45, 212, 191, 0.25);
+  background: rgba(7, 13, 26, 0.92);
+  border-color: rgba(45, 212, 191, 0.22);
   box-shadow: var(--shadow-sm);
 }
 

@@ -3,6 +3,7 @@
     <div class="container">
       <div class="metrics__grid">
         <div v-for="m in metrics" :key="m.valueKey" class="metric">
+          <div class="metric__media" :style="{ backgroundImage: `linear-gradient(180deg, rgba(7,13,26,0.15), rgba(7,13,26,0.68)), url(${m.image})` }" />
           <div class="metric__value" :style="{ '--accent': m.color }">
             {{ t(m.valueKey) }}
             <Icon v-if="m.star" icon="mdi:star" class="metric__star app-icon app-icon--md" aria-hidden="true" />
@@ -16,13 +17,15 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { metric1, metric2, metric3 } = LANDING_IMAGES
 
 const metrics = [
-  { valueKey: 'metrics.m1_value', labelKey: 'metrics.m1_label', color: 'var(--violet)' },
-  { valueKey: 'metrics.m2_value', labelKey: 'metrics.m2_label', color: 'var(--teal)' },
-  { valueKey: 'metrics.m3_value', labelKey: 'metrics.m3_label', color: 'var(--amber)', star: true },
+  { valueKey: 'metrics.m1_value', labelKey: 'metrics.m1_label', color: 'var(--violet)', image: metric1 },
+  { valueKey: 'metrics.m2_value', labelKey: 'metrics.m2_label', color: 'var(--teal)', image: metric2 },
+  { valueKey: 'metrics.m3_value', labelKey: 'metrics.m3_label', color: 'var(--amber)', star: true, image: metric3 },
 ]
 </script>
 
@@ -46,6 +49,13 @@ const metrics = [
   border-radius: var(--radius-lg);
   padding: 28px 24px;
   backdrop-filter: blur(12px);
+}
+.metric__media {
+  width: calc(100% + 48px);
+  height: 96px;
+  margin: -28px -24px 18px;
+  background-size: cover;
+  background-position: center;
 }
 
 .metric__value {

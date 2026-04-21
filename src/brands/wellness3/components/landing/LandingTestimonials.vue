@@ -15,7 +15,9 @@
           </div>
           <p class="testimonial__text">"{{ t(item.textKey) }}"</p>
           <div class="testimonial__author">
-            <div class="testimonial__avatar" :style="{ background: item.avatarGrad }" />
+            <div class="testimonial__avatar">
+              <img :src="item.avatar" alt="" />
+            </div>
             <div>
               <div class="testimonial__name">{{ t(item.nameKey) }}</div>
               <div class="testimonial__role">{{ t(item.roleKey) }}</div>
@@ -29,13 +31,15 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { testimonial1, testimonial2, testimonial3 } = LANDING_IMAGES
 
 const items = [
-  { textKey: 'testimonials.t1_text', nameKey: 'testimonials.t1_name', roleKey: 'testimonials.t1_role', avatarGrad: 'linear-gradient(135deg, #7c3aed, #2dd4bf)' },
-  { textKey: 'testimonials.t2_text', nameKey: 'testimonials.t2_name', roleKey: 'testimonials.t2_role', avatarGrad: 'linear-gradient(135deg, #0284c7, #a78bfa)' },
-  { textKey: 'testimonials.t3_text', nameKey: 'testimonials.t3_name', roleKey: 'testimonials.t3_role', avatarGrad: 'linear-gradient(135deg, #d97706, #f9a8d4)' },
+  { textKey: 'testimonials.t1_text', nameKey: 'testimonials.t1_name', roleKey: 'testimonials.t1_role', avatar: testimonial1 },
+  { textKey: 'testimonials.t2_text', nameKey: 'testimonials.t2_name', roleKey: 'testimonials.t2_role', avatar: testimonial2 },
+  { textKey: 'testimonials.t3_text', nameKey: 'testimonials.t3_name', roleKey: 'testimonials.t3_role', avatar: testimonial3 },
 ]
 </script>
 
@@ -106,6 +110,12 @@ const items = [
   border-radius: 50%;
   flex-shrink: 0;
   box-shadow: 0 0 16px rgba(167, 139, 250, 0.25);
+  overflow: hidden;
+}
+.testimonial__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .testimonial__name {

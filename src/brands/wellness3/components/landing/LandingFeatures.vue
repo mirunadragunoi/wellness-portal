@@ -18,13 +18,10 @@
         >
           <div
             class="feature-card__media"
-            :style="{ background: card.mediaBg }"
-          >
-            <span class="feature-card__emoji">{{ card.emoji }}</span>
-          </div>
+            :style="{ backgroundImage: `${card.mediaBg}, url(${card.mediaImage})` }"
+          />
           <div class="feature-card__body">
             <div class="feature-card__heading">
-              <span class="feature-card__emoji-sm">{{ card.emoji }}</span>
               <h3 class="feature-card__title">{{ t(card.titleKey) }}</h3>
             </div>
             <p class="feature-card__desc">{{ t(card.descKey) }}</p>
@@ -37,43 +34,45 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { featureMeditation, featureBreathing, featureTracking, featurePlan } = LANDING_IMAGES
 
 const cards = [
   {
     key: 'meditation',
-    emoji: '🧘',
     bg: 'rgba(167,139,250,.08)',
     border: 'rgba(167,139,250,.15)',
     mediaBg: 'linear-gradient(135deg, rgba(167,139,250,.3), rgba(7,13,26,.6))',
+    mediaImage: featureMeditation,
     titleKey: 'features.card1_title',
     descKey: 'features.card1_desc',
   },
   {
     key: 'breathing',
-    emoji: '💨',
     bg: 'rgba(45,212,191,.08)',
     border: 'rgba(45,212,191,.15)',
     mediaBg: 'linear-gradient(135deg, rgba(45,212,191,.3), rgba(7,13,26,.6))',
+    mediaImage: featureBreathing,
     titleKey: 'features.card2_title',
     descKey: 'features.card2_desc',
   },
   {
     key: 'sleep',
-    emoji: '🌙',
     bg: 'rgba(124,159,255,.08)',
     border: 'rgba(124,159,255,.15)',
     mediaBg: 'linear-gradient(135deg, rgba(124,159,255,.3), rgba(7,13,26,.6))',
+    mediaImage: featureTracking,
     titleKey: 'features.card3_title',
     descKey: 'features.card3_desc',
   },
   {
     key: 'tracking',
-    emoji: '✦',
     bg: 'rgba(251,191,36,.08)',
     border: 'rgba(251,191,36,.15)',
     mediaBg: 'linear-gradient(135deg, rgba(251,191,36,.3), rgba(7,13,26,.6))',
+    mediaImage: featurePlan,
     titleKey: 'features.card4_title',
     descKey: 'features.card4_desc',
   },
@@ -120,11 +119,8 @@ const cards = [
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.feature-card__emoji {
-  font-size: 44px;
-  opacity: 0.3;
+  background-size: cover;
+  background-position: center;
 }
 
 .feature-card__body {
@@ -132,14 +128,7 @@ const cards = [
 }
 
 .feature-card__heading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   margin-bottom: 10px;
-}
-
-.feature-card__emoji-sm {
-  font-size: 24px;
 }
 
 .feature-card__title {

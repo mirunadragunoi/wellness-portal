@@ -15,7 +15,7 @@
           class="preview-card"
           @click="$router.push('/signup')"
         >
-          <div class="preview-card__img" :style="{ background: card.gradient }">
+          <div class="preview-card__img" :style="{ backgroundImage: `${card.gradient}, url(${card.image})` }">
             <div class="preview-card__overlay" />
             <span class="preview-card__badge">{{ card.categoryLabel }}</span>
             <div class="preview-card__play-wrap">
@@ -43,14 +43,16 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const { preview1, preview2, preview3, preview4 } = LANDING_IMAGES
 
 const previewCards = [
-  { id: 1, title: '5 Minutes for Calm',  type: 'Meditation',  categoryLabel: 'Stress',      duration: 300,  gradient: 'linear-gradient(135deg, #312e81, #7c3aed, #2dd4bf)' },
-  { id: 2, title: 'Ocean Night Story',    type: 'Sleep Story', categoryLabel: 'Sleep',       duration: 1200, gradient: 'linear-gradient(135deg, #1e1b4b, #4338ca, #a78bfa)' },
-  { id: 3, title: 'Morning Gratitude',    type: 'Meditation',  categoryLabel: 'Mindfulness', duration: 600,  gradient: 'linear-gradient(135deg, #064e3b, #059669, #34d399)' },
-  { id: 4, title: 'Deep Focus Flow',      type: 'Meditation',  categoryLabel: 'Focus',       duration: 900,  gradient: 'linear-gradient(135deg, #0c4a6e, #0284c7, #7dd3fc)' },
+  { id: 1, title: '5 Minutes for Calm',  type: 'Meditation',  categoryLabel: 'Stress',      duration: 300,  gradient: 'linear-gradient(145deg, rgba(49,46,129,0.65), rgba(45,212,191,0.25))', image: preview1 },
+  { id: 2, title: 'Ocean Night Story',    type: 'Sleep Story', categoryLabel: 'Sleep',       duration: 1200, gradient: 'linear-gradient(145deg, rgba(30,27,75,0.72), rgba(167,139,250,0.22))', image: preview2 },
+  { id: 3, title: 'Morning Gratitude',    type: 'Meditation',  categoryLabel: 'Mindfulness', duration: 600,  gradient: 'linear-gradient(145deg, rgba(6,78,59,0.68), rgba(52,211,153,0.22))', image: preview3 },
+  { id: 4, title: 'Deep Focus Flow',      type: 'Meditation',  categoryLabel: 'Focus',       duration: 900,  gradient: 'linear-gradient(145deg, rgba(12,74,110,0.72), rgba(125,211,252,0.2))', image: preview4 },
 ]
 </script>
 
@@ -94,6 +96,8 @@ const previewCards = [
   height: 148px;
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 
 .preview-card__overlay {
