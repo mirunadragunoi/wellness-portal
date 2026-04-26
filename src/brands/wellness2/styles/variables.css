@@ -108,6 +108,25 @@
   --border-default: rgba(184, 245, 102, 0.15);
   --brand-primary:  var(--lime-500);
   --brand-dark:     var(--forest-400);
+
+  /* ── Legacy compatibility tokens (old wellness2 components) ── */
+  --parchment:    var(--forest-900);
+  --parchment-2:  var(--forest-800);
+  --ink-900:      var(--text-primary);
+  --ink-800:      var(--text-primary);
+  --ink-700:      #cde7d6;
+  --ink-300:      rgba(240, 250, 242, 0.16);
+  --ink-200:      rgba(240, 250, 242, 0.12);
+  --ink-100:      rgba(240, 250, 242, 0.08);
+  --sage-50:      rgba(184, 245, 102, 0.08);
+  --sage-100:     rgba(184, 245, 102, 0.12);
+  --sage-300:     var(--emerald-400);
+  --sage-500:     var(--lime-500);
+  --sage-600:     var(--lime-400);
+  --sage-700:     #87b84f;
+  --shadow-sm:    0 4px 14px rgba(2, 10, 4, 0.45);
+  --shadow-md:    var(--glow-card);
+  --shadow-lg:    var(--glow-card-hover);
 }
 
 @supports (height: 100dvh) {

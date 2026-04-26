@@ -69,35 +69,29 @@ function finish() {
 
 <style scoped>
 .onboarding {
-  min-height: var(--app-min-height); background: var(--parchment);
+  min-height: var(--app-min-height); background: var(--forest-900);
   display: flex; flex-direction: column; position: relative;
 }
 .onboarding__nav {
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px var(--container-pad);
-  border-bottom: 2px solid var(--ink-200);
-  background: var(--bg-surface);
+  border-bottom: 1px solid rgba(184,245,102,0.08);
+  background: rgba(7,15,10,0.9); backdrop-filter: blur(20px);
 }
 .onboarding__logo {
-  font-family: var(--font-display); font-size: 20px; font-weight: 400;
-  color: var(--text-primary);
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  color: var(--text-primary); letter-spacing: -0.5px;
 }
 .onboarding__back {
   display: inline-flex; align-items: center; gap: 6px;
-  margin: 14px var(--container-pad) 4px;
-  align-self: flex-start;
-  padding: 7px 14px; border: 2px solid var(--ink-200); border-radius: var(--radius-sm);
+  margin: 14px var(--container-pad) 4px; align-self: flex-start;
+  padding: 7px 14px; border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-pill);
   font-size: 13px; font-weight: 600; color: var(--text-secondary);
-  background: none; cursor: pointer; transition: all var(--duration-fast);
+  background: rgba(255,255,255,0.04); cursor: pointer; transition: all var(--duration-fast);
 }
-.onboarding__back:hover { background: var(--ink-900); color: var(--parchment); border-color: var(--ink-900); }
+.onboarding__back:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
 .step-enter-active, .step-leave-active { transition: all 0.3s var(--ease-smooth); }
 .step-enter-from { opacity: 0; transform: translateX(32px); }
 .step-leave-to   { opacity: 0; transform: translateX(-32px); }
-
-@media (max-width: 640px) {
-  .onboarding__back {
-    margin: 10px 16px 0;
-  }
-}
+@media (max-width: 640px) { .onboarding__back { margin: 10px 16px 0; } }
 </style>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wellness — Your Journey</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { background:var(--forest-900); overflow:hidden; }
+
+/* Layout */
+.onb-wrap {
+  min-height:100vh; display:flex; flex-direction:column;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+
+/* Top bar */
+.onb-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px clamp(20px,4vw,48px);
+  flex-shrink:0;
+}
+.onb-logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; display:flex; align-items:center; gap:6px; color:var(--text-primary); }
+.onb-logo-dot { width:6px; height:6px; border-radius:50%; background:var(--lime-500); box-shadow:0 0 8px rgba(184,245,102,0.8); }
+.onb-step-label { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-muted); letter-spacing:1px; }
+.onb-skip { font-size:13px; color:var(--text-muted); cursor:pointer; transition:color 150ms; padding:6px 12px; border-radius:999px; }
+.onb-skip:hover { color:var(--text-secondary); background:rgba(255,255,255,0.04); }
+
+/* Progress bar */
+.onb-progress { padding:0 clamp(20px,4vw,48px); margin-bottom:0; flex-shrink:0; }
+.progress-track { height:3px; background:rgba(255,255,255,0.07); border-radius:999px; overflow:visible; position:relative; }
+.progress-fill {
+  height:100%; border-radius:999px;
+  background:linear-gradient(90deg, var(--emerald-400), var(--lime-500));
+  transition:width 500ms var(--ease-out);
+  position:relative;
+}
+.progress-fill::after { content:''; position:absolute; right:-1px; top:50%; transform:translateY(-50%); width:8px; height:8px; border-radius:50%; background:var(--lime-500); box-shadow:0 0 8px rgba(184,245,102,0.6); }
+
+/* Content area */
+.onb-content {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:24px clamp(20px,4vw,48px);
+  overflow:hidden;
+}
+.step { display:none; width:100%; max-width:600px; animation:fadeInUp 0.4s var(--ease-out) both; }
+.step.active { display:block; }
+
+.step-title { font-family:'Syne',sans-serif; font-size:clamp(26px,4vw,40px); font-weight:800; letter-spacing:-1.5px; color:var(--text-primary); margin-bottom:10px; line-height:1.1; }
+.step-title .lime { color:var(--lime-500); }
+.step-sub { font-size:15px; color:var(--text-secondary); line-height:1.65; margin-bottom:32px; }
+
+/* Option grid */
+.options-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:32px; }
+.opt-btn {
+  display:flex; align-items:center; gap:12px;
+  padding:16px 18px; border-radius:16px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer; transition:all 200ms var(--ease-out); text-align:left;
+}
+.opt-btn:hover { background:rgba(184,245,102,0.07); border-color:rgba(184,245,102,0.2); }
+.opt-btn.selected { background:rgba(184,245,102,0.1); border-color:rgba(184,245,102,0.35); }
+.opt-btn.selected .opt-icon-wrap { background:rgba(184,245,102,0.15); border-color:rgba(184,245,102,0.3); }
+.opt-icon-wrap { width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; transition:all 200ms; }
+.opt-label { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text-primary); }
+.opt-desc { font-size:12px; color:var(--text-muted); margin-top:2px; }
+
+/* Radio options (single select) */
+.radio-list { display:flex; flex-direction:column; gap:8px; margin-bottom:32px; }
+.radio-btn {
+  display:flex; align-items:center; gap:14px;
+  padding:18px 20px; border-radius:16px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer; transition:all 200ms var(--ease-out);
+}
+.radio-btn:hover { background:rgba(184,245,102,0.06); border-color:rgba(184,245,102,0.18); }
+.radio-btn.selected { background:rgba(184,245,102,0.1); border-color:rgba(184,245,102,0.35); }
+.radio-dot { width:20px; height:20px; border-radius:50%; border:2px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 200ms; }
+.radio-btn.selected .radio-dot { border-color:var(--lime-500); background:var(--lime-500); }
+.radio-btn.selected .radio-dot::after { content:''; width:7px; height:7px; border-radius:50%; background:var(--forest-900); display:block; }
+.radio-icon { font-size:22px; }
+.radio-label { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:var(--text-primary); }
+.radio-sub { font-size:12px; color:var(--text-muted); margin-top:1px; }
+
+/* Proof step */
+.proof-card {
+  padding:40px; background:var(--bg-glass); backdrop-filter:blur(20px);
+  border:var(--border-glass); border-radius:24px; text-align:center;
+  margin-bottom:32px;
+}
+.proof-num { font-family:'Syne',sans-serif; font-size:72px; font-weight:800; letter-spacing:-4px; color:var(--lime-500); line-height:1; margin-bottom:8px; }
+.proof-text { font-size:16px; color:var(--text-secondary); line-height:1.7; }
+
+/* Duration grid */
+.dur-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:32px; }
+.dur-btn {
+  padding:20px 12px; border-radius:16px; text-align:center;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer; transition:all 200ms var(--ease-out);
+}
+.dur-btn:hover { background:rgba(184,245,102,0.07); border-color:rgba(184,245,102,0.2); }
+.dur-btn.selected { background:rgba(184,245,102,0.1); border-color:rgba(184,245,102,0.35); }
+.dur-val { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; color:var(--lime-400); margin-bottom:4px; }
+.dur-label { font-size:11px; color:var(--text-muted); }
+
+/* Loading step */
+.loading-wrap { text-align:center; padding:20px 0 36px; }
+.loading-orb {
+  width:120px; height:120px; border-radius:50%; margin:0 auto 32px;
+  background:radial-gradient(circle, rgba(184,245,102,0.3) 0%, rgba(34,197,94,0.1) 50%, transparent 70%);
+  border:2px solid rgba(184,245,102,0.3);
+  animation:breathe-orb 2.5s ease-in-out infinite;
+  display:flex; align-items:center; justify-content:center; font-size:36px;
+}
+.loading-title { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; letter-spacing:-1px; color:var(--text-primary); margin-bottom:10px; }
+.loading-msg { font-size:15px; color:var(--text-secondary); margin-bottom:32px; min-height:24px; }
+.loading-bar-wrap { max-width:280px; margin:0 auto; }
+.loading-track { height:4px; background:rgba(255,255,255,0.07); border-radius:999px; overflow:hidden; }
+.loading-fill { height:100%; background:linear-gradient(90deg,var(--emerald-400),var(--lime-500)); border-radius:999px; width:0%; transition:width 400ms var(--ease-out); }
+
+/* Bottom nav */
+.onb-bottom {
+  padding:20px clamp(20px,4vw,48px);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0;
+  padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+}
+.onb-back { display:flex; align-items:center; gap:6px; padding:12px 20px; border-radius:999px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); font-size:14px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all 200ms; }
+.onb-back:hover { color:var(--text-primary); background:rgba(255,255,255,0.08); }
+.onb-back:disabled { opacity:0.3; cursor:default; }
+.onb-next { display:flex; align-items:center; gap:8px; padding:14px 32px; border-radius:999px; background:var(--lime-500); color:var(--forest-900); font-size:15px; font-weight:700; cursor:pointer; transition:all 220ms var(--ease-out); }
+.onb-next:hover { background:var(--lime-400); box-shadow:0 0 32px rgba(184,245,102,0.3); }
+.onb-next:active { transform:scale(0.97); }
+.dots { display:flex; gap:6px; align-items:center; }
+.dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.12); transition:all 300ms; }
+.dot.active { width:20px; border-radius:999px; background:var(--lime-500); }
+.dot.done { background:rgba(184,245,102,0.3); }
+
+@keyframes breathe-orb { 0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(184,245,102,0.2);} 50%{transform:scale(1.12);box-shadow:0 0 40px 10px rgba(184,245,102,0.1);} }
+@media(max-width:600px){.options-grid{grid-template-columns:1fr;} .dur-grid{grid-template-columns:repeat(2,1fr);} .proof-num{font-size:52px;}}
+</style>
+</head>
+<body>
+<div class="onb-wrap">
+  <!-- Top -->
+  <div class="onb-top">
+    <div class="onb-logo"><span class="onb-logo-dot"></span>wellness</div>
+    <span class="onb-step-label" id="step-label">Step 1 of 8</span>
+    <span class="onb-skip" onclick="window.location='home.html'">Skip →</span>
+  </div>
+
+  <!-- Progress -->
+  <div class="onb-progress">
+    <div class="progress-track"><div class="progress-fill" id="prog" style="width:12.5%"></div></div>
+  </div>
+
+  <!-- Content -->
+  <div class="onb-content">
+
+    <!-- Step 1: Goals -->
+    <div class="step active" id="s1">
+      <div class="step-title">What brings you <span class="lime">here?</span></div>
+      <div class="step-sub">Select all that apply</div>
+      <div class="options-grid">
+        <div class="opt-btn" onclick="toggleOpt(this)"><div class="opt-icon-wrap">🌧</div><div><div class="opt-label">Reduce stress</div><div class="opt-desc">Calm an overloaded mind</div></div></div>
+        <div class="opt-btn selected" onclick="toggleOpt(this)"><div class="opt-icon-wrap">😴</div><div><div class="opt-label">Improve sleep</div><div class="opt-desc">Fall asleep faster</div></div></div>
+        <div class="opt-btn" onclick="toggleOpt(this)"><div class="opt-icon-wrap">🎯</div><div><div class="opt-label">Increase focus</div><div class="opt-desc">Sharpen your attention</div></div></div>
+        <div class="opt-btn" onclick="toggleOpt(this)"><div class="opt-icon-wrap">☀️</div><div><div class="opt-label">Improve mood</div><div class="opt-desc">Feel better daily</div></div></div>
+        <div class="opt-btn" onclick="toggleOpt(this)"><div class="opt-icon-wrap">🧘</div><div><div class="opt-label">Learn meditation</div><div class="opt-desc">Start from scratch</div></div></div>
+        <div class="opt-btn" onclick="toggleOpt(this)"><div class="opt-icon-wrap">🌱</div><div><div class="opt-label">Personal growth</div><div class="opt-desc">Become your best self</div></div></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Proof -->
+    <div class="step" id="s2">
+      <div class="step-title">You're <span class="lime">not alone</span></div>
+      <div class="step-sub">Millions of people struggle with the same challenges. Together we can find calm.</div>
+      <div class="proof-card">
+        <div class="proof-num">95%</div>
+        <div class="proof-text">of our members report feeling less stressed after just a few minutes a day of practice.</div>
+      </div>
+    </div>
+
+    <!-- Step 3: Stress frequency -->
+    <div class="step" id="s3">
+      <div class="step-title">How often do you feel <span class="lime">stressed?</span></div>
+      <div class="step-sub">Be honest — there are no wrong answers here.</div>
+      <div class="radio-list">
+        <div class="radio-btn selected" onclick="radioSel(this,'.radio-list')"><div class="radio-dot"></div><span class="radio-icon">⚡</span><div><div class="radio-label">Almost always</div><div class="radio-sub">I feel overwhelmed regularly</div></div></div>
+        <div class="radio-btn" onclick="radioSel(this,'.radio-list')"><div class="radio-dot"></div><span class="radio-icon">🌧</span><div><div class="radio-label">Frequently</div><div class="radio-sub">Multiple times per week</div></div></div>
+        <div class="radio-btn" onclick="radioSel(this,'.radio-list')"><div class="radio-dot"></div><span class="radio-icon">☁️</span><div><div class="radio-label">Sometimes</div><div class="radio-sub">Stress comes and goes</div></div></div>
+        <div class="radio-btn" onclick="radioSel(this,'.radio-list')"><div class="radio-dot"></div><span class="radio-icon">🌤</span><div><div class="radio-label">Rarely</div><div class="radio-sub">Only in tough situations</div></div></div>
+      </div>
+    </div>
+
+    <!-- Step 4: Proof 2 -->
+    <div class="step" id="s4">
+      <div class="step-title">You're in <span class="lime">good company</span></div>
+      <div class="step-sub">Thousands of people just like you have built a daily practice with Wellness2.</div>
+      <div class="proof-card">
+        <div class="proof-num">12k+</div>
+        <div class="proof-text">people have found their calm using our guided sessions. And 87% say their stress decreased within 2 weeks.</div>
+      </div>
+    </div>
+
+    <!-- Step 5: Meditation experience -->
+    <div class="step" id="s5">
+      <div class="step-title">Your experience with <span class="lime">meditation?</span></div>
+      <div class="step-sub">We'll tailor your plan to exactly where you are.</div>
+      <div class="radio-list" id="exp-list">
+        <div class="radio-btn" onclick="radioSel(this,'#exp-list')"><div class="radio-dot"></div><span class="radio-icon">🌱</span><div><div class="radio-label">Brand new</div><div class="radio-sub">Never tried it before</div></div></div>
+        <div class="radio-btn selected" onclick="radioSel(this,'#exp-list')"><div class="radio-dot"></div><span class="radio-icon">🍃</span><div><div class="radio-label">I've tried it</div><div class="radio-sub">A few times, not consistent</div></div></div>
+        <div class="radio-btn" onclick="radioSel(this,'#exp-list')"><div class="radio-dot"></div><span class="radio-icon">🌿</span><div><div class="radio-label">Occasionally</div><div class="radio-sub">A few times per month</div></div></div>
+        <div class="radio-btn" onclick="radioSel(this,'#exp-list')"><div class="radio-dot"></div><span class="radio-icon">🌳</span><div><div class="radio-label">Regularly</div><div class="radio-sub">Part of my routine</div></div></div>
+      </div>
+    </div>
+
+    <!-- Step 6: Pace -->
+    <div class="step" id="s6">
+      <div class="step-title">How do you prefer to <span class="lime">learn?</span></div>
+      <div class="step-sub">This shapes the pacing of your sessions and plan.</div>
+      <div class="radio-list" id="pace-list">
+        <div class="radio-btn" onclick="radioSel(this,'#pace-list')"><div class="radio-dot"></div><span class="radio-icon">⚡</span><div><div class="radio-label">Fast</div><div class="radio-sub">Jump right in</div></div></div>
+        <div class="radio-btn selected" onclick="radioSel(this,'#pace-list')"><div class="radio-dot"></div><span class="radio-icon">⚖️</span><div><div class="radio-label">Balanced</div><div class="radio-sub">Steady, consistent progress</div></div></div>
+        <div class="radio-btn" onclick="radioSel(this,'#pace-list')"><div class="radio-dot"></div><span class="radio-icon">🐢</span><div><div class="radio-label">Slow</div><div class="radio-sub">Take my time</div></div></div>
+      </div>
+    </div>
+
+    <!-- Step 7: Daily time -->
+    <div class="step" id="s7">
+      <div class="step-title">How much time <span class="lime">daily?</span></div>
+      <div class="step-sub">Even 2 minutes a day creates measurable change. Be realistic with your schedule.</div>
+      <div class="dur-grid">
+        <div class="dur-btn" onclick="durSel(this)"><div class="dur-val">2–5</div><div class="dur-label">minutes</div></div>
+        <div class="dur-btn selected" onclick="durSel(this)"><div class="dur-val">5–10</div><div class="dur-label">minutes</div></div>
+        <div class="dur-btn" onclick="durSel(this)"><div class="dur-val">10–20</div><div class="dur-label">minutes</div></div>
+        <div class="dur-btn" onclick="durSel(this)"><div class="dur-val">20+</div><div class="dur-label">minutes</div></div>
+      </div>
+    </div>
+
+    <!-- Step 8: Loading -->
+    <div class="step" id="s8">
+      <div class="loading-wrap">
+        <div class="loading-orb">✦</div>
+        <div class="loading-title">Building your plan</div>
+        <div class="loading-msg" id="loading-msg">Analyzing your preferences...</div>
+        <div class="loading-bar-wrap">
+          <div class="loading-track"><div class="loading-fill" id="loading-fill"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom -->
+  <div class="onb-bottom">
+    <button class="onb-back" id="back-btn" onclick="prevStep()" disabled>← Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="onb-next" id="next-btn" onclick="nextStep()">Continue →</button>
+  </div>
+</div>
+
+<script>
+let current = 1;
+const total = 8;
+const msgs = ['Analyzing your preferences...','Creating your personalized plan...','100% — Welcome!'];
+
+function updateUI() {
+  document.querySelectorAll('.step').forEach((s,i)=>{ s.classList.toggle('active', i+1===current); });
+  document.getElementById('prog').style.width = (current/total*100)+'%';
+  document.getElementById('step-label').textContent = `Step ${current} of ${total}`;
+  document.getElementById('back-btn').disabled = current===1;
+  const isLast = current===total;
+  document.getElementById('next-btn').textContent = isLast ? 'Go to app ✦' : 'Continue →';
+  document.getElementById('next-btn').style.display = isLast ? 'none' : '';
+
+  // Dots
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = '';
+  for(let i=1;i<=total;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':i<current?' done':'');
+    dotsEl.appendChild(d);
+  }
+}
+
+function nextStep() {
+  if(current < total) { current++; updateUI(); if(current===total) runLoading(); }
+  else window.location='home.html';
+}
+function prevStep() { if(current > 1){ current--; updateUI(); } }
+
+function toggleOpt(el) { el.classList.toggle('selected'); }
+function radioSel(el, scope) { document.querySelectorAll(scope+' .radio-btn').forEach(b=>b.classList.remove('selected')); el.classList.add('selected'); }
+function durSel(el) { document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('selected')); el.classList.add('selected'); }
+
+function runLoading() {
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('back-btn').style.display='none';
+  let pct=0; let mi=0;
+  const fill=document.getElementById('loading-fill');
+  const msg=document.getElementById('loading-msg');
+  const iv=setInterval(()=>{
+    pct+=2;
+    fill.style.width=pct+'%';
+    if(pct===40){mi=1;msg.textContent=msgs[1];}
+    if(pct===90){mi=2;msg.textContent=msgs[2];}
+    if(pct>=100){clearInterval(iv);setTimeout(()=>window.location='home.html',600);}
+  },60);
+}
+
+updateUI();
+</script>
+</body>
+</html>

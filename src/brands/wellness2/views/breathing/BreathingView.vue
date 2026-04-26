@@ -1,44 +1,53 @@
 <template>
   <div class="breathing-view">
-    <div class="breathing-view__inner">
-      <!-- Header -->
-      <div class="breathing-view__header">
-        <RouterLink to="/home" class="breathing-view__back">
-          <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
-          {{ t('common.back') }}
-        </RouterLink>
-        <div class="breathing-view__info">
-          <h1 class="breathing-view__title">{{ config.title }}</h1>
-          <p class="breathing-view__desc">{{ config.description }}</p>
+    <div class="type-bar">
+      <RouterLink to="/home" class="back-btn">
+        <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" />
+        Home
+      </RouterLink>
+      <div class="type-tabs">
+        <button
+          v-for="tab in tabs"
+          :key="tab.id"
+          class="type-tab"
+          :class="{ active: activeType === tab.id }"
+          @click="changeType(tab.id)"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
+      <div style="width: 80px"></div>
+    </div>
+
+    <div class="breath-main">
+      <div class="bg-glow"></div>
+      <div class="breath-info">
+        <div class="breath-type-badge">Breathing exercise</div>
+        <h1 class="breath-title">{{ config.title }}</h1>
+        <p class="breath-desc">{{ config.description }}</p>
+      </div>
+      <div class="breathing-view__inner">
+        <BreathingCircle
+          :phase="isRunning ? currentPhase?.phase : 'idle'"
+          :count="phaseCountdown"
+          :total-duration="currentPhase?.duration || 4"
+        />
+        <div class="breathing-view__stats">
+          <BaseProgressBar :value="progress" :height="6" style="max-width:280px;width:100%" />
+          <p class="breathing-view__remaining">{{ isRunning ? formattedRemaining : 'Ready to start' }}</p>
+          <p v-if="isRunning" class="breathing-view__rounds">Round {{ rounds + 1 }}</p>
         </div>
+        <BreathingControls
+          v-model="totalDuration"
+          :durations="config.availableDurations"
+          :is-running="isRunning"
+          :is-paused="isPaused"
+          @start="start"
+          @pause="pause"
+          @stop="stop"
+        />
       </div>
 
-      <!-- Circle -->
-      <BreathingCircle
-        :phase="isRunning ? currentPhase?.phase : 'idle'"
-        :count="phaseCountdown"
-        :total-duration="currentPhase?.duration || 4"
-      />
-
-      <!-- Progress / remaining -->
-      <div class="breathing-view__stats">
-        <BaseProgressBar :value="progress" :height="6" style="max-width:280px;width:100%" />
-        <p class="breathing-view__remaining">{{ isRunning ? formattedRemaining : 'Ready to start' }}</p>
-        <p v-if="isRunning" class="breathing-view__rounds">Round {{ rounds + 1 }}</p>
-      </div>
-
-      <!-- Controls -->
-      <BreathingControls
-        v-model="totalDuration"
-        :durations="config.availableDurations"
-        :is-running="isRunning"
-        :is-paused="isPaused"
-        @start="start"
-        @pause="pause"
-        @stop="stop"
-      />
-
-      <!-- Complete overlay -->
       <Transition name="fade">
         <div v-if="isComplete" class="breathing-complete">
           <div class="breathing-complete__check">
@@ -57,15 +66,16 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { useBreathing } from '@/composables/useBreathing'
 import BreathingCircle   from '@/components/breathing/BreathingCircle.vue'
 import BreathingControls from '@/components/breathing/BreathingControls.vue'
 import BaseProgressBar   from '@/components/base/BaseProgressBar.vue'
 
-const { t }  = useI18n()
 const route  = useRoute()
+const router = useRouter()
 const typeId = route.params.type || 'box'
 
 const {
@@ -74,42 +84,38 @@ const {
   totalDuration, progress, formattedRemaining,
   start, pause, stop, reset
 } = useBreathing(typeId)
+
+const tabs = [
+  { id: 'box', label: 'Box' },
+  { id: '4-7-8', label: '4-7-8' },
+  { id: 'calm', label: 'Calm' },
+  { id: 'sos', label: 'SOS' }
+]
+const activeType = computed(() => route.params.type || 'box')
+function changeType(id) {
+  router.push({ name: 'breathing', params: { type: id } })
+}
 </script>
 
 <style scoped>
 .breathing-view {
   min-height: var(--app-min-height);
-  display: flex; align-items: center; justify-content: center;
-  background: var(--bg-base);
-  padding: 24px; position: relative; overflow: hidden;
+  background: var(--forest-950);
+  overflow: hidden;
 }
-.breathing-view::before {
-  content: ''; position: absolute; top: -15%; right: -10%;
-  width: 500px; height: 500px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(184,245,102,0.06) 0%, transparent 65%);
-  pointer-events: none;
-}
-.breathing-view::after {
-  content: ''; position: absolute; bottom: -20%; left: -10%;
-  width: 400px; height: 400px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(34,197,94,0.04) 0%, transparent 65%);
-  pointer-events: none;
-}
-.breathing-view__inner {
-  display: flex; flex-direction: column; align-items: center; gap: 40px;
-  width: 100%; max-width: 520px; position: relative; z-index: 1;
-}
-.breathing-view__header { text-align: center; width: 100%; }
-.breathing-view__back {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 13px; font-weight: 600; color: var(--lime-400);
-  text-decoration: none; margin-bottom: 24px;
-  padding: 7px 14px; border: 1px solid rgba(184,245,102,0.2);
-  border-radius: var(--radius-pill); transition: all var(--duration-fast);
-}
-.breathing-view__back:hover { color: var(--lime-300); border-color: rgba(184,245,102,0.4); }
-.breathing-view__title { font-family: var(--font-display); font-size: 36px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -1px; }
-.breathing-view__desc  { font-size: 15px; color: var(--text-secondary); }
+.type-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(16px,3vw,40px); height: 68px; background: rgba(2,10,4,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(184,245,102,0.06); }
+.type-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); border-radius: 999px; padding: 4px; border: 1px solid rgba(255,255,255,0.06); }
+.type-tab { padding: 7px 16px; border: none; border-radius: 999px; background: transparent; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+.type-tab.active { background: var(--lime-500); color: var(--forest-900); }
+.back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary); text-decoration: none; }
+.breath-main { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 68px; position: relative; }
+.bg-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(184,245,102,0.06) 0%, transparent 70%); left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; animation: breathe-bg 8s ease-in-out infinite; }
+@keyframes breathe-bg { 0%,100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } }
+.breath-info { text-align: center; margin-bottom: 24px; z-index: 2; }
+.breath-type-badge { display: inline-flex; padding: 5px 14px; border-radius: 999px; background: rgba(184,245,102,0.08); border: 1px solid rgba(184,245,102,0.18); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--lime-400); margin-bottom: 12px; }
+.breath-title { font-family: var(--font-display); font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: -1px; color: var(--text-primary); margin-bottom: 6px; }
+.breath-desc { font-size: 14px; color: var(--text-secondary); }
+.breathing-view__inner { display: flex; flex-direction: column; align-items: center; gap: 24px; z-index: 2; }
 .breathing-view__stats { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .breathing-view__remaining { font-family: var(--font-mono); font-size: 24px; color: var(--lime-400); }
 .breathing-view__rounds    { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
@@ -142,14 +148,7 @@ const {
 .bc-btn--ghost:hover { background: rgba(255,255,255,0.09); }
 
 @media (max-width: 640px) {
-  .breathing-view {
-    padding: 18px 16px;
-  }
-  .breathing-view__inner {
-    gap: 28px;
-  }
-  .breathing-view__title {
-    font-size: 30px;
-  }
+  .type-tab { padding: 6px 10px; font-size: 11px; }
+  .breathing-view__inner { gap: 18px; width: calc(100% - 32px); }
 }
 </style>

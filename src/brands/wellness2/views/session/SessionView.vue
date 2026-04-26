@@ -86,30 +86,39 @@ function goBack() {
 </script>
 
 <style scoped>
-.session-view { min-height: var(--app-min-height); display: flex; flex-direction: column; background: var(--parchment); }
+.session-view { min-height: var(--app-min-height); display: flex; flex-direction: column; background: var(--forest-900); }
 .session-view__player { position: relative; flex: 1; display: flex; flex-direction: column; }
 .session-view__back {
   position: fixed; top: 20px; left: 24px; z-index: 50;
   display: flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: var(--radius-sm);
-  background: var(--parchment); border: 2px solid var(--ink-200);
-  box-shadow: 3px 3px 0 var(--ink-200);
+  padding: 9px 16px; border-radius: 999px;
+  background: rgba(7,15,10,0.82);
+  border: 1px solid rgba(184,245,102,0.22);
+  backdrop-filter: blur(14px);
   font-family: var(--font-body); font-size: 13px; font-weight: 600;
-  color: var(--ink-800); cursor: pointer; transition: all var(--duration-fast);
+  color: var(--lime-400); cursor: pointer; transition: all var(--duration-fast);
 }
-.session-view__back:hover { background: var(--sage-500); color: white; border-color: var(--sage-600); box-shadow: 3px 3px 0 var(--sage-700); }
+.session-view__back:hover {
+  background: rgba(184,245,102,0.14);
+  color: var(--lime-300);
+  box-shadow: 0 0 18px rgba(184,245,102,0.24);
+}
 .session-view__empty {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 20px; min-height: var(--app-min-height); color: var(--ink-900); background: var(--parchment);
+  gap: 20px; min-height: var(--app-min-height); color: var(--text-primary); background: var(--forest-900);
 }
 .session-view__empty p { font-size: 16px; color: var(--text-secondary); }
 .session-view__explore-btn {
-  padding: 12px 28px; border-radius: var(--radius-sm);
-  background: var(--sage-500); color: white; border: 2px solid var(--sage-600);
+  padding: 12px 28px; border-radius: 999px;
+  background: var(--lime-500); color: var(--forest-900); border: none;
   text-decoration: none; font-weight: 600; font-size: 14px;
-  box-shadow: 3px 3px 0 var(--sage-700); transition: all var(--duration-fast);
+  box-shadow: 0 0 20px rgba(184,245,102,0.28); transition: all var(--duration-fast);
 }
-.session-view__explore-btn:hover { background: var(--sage-600); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--sage-700); }
+.session-view__explore-btn:hover {
+  background: var(--lime-400);
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(184,245,102,0.35);
+}
 
 @media (max-width: 640px) {
   .session-view__back {

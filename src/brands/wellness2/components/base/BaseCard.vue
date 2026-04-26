@@ -8,12 +8,16 @@ defineProps({ variant:{ type:String, default:'default' }, hoverable:{ type:Boole
 </script>
 <style scoped>
 .base-card {
-  background:var(--bg-surface); border-radius:var(--radius);
-  overflow:hidden;
-  transition:transform var(--duration-normal), box-shadow var(--duration-normal);
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border-radius: var(--radius); overflow: hidden;
+  transition: all var(--duration-normal) var(--ease-smooth);
 }
-.base-card--default  { border:2px solid var(--ink-100); }
-.base-card--elevated { box-shadow:var(--shadow-md); border:1px solid var(--ink-100); }
-.base-card--flat     { background:var(--parchment-2); border:none; }
-.base-card--hoverable:hover { transform:translate(-1px,-2px); box-shadow:4px 4px 0 var(--sage-100); }
+.base-card--default  { border: var(--border-glass); box-shadow: var(--glow-card); }
+.base-card--elevated { border: var(--border-glass); box-shadow: var(--glow-card-hover); }
+.base-card--flat     { background: rgba(13,31,18,0.4); border: var(--border-subtle); }
+.base-card--hoverable:hover {
+  border-color: rgba(184,245,102,0.25);
+  box-shadow: var(--glow-card-hover);
+  transform: translateY(-2px);
+}
 </style>

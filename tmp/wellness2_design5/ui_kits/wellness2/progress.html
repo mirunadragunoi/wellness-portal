@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wellness — Progress</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { background:var(--forest-900); min-height:100vh; }
+.progress-wrap { max-width:1280px; margin:0 auto; padding:40px var(--container-pad) 100px; }
+
+.page-header { margin-bottom:36px; }
+.page-title { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,48px); font-weight:800; letter-spacing:-2px; color:var(--text-primary); margin-bottom:6px; }
+.page-sub { font-size:15px; color:var(--text-secondary); }
+
+/* Stats grid */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+.stat-card {
+  padding:28px 24px; border-radius:20px;
+  background:var(--bg-glass); backdrop-filter:blur(20px);
+  border:var(--border-glass);
+  position:relative; overflow:hidden;
+  transition:all 280ms var(--ease-out);
+}
+.stat-card:hover { border-color:rgba(184,245,102,0.22); box-shadow:var(--glow-card-hover); transform:translateY(-2px); }
+.stat-card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; background:radial-gradient(circle,rgba(184,245,102,0.06) 0%,transparent 70%); pointer-events:none; }
+.stat-icon { font-size:22px; margin-bottom:14px; }
+.stat-val { font-family:'Syne',sans-serif; font-size:clamp(32px,3.5vw,48px); font-weight:800; letter-spacing:-2px; color:var(--lime-500); line-height:1; margin-bottom:6px; }
+.stat-val .stat-unit { font-size:18px; font-weight:600; letter-spacing:-1px; color:var(--lime-400); }
+.stat-label { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; font-weight:600; }
+.stat-delta { margin-top:10px; font-size:12px; color:var(--emerald-400); font-weight:600; }
+
+/* Two-column below stats */
+.bottom-grid { display:grid; grid-template-columns:1fr 400px; gap:20px; }
+
+/* Mood chart */
+.chart-card {
+  background:var(--bg-glass); backdrop-filter:blur(20px);
+  border:var(--border-glass); border-radius:20px; padding:28px;
+  margin-bottom:20px;
+}
+.chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.chart-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--text-primary); }
+.chart-period { font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+
+/* Bar chart */
+.bar-chart { display:flex; align-items:flex-end; gap:8px; height:100px; margin-bottom:12px; }
+.bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.bar { width:100%; border-radius:6px 6px 0 0; transition:all 300ms var(--ease-out); cursor:pointer; position:relative; min-height:4px; }
+.bar:hover { filter:brightness(1.2); }
+.bar-day { font-size:10px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-weight:500; }
+.bar-val-label { font-size:9px; color:var(--text-muted); }
+
+/* Mood timeline */
+.mood-timeline { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
+.mood-timeline::-webkit-scrollbar{display:none;}
+.mood-point { display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; }
+.mood-point-dot { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; border:2px solid transparent; transition:all 200ms; cursor:pointer; }
+.mood-point-dot:hover { transform:scale(1.15); }
+.mood-point-date { font-size:9px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+
+/* Session history */
+.history-card { background:var(--bg-glass); backdrop-filter:blur(20px); border:var(--border-glass); border-radius:20px; padding:28px; }
+.history-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:20px; }
+.history-item {
+  display:grid; grid-template-columns:36px 1fr auto; gap:12px; align-items:center;
+  padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.history-item:last-child { border-bottom:none; padding-bottom:0; }
+.history-icon { width:36px; height:36px; border-radius:10px; background:rgba(184,245,102,0.08); border:1px solid rgba(184,245,102,0.12); display:flex; align-items:center; justify-content:center; font-size:16px; }
+.history-title-text { font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:2px; }
+.history-date { font-size:11px; color:var(--text-muted); }
+.history-dur { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--lime-500); font-weight:500; }
+
+/* Sidebar right */
+.sidebar-right { display:flex; flex-direction:column; gap:16px; }
+
+/* Streak calendar */
+.streak-big {
+  padding:28px; background:linear-gradient(160deg,var(--forest-700),var(--forest-600));
+  border:1px solid rgba(184,245,102,0.12); border-radius:20px;
+  position:relative; overflow:hidden;
+}
+.streak-big::after { content:''; position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:radial-gradient(circle,rgba(184,245,102,0.08) 0%,transparent 70%); }
+.streak-big-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:3px; color:var(--text-muted); margin-bottom:8px; display:block; }
+.streak-big-val { font-family:'Syne',sans-serif; font-size:52px; font-weight:800; letter-spacing:-3px; color:var(--lime-500); line-height:1; margin-bottom:4px; }
+.streak-big-unit { font-size:13px; color:var(--text-secondary); margin-bottom:20px; }
+.streak-calendar { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal-day { aspect-ratio:1; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; font-family:'JetBrains Mono',monospace; color:var(--text-muted); cursor:default; }
+.cal-done { background:var(--lime-500); color:var(--forest-900); font-weight:700; }
+.cal-today { background:rgba(184,245,102,0.25); color:var(--lime-400); border:1px solid rgba(184,245,102,0.4); }
+.cal-empty { background:rgba(255,255,255,0.04); }
+
+/* Goals card */
+.goals-card { padding:24px; background:var(--bg-glass); backdrop-filter:blur(16px); border:var(--border-glass); border-radius:18px; }
+.goals-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:3px; color:var(--lime-500); margin-bottom:16px; }
+.goal-item { margin-bottom:14px; }
+.goal-item:last-child { margin-bottom:0; }
+.goal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.goal-name { font-size:13px; color:var(--text-secondary); }
+.goal-pct { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--lime-400); font-weight:500; }
+.goal-track { height:5px; background:rgba(255,255,255,0.07); border-radius:999px; overflow:hidden; }
+.goal-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--emerald-400),var(--lime-500)); position:relative; }
+.goal-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); animation:shimmer-line 2s infinite; background-size:200%; }
+
+@media(max-width:1100px){.bottom-grid{grid-template-columns:1fr;}.sidebar-right{display:grid;grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr);}.sidebar-right{grid-template-columns:1fr;}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav class="app-navbar">
+  <div class="nav-logo"><span class="nav-logo-dot"></span>wellness</div>
+  <div class="nav-tabs">
+    <a href="home.html" class="nav-tab">Home</a>
+    <a href="explore.html" class="nav-tab">Explore</a>
+    <a href="learn.html" class="nav-tab">Learn</a>
+    <a href="progress.html" class="nav-tab active">Progress</a>
+  </div>
+  <div class="nav-right">
+    <a href="sos.html" class="nav-sos">SOS</a>
+    <div class="nav-avatar">A</div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="progress-wrap">
+    <div class="page-header">
+      <h1 class="page-title">Your Progress</h1>
+      <p class="page-sub">Track your wellness journey — sessions, moods, and streaks.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🎧</div>
+        <div class="stat-val">47<span class="stat-unit"></span></div>
+        <div class="stat-label">Total Sessions</div>
+        <div class="stat-delta">↑ 8 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱</div>
+        <div class="stat-val">6<span class="stat-unit">h</span></div>
+        <div class="stat-label">Total Time</div>
+        <div class="stat-delta">↑ 48 min this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-val">21<span class="stat-unit"></span></div>
+        <div class="stat-label">Current Streak</div>
+        <div class="stat-delta">Personal best!</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-val">21<span class="stat-unit"></span></div>
+        <div class="stat-label">Longest Streak</div>
+        <div class="stat-delta" style="color:var(--amber-400)">All-time record</div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <!-- Left column -->
+      <div>
+        <!-- Mood chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Mood History</span>
+            <span class="chart-period">Last 7 days</span>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-col"><div class="bar" style="height:35%;background:linear-gradient(to top,var(--forest-400),var(--forest-300))"></div><div class="bar-day">M</div></div>
+            <div class="bar-col"><div class="bar" style="height:55%;background:linear-gradient(to top,var(--emerald-500),var(--emerald-400))"></div><div class="bar-day">T</div></div>
+            <div class="bar-col"><div class="bar" style="height:45%;background:linear-gradient(to top,var(--forest-400),var(--forest-300))"></div><div class="bar-day">W</div></div>
+            <div class="bar-col"><div class="bar" style="height:70%;background:linear-gradient(to top,var(--emerald-500),var(--lime-500))"></div><div class="bar-day">T</div></div>
+            <div class="bar-col"><div class="bar" style="height:80%;background:linear-gradient(to top,var(--lime-500),var(--lime-400))"></div><div class="bar-day">F</div></div>
+            <div class="bar-col"><div class="bar" style="height:65%;background:linear-gradient(to top,var(--emerald-500),var(--emerald-400))"></div><div class="bar-day">S</div></div>
+            <div class="bar-col"><div class="bar" style="height:75%;background:linear-gradient(to top,var(--lime-500),var(--lime-400));box-shadow:0 0 12px rgba(184,245,102,0.3)"></div><div class="bar-day" style="color:var(--lime-500)">S</div></div>
+          </div>
+          <div class="mood-timeline">
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(45,106,52,0.3);border-color:var(--forest-400)">🌧</div><div class="mood-point-date">Mon</div></div>
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(52,211,153,0.15);border-color:var(--emerald-400)">🌤</div><div class="mood-point-date">Tue</div></div>
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(45,106,52,0.2);border-color:var(--forest-300)">☁️</div><div class="mood-point-date">Wed</div></div>
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(184,245,102,0.15);border-color:var(--lime-500)">☀️</div><div class="mood-point-date">Thu</div></div>
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(184,245,102,0.2);border-color:var(--lime-500);box-shadow:0 0 10px rgba(184,245,102,0.25)">✨</div><div class="mood-point-date">Fri</div></div>
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(52,211,153,0.15);border-color:var(--emerald-400)">🌤</div><div class="mood-point-date">Sat</div></div>
+            <div class="mood-point"><div class="mood-point-dot" style="background:rgba(184,245,102,0.2);border-color:var(--lime-500);box-shadow:0 0 12px rgba(184,245,102,0.3)">☀️</div><div class="mood-point-date">Sun</div></div>
+          </div>
+        </div>
+
+        <!-- Session history -->
+        <div class="history-card">
+          <div class="history-title">Recent Sessions</div>
+          <div class="history-item">
+            <div class="history-icon">🧘</div>
+            <div><div class="history-title-text">Morning Clarity</div><div class="history-date">Today · Meditation</div></div>
+            <div class="history-dur">10 min</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon">🌬️</div>
+            <div><div class="history-title-text">Box Breathing 4-4-4</div><div class="history-date">Yesterday · Breathing</div></div>
+            <div class="history-dur">5 min</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon">😴</div>
+            <div><div class="history-title-text">Forest at Night</div><div class="history-date">2 days ago · Sleep Story</div></div>
+            <div class="history-dur">25 min</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon">🧘</div>
+            <div><div class="history-title-text">Deep Belly Breathing</div><div class="history-date">3 days ago · Breathing</div></div>
+            <div class="history-dur">7 min</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon">🎵</div>
+            <div><div class="history-title-text">Rain on Leaves</div><div class="history-date">4 days ago · Soundscape</div></div>
+            <div class="history-dur">18 min</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right sidebar -->
+      <div class="sidebar-right">
+        <div class="streak-big">
+          <span class="streak-big-label">🔥 Current Streak</span>
+          <div class="streak-big-val">21</div>
+          <div class="streak-big-unit">days in a row</div>
+          <div class="streak-calendar" id="cal"></div>
+        </div>
+
+        <div class="goals-card">
+          <div class="goals-title">Weekly Goals</div>
+          <div class="goal-item">
+            <div class="goal-head"><span class="goal-name">Daily meditation</span><span class="goal-pct">5/7 days</span></div>
+            <div class="goal-track"><div class="goal-fill" style="width:71%"></div></div>
+          </div>
+          <div class="goal-item">
+            <div class="goal-head"><span class="goal-name">Mindful minutes</span><span class="goal-pct">48/60 min</span></div>
+            <div class="goal-track"><div class="goal-fill" style="width:80%"></div></div>
+          </div>
+          <div class="goal-item">
+            <div class="goal-head"><span class="goal-name">Mood check-ins</span><span class="goal-pct">7/7 days</span></div>
+            <div class="goal-track"><div class="goal-fill" style="width:100%"></div></div>
+          </div>
+          <div class="goal-item">
+            <div class="goal-head"><span class="goal-name">Breathing sessions</span><span class="goal-pct">2/5 sessions</span></div>
+            <div class="goal-track"><div class="goal-fill" style="width:40%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <a href="home.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</a>
+  <a href="explore.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Explore</a>
+  <a href="learn.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Learn</a>
+  <a href="progress.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Progress</a>
+</div>
+
+<script>
+// Build calendar
+const cal = document.getElementById('cal');
+const days = ['M','T','W','T','F','S','S'];
+for(let w=0;w<4;w++){
+  for(let d=0;d<7;d++){
+    const i=w*7+d;
+    const el=document.createElement('div');
+    el.className='cal-day';
+    const done=i<21;
+    const today=i===20;
+    if(today){el.className='cal-day cal-today';el.textContent='21';}
+    else if(done){el.className='cal-day cal-done';el.textContent='✓';}
+    else{el.className='cal-day cal-empty';}
+    cal.appendChild(el);
+  }
+}
+</script>
+</body>
+</html>

@@ -9,8 +9,11 @@ const BRAND_MAP = {
 }
 
 export function getBrandKey() {
-  const key = (import.meta.env.MODE || import.meta.env.VITE_BRAND || 'wellness').toLowerCase()
-  return BRAND_MAP[key] ? key : 'wellness'
+  const envBrand = (import.meta.env.VITE_BRAND || '').toLowerCase()
+  const modeBrand = (import.meta.env.MODE || '').toLowerCase()
+  if (BRAND_MAP[envBrand]) return envBrand
+  if (BRAND_MAP[modeBrand]) return modeBrand
+  return 'wellness'
 }
 
 export function getBrandConfig() {

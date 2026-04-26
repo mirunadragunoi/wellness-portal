@@ -81,7 +81,9 @@ function checkMood(id) {
 .post-session {
   min-height: var(--app-min-height); display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  background: var(--forest-900); padding: 48px var(--container-pad); text-align: center;
+  background: var(--forest-900);
+  padding: calc(var(--navbar-height) + 32px) var(--container-pad) 80px;
+  text-align: center;
 }
 .post-session__check {
   width: 80px; height: 80px; border-radius: 50%;
@@ -90,7 +92,7 @@ function checkMood(id) {
   color: var(--lime-400); animation: bounceIn 0.6s var(--ease-bounce);
   box-shadow: 0 0 40px rgba(184,245,102,0.2); margin-bottom: 16px;
 }
-.post-session__title { font-family: var(--font-display); font-size: clamp(28px,4vw,44px); font-weight: 800; letter-spacing: -2px; color: var(--text-primary); margin-bottom: 8px; }
+.post-session__title { font-family: var(--font-display); font-size: clamp(24px,3vw,36px); font-weight: 800; letter-spacing: -1.5px; color: var(--text-primary); margin-bottom: 8px; }
 .post-session__body   { font-size: 15px; color: var(--text-secondary); max-width: 420px; line-height: 1.7; margin-bottom: 36px; }
 .post-session__mood  { margin-bottom: 32px; }
 .post-session__mood-q { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }

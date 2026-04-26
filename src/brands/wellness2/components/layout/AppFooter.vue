@@ -2,9 +2,9 @@
   <footer class="footer">
     <div class="footer__top">
       <div class="footer__brand">
-        <span class="footer__logo">
+        <RouterLink to="/" class="footer__logo">
           {{ t('brand.name') }}
-        </span>
+        </RouterLink>
         <p class="footer__tagline">Your daily companion for mindful living.</p>
       </div>
       <ul class="footer__links">
@@ -26,7 +26,11 @@ const { t } = useI18n()
 </script>
 
 <style scoped>
-.footer { background:var(--ink-900); margin-top:auto; }
+.footer {
+  background: var(--forest-950);
+  margin-top: auto;
+  border-top: 1px solid rgba(184,245,102,0.08);
+}
 
 .footer__top {
   display:flex; align-items:flex-start; justify-content:space-between;
@@ -36,10 +40,17 @@ const { t } = useI18n()
 .footer__brand { display:flex; flex-direction:column; gap:10px; }
 .footer__logo {
   display:inline-flex; align-items:center; gap:10px;
-  font-family:var(--font-display); font-size:20px; font-weight:400;
-  color:var(--parchment);
+  font-family:var(--font-display); font-size:20px; font-weight:700;
+  color:var(--text-primary); text-decoration:none;
+  transition: opacity 150ms;
 }
-.footer__tagline { font-size:13px; color:var(--ink-400); max-width:260px; line-height:1.6; }
+.footer__logo:hover { opacity: 0.8; }
+.footer__tagline {
+  font-size: 13px;
+  color: var(--text-secondary);
+  max-width: 260px;
+  line-height: 1.6;
+}
 
 .footer__links {
   display: flex;
@@ -49,16 +60,16 @@ const { t } = useI18n()
   list-style: none;
 }
 .footer__link {
-  font-size:14px; color:var(--ink-400); text-decoration:none;
+  font-size:14px; color:var(--text-secondary); text-decoration:none;
   transition:color var(--duration-fast);
 }
-.footer__link:hover { color:var(--sage-300); }
+.footer__link:hover { color:var(--lime-400); }
 
 .footer__bottom {
   display:flex; align-items:center; justify-content:flex-start;
   padding:16px var(--container-pad);
 }
-.footer__copy { font-size:12px; color:var(--ink-500); }
+.footer__copy { font-size:12px; color:var(--text-muted); }
 
 @media (max-width:640px) {
   .footer__top { flex-direction:column; padding: 36px 16px 24px; }

@@ -1,21 +1,25 @@
 <template>
-  <section class="how section">
-    <div class="container">
-      <div class="how__header">
-        <span class="section-label">{{ t('howItWorks.label') }}</span>
-        <h2 class="section-title">{{ t('howItWorks.title_1') }} <em>{{ t('howItWorks.title_em') }}</em></h2>
-      </div>
-      <div class="how__steps">
-        <div v-for="(step, i) in steps" :key="i" class="how-step">
-          <div class="how-step__num">{{ String(i+1).padStart(2,'0') }}</div>
-          <div class="how-step__media" :style="{ backgroundImage:`url(${step.img})` }" />
-          <div class="how-step__copy">
-            <h3 class="how-step__title">{{ t(step.titleKey) }}</h3>
-            <p  class="how-step__desc">{{ t(step.descKey) }}</p>
+  <section class="how-section" id="how">
+    <div class="how-inner">
+      <span class="section-label reveal">{{ t('howItWorks.label') }}</span>
+      <h2 class="section-title reveal reveal-1">
+        {{ t('howItWorks.title_1') }} <span class="lime">{{ t('howItWorks.title_em') }}</span>
+      </h2>
+
+      <div class="how-steps">
+        <div
+          v-for="(step, i) in steps"
+          :key="i"
+          class="how-step-row reveal"
+          :class="`reveal-${i}`"
+        >
+          <div class="how-step-num">0{{ i + 1 }}</div>
+          <div class="how-step-content">
+            <div class="step-title">{{ t(step.titleKey) }}</div>
+            <div class="step-desc">{{ t(step.descKey) }}</div>
           </div>
+          <div class="how-step-img" :style="{ backgroundImage: `url(${step.img})` }" />
         </div>
-        <!-- Connecting line -->
-        <div class="how__line" aria-hidden="true" />
       </div>
     </div>
   </section>
@@ -26,45 +30,60 @@ import { useI18n } from 'vue-i18n'
 import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 const steps = [
-  { img:LANDING_IMAGES.howStep1, titleKey:'howItWorks.step1_title', descKey:'howItWorks.step1_desc' },
-  { img:LANDING_IMAGES.howStep2, titleKey:'howItWorks.step2_title', descKey:'howItWorks.step2_desc' },
-  { img:LANDING_IMAGES.howStep3, titleKey:'howItWorks.step3_title', descKey:'howItWorks.step3_desc' },
+  { img: LANDING_IMAGES.howStep1, titleKey: 'howItWorks.step1_title', descKey: 'howItWorks.step1_desc' },
+  { img: LANDING_IMAGES.howStep2, titleKey: 'howItWorks.step2_title', descKey: 'howItWorks.step2_desc' },
+  { img: LANDING_IMAGES.howStep3, titleKey: 'howItWorks.step3_title', descKey: 'howItWorks.step3_desc' },
 ]
 </script>
 
 <style scoped>
-.how { background:var(--bg-surface); }
-.how__header { margin-bottom:56px; }
+.how-section { background: var(--forest-800); }
+.how-inner { max-width: var(--container-max); margin: 0 auto; padding: 100px var(--container-pad); }
 
-.how__steps {
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:40px; position:relative;
+.section-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 3px; color: var(--lime-500); display: block; margin-bottom: 12px;
 }
-.how__line {
-  position:absolute; top:82px; left:calc(16.66% + 8px); right:calc(16.66% + 8px); height:2px;
-  background:repeating-linear-gradient(90deg, var(--sage-300) 0, var(--sage-300) 8px, transparent 8px, transparent 16px);
-  pointer-events:none; z-index:0;
+.section-title {
+  font-family: var(--font-display); font-size: clamp(36px,4vw,56px);
+  font-weight: 800; letter-spacing: -2px; color: var(--text-primary); margin-bottom: 56px;
+}
+.lime { color: var(--lime-500); }
+
+.how-steps { display: flex; flex-direction: column; }
+.how-step-row {
+  display: grid; grid-template-columns: 80px 1fr 360px; gap: 40px; align-items: center;
+  padding: 48px 0; border-top: 1px solid rgba(184,245,102,0.06);
+  transition: background 300ms;
+}
+.how-step-row:hover {
+  background: rgba(184,245,102,0.015);
+  margin: 0 -24px; padding-left: 24px; padding-right: 24px; border-radius: 16px;
 }
 
-.how-step { position:relative; z-index:1; }
-.how-step__num {
-  font-family:var(--font-display); font-size:11px; font-weight:600;
-  text-transform:uppercase; letter-spacing:3px; color:var(--sage-500);
-  margin-bottom:16px;
+.how-step-num {
+  font-family: var(--font-display); font-size: 64px; font-weight: 800;
+  color: rgba(184,245,102,0.15); line-height: 1; letter-spacing: -3px;
 }
-.how-step__media {
-  width:100%; aspect-ratio:4/3;
-  border-radius:var(--radius-lg); background-size:cover; background-position:center;
-  margin-bottom:20px; border:2px solid var(--ink-100);
-  transition:transform var(--duration-normal), box-shadow var(--duration-normal);
+.step-title {
+  font-family: var(--font-display); font-size: 26px; font-weight: 800;
+  letter-spacing: -1px; color: var(--text-primary); margin-bottom: 10px;
 }
-.how-step:hover .how-step__media { transform:translate(-3px,-3px); box-shadow:6px 6px 0 var(--sage-200); }
+.step-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; max-width: 420px; }
 
-.how-step__title { font-family:var(--font-display); font-size:22px; font-weight:400; color:var(--ink-900); margin-bottom:10px; }
-.how-step__desc  { font-size:14px; color:var(--text-secondary); line-height:1.65; }
+.how-step-img {
+  width: 100%; height: 180px; border-radius: 16px; overflow: hidden;
+  background: var(--forest-700);
+  background-size: cover; background-position: center;
+  filter: brightness(0.8) saturate(1.2);
+}
 
-@media (max-width:768px) {
-  .how__steps { grid-template-columns:1fr; gap:28px; }
-  .how__line  { display:none; }
+@media (max-width: 1024px) {
+  .how-step-row { grid-template-columns: 60px 1fr; }
+  .how-step-img { display: none; }
+}
+@media (max-width: 640px) {
+  .how-step-row { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
+  .how-step-num { font-size: 48px; }
 }
 </style>

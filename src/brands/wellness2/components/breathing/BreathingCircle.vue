@@ -55,7 +55,7 @@ const displayCount = computed(() =>
 
 // Dynamic scale based on phase + progress within phase
 const circleStyle = computed(() => {
-  const progress = props.totalDuration > 0 ? 1 - props.count / props.totalDuration : 0
+  const progress = 1 - props.count / props.totalDuration
   let scale = 1
   let glow  = '0 0 0 0 rgba(184,245,102,0)'
 

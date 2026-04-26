@@ -5,7 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:wellness": "vite --mode wellness",
+    "dev:wellness2": "vite --mode wellness2",
+    "dev:wellness2:phone": "vite --mode wellness2 --host --port 5174",
+    "dev:wellness3": "vite --mode wellness3",
     "build": "vite build",
+    "build:wellness": "vite build --mode wellness",
+    "build:wellness2": "vite build --mode wellness2",
+    "build:wellness3": "vite build --mode wellness3",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },

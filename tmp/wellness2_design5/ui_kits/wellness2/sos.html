@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wellness — SOS</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { background:var(--forest-950); min-height:100vh; overflow-x:hidden; }
+
+/* Top bar */
+.sos-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px clamp(16px,3vw,40px);
+}
+.sos-logo { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; display:flex; align-items:center; gap:6px; }
+.sos-logo-dot { width:6px; height:6px; border-radius:50%; background:var(--lime-500); box-shadow:0 0 8px rgba(184,245,102,0.8); }
+.close-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--text-muted); cursor:pointer; transition:all 150ms; }
+.close-btn:hover { color:var(--text-primary); background:rgba(255,255,255,0.1); }
+
+/* Screen management */
+.screen { display:none; }
+.screen.active { display:block; animation:fadeInUp 0.4s var(--ease-out) both; }
+
+/* ── Main menu ── */
+.sos-menu { max-width:600px; margin:0 auto; padding:0 clamp(16px,3vw,40px) 48px; }
+.sos-header { text-align:center; margin-bottom:40px; }
+.sos-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 18px; border-radius:999px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#f87171; margin-bottom:16px; }
+.sos-badge-dot { width:6px; height:6px; border-radius:50%; background:#f87171; animation:pulse-dot 1.5s ease infinite; }
+.sos-title { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,44px); font-weight:800; letter-spacing:-1.5px; color:var(--text-primary); margin-bottom:8px; }
+.sos-sub { font-size:15px; color:var(--text-secondary); }
+
+.sos-options { display:flex; flex-direction:column; gap:12px; }
+.sos-opt {
+  display:flex; align-items:center; gap:20px;
+  padding:24px; border-radius:20px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  cursor:pointer; transition:all 250ms var(--ease-out);
+  text-align:left;
+}
+.sos-opt:hover { background:rgba(184,245,102,0.06); border-color:rgba(184,245,102,0.2); transform:translateX(4px); }
+.sos-opt-icon { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; }
+.sos-opt:nth-child(1) .sos-opt-icon { background:rgba(184,245,102,0.1); border:1px solid rgba(184,245,102,0.2); }
+.sos-opt:nth-child(2) .sos-opt-icon { background:rgba(52,211,153,0.1); border:1px solid rgba(52,211,153,0.2); }
+.sos-opt:nth-child(3) .sos-opt-icon { background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); }
+.sos-opt-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:4px; }
+.sos-opt-desc { font-size:13px; color:var(--text-secondary); line-height:1.5; }
+.sos-opt-arrow { margin-left:auto; font-size:18px; color:var(--text-muted); flex-shrink:0; transition:transform 200ms; }
+.sos-opt:hover .sos-opt-arrow { transform:translateX(4px); color:var(--lime-400); }
+
+/* ── Breathing screen ── */
+.breath-screen { max-width:480px; margin:0 auto; padding:0 clamp(16px,3vw,40px) 48px; text-align:center; }
+.screen-title { font-family:'Syne',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:800; letter-spacing:-1px; color:var(--text-primary); margin-bottom:6px; }
+.screen-sub { font-size:14px; color:var(--text-secondary); margin-bottom:40px; }
+.sos-circle-wrap { position:relative; width:220px; height:220px; margin:0 auto 40px; }
+.sos-ring { position:absolute; border-radius:50%; border:1px solid rgba(184,245,102,0.12); animation:ring-pulse 3s ease-in-out infinite; }
+.sos-ring-1 { inset:-16px; animation-delay:0s; }
+.sos-ring-2 { inset:-6px; animation-delay:0.4s; }
+.sos-circle-main {
+  position:absolute; inset:0; border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, rgba(184,245,102,0.15) 0%, rgba(13,31,18,0.9) 100%);
+  border:2px solid rgba(184,245,102,0.25);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.sos-phase { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--lime-400); margin-bottom:4px; }
+.sos-count { font-family:'JetBrains Mono',monospace; font-size:48px; font-weight:400; color:var(--text-primary); line-height:1; }
+@keyframes ring-pulse { 0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.03)} }
+
+.feel-better { padding:24px; background:rgba(184,245,102,0.06); border:1px solid rgba(184,245,102,0.15); border-radius:20px; text-align:center; margin-top:8px; display:none; }
+.feel-better-q { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text-primary); margin-bottom:20px; }
+.feel-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+/* ── Grounding screen ── */
+.ground-screen { max-width:520px; margin:0 auto; padding:0 clamp(16px,3vw,40px) 48px; }
+.ground-card {
+  padding:40px 36px; background:var(--bg-glass); backdrop-filter:blur(20px);
+  border:var(--border-glass); border-radius:24px; text-align:center; margin-bottom:20px;
+}
+.ground-num { font-family:'Syne',sans-serif; font-size:80px; font-weight:800; letter-spacing:-4px; color:var(--lime-500); line-height:1; margin-bottom:4px; }
+.ground-sense { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:3px; color:var(--text-muted); margin-bottom:16px; }
+.ground-instruction { font-size:clamp(17px,2vw,22px); color:var(--text-primary); line-height:1.5; font-family:'Syne',sans-serif; font-weight:700; }
+.ground-progress { display:flex; gap:6px; justify-content:center; margin-bottom:28px; }
+.gp-dot { width:32px; height:4px; border-radius:999px; background:rgba(255,255,255,0.08); transition:all 300ms; }
+.gp-dot.done { background:var(--lime-500); }
+.gp-dot.active { background:rgba(184,245,102,0.4); }
+
+/* ── Calm screen ── */
+.calm-screen { max-width:480px; margin:0 auto; padding:0 clamp(16px,3vw,40px) 48px; text-align:center; }
+.calm-orb { width:160px; height:160px; border-radius:50%; margin:0 auto 32px; background:radial-gradient(circle,rgba(184,245,102,0.2) 0%,rgba(34,197,94,0.08) 50%,transparent 70%); border:2px solid rgba(184,245,102,0.2); display:flex; align-items:center; justify-content:center; font-size:48px; animation:breathe-orb 3.5s ease-in-out infinite; }
+@keyframes breathe-orb{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(184,245,102,0.1)}50%{transform:scale(1.1);box-shadow:0 0 40px 8px rgba(184,245,102,0.08)}}
+.calm-title { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; letter-spacing:-1px; color:var(--text-primary); margin-bottom:8px; }
+.calm-body { font-size:15px; color:var(--text-secondary); line-height:1.7; margin-bottom:32px; }
+.calm-steps { text-align:left; display:flex; flex-direction:column; gap:10px; margin-bottom:32px; }
+.calm-step { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); }
+.calm-step-num { width:24px; height:24px; border-radius:50%; background:rgba(184,245,102,0.1); border:1px solid rgba(184,245,102,0.2); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--lime-400); flex-shrink:0; }
+.calm-step-text { font-size:14px; color:var(--text-secondary); line-height:1.5; }
+
+/* Shared back + buttons */
+.screen-back { display:flex; align-items:center; gap:6px; padding:10px 16px; border-radius:999px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all 150ms; width:fit-content; margin-bottom:28px; }
+.screen-back:hover { color:var(--text-primary); }
+.btn-lime { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:999px; background:var(--lime-500); color:var(--forest-900); font-size:15px; font-weight:700; cursor:pointer; transition:all 220ms var(--ease-out); border:none; font-family:'DM Sans',sans-serif; }
+.btn-lime:hover { background:var(--lime-400); box-shadow:0 0 32px rgba(184,245,102,0.35); }
+.btn-outline { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:999px; background:transparent; color:var(--text-secondary); font-size:15px; font-weight:600; cursor:pointer; transition:all 200ms; border:1px solid rgba(255,255,255,0.1); font-family:'DM Sans',sans-serif; }
+.btn-outline:hover { color:var(--text-primary); border-color:rgba(255,255,255,0.2); }
+
+@media(max-width:480px) { .sos-opt { padding:18px; gap:14px; } .sos-opt-icon { width:44px; height:44px; font-size:20px; } .ground-num { font-size:56px; } }
+</style>
+</head>
+<body>
+
+<div class="sos-top">
+  <div class="sos-logo"><span class="sos-logo-dot"></span>wellness</div>
+  <div class="close-btn" onclick="window.location='home.html'">✕</div>
+</div>
+
+<!-- MENU -->
+<div class="screen active" id="screen-menu">
+  <div class="sos-menu">
+    <div class="sos-header">
+      <div class="sos-badge"><span class="sos-badge-dot"></span>Quick Relief</div>
+      <h1 class="sos-title">Choose what you need right now</h1>
+      <p class="sos-sub">We'll guide you through a fast, effective exercise.</p>
+    </div>
+    <div class="sos-options">
+      <div class="sos-opt" onclick="show('screen-breath')">
+        <div class="sos-opt-icon">🌬️</div>
+        <div>
+          <div class="sos-opt-title">Breathing — 1 min</div>
+          <div class="sos-opt-desc">Quick box breathing to calm your nervous system instantly</div>
+        </div>
+        <div class="sos-opt-arrow">→</div>
+      </div>
+      <div class="sos-opt" onclick="show('screen-ground')">
+        <div class="sos-opt-icon">🌿</div>
+        <div>
+          <div class="sos-opt-title">Grounding 5-4-3-2-1</div>
+          <div class="sos-opt-desc">Use your senses to come back to the present moment</div>
+        </div>
+        <div class="sos-opt-arrow">→</div>
+      </div>
+      <div class="sos-opt" onclick="show('screen-calm')">
+        <div class="sos-opt-icon">🧘</div>
+        <div>
+          <div class="sos-opt-title">Instant Calm</div>
+          <div class="sos-opt-desc">A 2-minute guided meditation for immediate relief</div>
+        </div>
+        <div class="sos-opt-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BREATHING -->
+<div class="screen" id="screen-breath">
+  <div class="breath-screen">
+    <div class="screen-back" onclick="show('screen-menu')">← Back</div>
+    <div class="screen-title">SOS Breathing</div>
+    <div class="screen-sub">Box breathing — 2-4-2-4 pattern · 1 minute</div>
+    <div class="sos-circle-wrap">
+      <div class="sos-ring sos-ring-1"></div>
+      <div class="sos-ring sos-ring-2"></div>
+      <div class="sos-circle-main" id="sos-circle">
+        <div class="sos-phase" id="sos-phase">Press Play</div>
+        <div class="sos-count" id="sos-count">—</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px">
+      <button class="btn-outline" id="sos-stop" onclick="sosStop()">■ Stop</button>
+      <button class="btn-lime" id="sos-play" onclick="sosToggle()">▶ Start</button>
+    </div>
+    <div class="feel-better" id="feel-better">
+      <div class="feel-better-q">Are you feeling better?</div>
+      <div class="feel-row">
+        <button class="btn-lime" onclick="window.location='home.html'">Yes, I feel better ✦</button>
+        <button class="btn-outline" onclick="show('screen-menu')">Try another</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUNDING -->
+<div class="screen" id="screen-ground">
+  <div class="ground-screen">
+    <div class="screen-back" onclick="show('screen-menu')">← Back</div>
+    <div class="screen-title" style="font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-1px;color:var(--text-primary);margin-bottom:6px;">Grounding 5-4-3-2-1</div>
+    <div style="font-size:14px;color:var(--text-secondary);margin-bottom:32px;">Use your senses to come back to the present</div>
+    <div class="ground-progress" id="g-progress">
+      <div class="gp-dot active"></div><div class="gp-dot"></div><div class="gp-dot"></div><div class="gp-dot"></div><div class="gp-dot"></div>
+    </div>
+    <div class="ground-card">
+      <div class="ground-num" id="g-num">5</div>
+      <div class="ground-sense" id="g-sense">things you can SEE</div>
+      <div class="ground-instruction" id="g-instruction">Look around you. Notice 5 things in your visual field right now.</div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn-outline" onclick="show('screen-menu')">← Back</button>
+      <button class="btn-lime" id="g-next" onclick="groundNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- INSTANT CALM -->
+<div class="screen" id="screen-calm">
+  <div class="calm-screen">
+    <div class="screen-back" onclick="show('screen-menu')">← Back</div>
+    <div class="calm-orb">🌿</div>
+    <div class="calm-title">Instant Calm</div>
+    <div class="calm-body">Follow these steps slowly. Give yourself permission to pause and breathe between each one.</div>
+    <div class="calm-steps">
+      <div class="calm-step"><div class="calm-step-num">1</div><div class="calm-step-text">Close your eyes and take 3 slow, deep breaths. Feel your belly rise and fall.</div></div>
+      <div class="calm-step"><div class="calm-step-num">2</div><div class="calm-step-text">Notice where you're holding tension. Consciously soften your jaw, shoulders, and hands.</div></div>
+      <div class="calm-step"><div class="calm-step-num">3</div><div class="calm-step-text">Silently repeat: <em style="color:var(--lime-400)">"I am safe. This feeling will pass. I can handle this."</em></div></div>
+      <div class="calm-step"><div class="calm-step-num">4</div><div class="calm-step-text">Breathe out slowly for 8 counts. Your nervous system is already calming down.</div></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-lime" onclick="window.location='home.html'">I feel better ✦</button>
+      <button class="btn-outline" onclick="show('screen-menu')">Try another</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+// SOS Breathing engine
+const sosPhases=[{name:'Inhale',dur:2},{name:'Hold',dur:4},{name:'Exhale',dur:4}];
+let sosPlaying=false,sosTimer=null,sosPhaseIdx=0,sosCount=0,sosRounds=0,sosMaxRounds=5;
+function sosToggle(){sosPlaying?sosPause():sosStart();}
+function sosStart(){sosPlaying=true;document.getElementById('sos-play').textContent='⏸ Pause';if(sosCount===0){sosPhaseIdx=0;sosCount=sosPhases[0].dur;}sosTick();}
+function sosPause(){sosPlaying=false;clearTimeout(sosTimer);document.getElementById('sos-play').textContent='▶ Resume';}
+function sosStop(){sosPlaying=false;clearTimeout(sosTimer);sosPhaseIdx=0;sosCount=0;sosRounds=0;document.getElementById('sos-play').textContent='▶ Start';document.getElementById('sos-phase').textContent='Press Play';document.getElementById('sos-count').textContent='—';document.getElementById('sos-circle').style.transform='scale(1)';}
+function sosTick(){
+  if(!sosPlaying)return;
+  const ph=sosPhases[sosPhaseIdx];
+  document.getElementById('sos-phase').textContent=ph.name;
+  document.getElementById('sos-count').textContent=sosCount;
+  const s=ph.name==='Inhale'?1+0.15*(1-sosCount/ph.dur):ph.name==='Exhale'?1.15-0.12*(1-sosCount/ph.dur):1.15;
+  document.getElementById('sos-circle').style.transform=`scale(${s})`;
+  sosCount--;
+  if(sosCount<0){sosPhaseIdx=(sosPhaseIdx+1)%sosPhases.length;if(sosPhaseIdx===0){sosRounds++;if(sosRounds>=sosMaxRounds){sosStop();document.getElementById('feel-better').style.display='block';return;}}sosCount=sosPhases[sosPhaseIdx].dur;}
+  sosTimer=setTimeout(sosTick,1000);
+}
+
+// Grounding
+const gSteps=[{num:5,sense:'things you can SEE',text:'Look around. Notice 5 distinct things in your visual field right now.'},{num:4,sense:'things you can TOUCH',text:'Feel 4 surfaces or textures around you — your clothes, your seat, the air.'},{num:3,sense:'things you can HEAR',text:'Listen carefully. Identify 3 sounds in your environment right now.'},{num:2,sense:'things you can SMELL',text:'Notice 2 scents around you, even subtle ones. Breathe slowly.'},{num:1,sense:'thing you can TASTE',text:'Notice 1 taste in your mouth. Take a slow breath. You\'re grounded.'}];
+let gStep=0;
+function groundNext(){
+  if(gStep<gSteps.length-1){gStep++;const s=gSteps[gStep];document.getElementById('g-num').textContent=s.num;document.getElementById('g-sense').textContent=s.sense;document.getElementById('g-instruction').textContent=s.text;const dots=document.querySelectorAll('.gp-dot');dots.forEach((d,i)=>{d.className='gp-dot'+(i<gStep?' done':i===gStep?' active':'');});}
+  else{document.getElementById('g-next').textContent='I feel grounded ✦';document.getElementById('g-next').onclick=()=>window.location='home.html';}
+}
+</script>
+</body>
+</html>

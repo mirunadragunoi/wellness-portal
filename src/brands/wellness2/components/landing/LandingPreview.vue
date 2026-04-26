@@ -1,33 +1,54 @@
 <template>
-  <section class="preview section">
-    <div class="container">
-      <div class="preview__header">
-        <span class="section-label">{{ t('preview.label') }}</span>
-        <h2 class="section-title">{{ t('preview.title_1') }} <em>{{ t('preview.title_em') }}</em></h2>
-        <p class="section-subtitle">{{ t('preview.subtitle') }}</p>
-      </div>
-
-      <!-- Masonry-style preview grid -->
-      <div class="preview__mosaic">
-        <div class="preview__tile preview__tile--tall"  :style="{ backgroundImage:`url(${LANDING_IMAGES.preview1})` }">
-          <div class="tile__label">Guided Meditation</div>
+  <section class="sessions-section" id="sessions">
+    <div class="sessions-inner">
+      <div class="sessions-header">
+        <div>
+          <span class="section-label reveal">{{ t('preview.label') }}</span>
+          <h2 class="section-title reveal reveal-1">
+            {{ t('preview.title_1') }} <span class="lime">{{ t('preview.title_em') }}</span>
+          </h2>
         </div>
-        <div class="preview__tile preview__tile--short" :style="{ backgroundImage:`url(${LANDING_IMAGES.preview2})` }">
-          <div class="tile__label">Breathing</div>
-        </div>
-        <div class="preview__tile preview__tile--short" :style="{ backgroundImage:`url(${LANDING_IMAGES.preview3})` }">
-          <div class="tile__label">Sleep Stories</div>
-        </div>
-        <div class="preview__tile preview__tile--tall"  :style="{ backgroundImage:`url(${LANDING_IMAGES.preview4})` }">
-          <div class="tile__label">Personal Tracking</div>
-        </div>
-      </div>
-
-      <div class="preview__cta">
-        <RouterLink to="/explore" class="preview__link">
-          Explore all sessions
+        <RouterLink to="/explore" class="sessions-link-all reveal">
+          See all
           <Icon icon="lucide:arrow-right" class="app-icon app-icon--sm" />
         </RouterLink>
+      </div>
+
+      <div class="sessions-grid reveal">
+        <!-- Featured card -->
+        <div class="featured-card" @click="router.push('/explore')">
+          <div class="feat-thumb" :style="{ backgroundImage: `url(${LANDING_IMAGES.preview1})` }">
+            <div class="feat-thumb-overlay" />
+            <div class="feat-type">Meditation</div>
+            <button class="feat-play-btn" aria-label="Play">
+              <Icon icon="lucide:play" class="app-icon app-icon--md" />
+            </button>
+          </div>
+          <div class="feat-body">
+            <div class="feat-body-title">Morning Clarity</div>
+            <div class="feat-body-desc">Start your day grounded and focused with this gentle wake-up meditation designed for busy mornings.</div>
+            <div class="feat-body-meta">
+              <span class="chip chip-active">Focus</span>
+              <span class="chip chip-default">10 min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sessions list -->
+        <div class="sessions-list">
+          <div
+            v-for="s in sessionRows" :key="s.title"
+            class="sess-row"
+            @click="router.push('/explore')"
+          >
+            <div class="sess-row-thumb" :style="s.image ? { backgroundImage: `url(${s.image})` } : { background: s.gradient }" />
+            <div>
+              <div class="sess-row-title">{{ s.title }}</div>
+              <div class="sess-row-cat">{{ s.type }}</div>
+            </div>
+            <div class="sess-row-dur">{{ s.duration }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -35,60 +56,90 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
+const router = useRouter()
+const sessionRows = [
+  { title: 'Forest at Night',     type: 'Sleep Story',   duration: '25 min', image: LANDING_IMAGES.preview2 },
+  { title: 'Box Breathing 4-4-4', type: 'Breathing',     duration: '5 min',  gradient: 'linear-gradient(135deg,var(--forest-600),var(--forest-400))' },
+  { title: 'Rain on Leaves',      type: 'Soundscape',    duration: '∞',      gradient: 'linear-gradient(135deg,var(--forest-700),var(--forest-300))' },
+  { title: 'Your Inner Strength', type: 'Motivational',  duration: '8 min',  gradient: 'linear-gradient(135deg,#1a3d21,#3d8b43)' },
+]
 </script>
 
 <style scoped>
-.preview { background:var(--parchment); }
-.preview__header { margin-bottom:40px; }
+.sessions-section {
+  background: var(--forest-950);
+  padding: 100px 0;
+}
+.sessions-inner { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad); }
+.sessions-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
 
-.preview__mosaic {
-  display:grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: 230px;
-  gap: 14px;
+.sessions-link-all {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; font-weight: 700; color: var(--lime-500);
+  text-decoration: none; transition: gap 150ms;
 }
-.preview__tile {
-  background-size:cover; background-position:center;
-  border-radius:var(--radius-lg);
-  border:2px solid var(--ink-100);
-  position:relative; overflow:hidden;
-  cursor:pointer;
-  transition:transform var(--duration-normal), box-shadow var(--duration-normal);
-}
-.preview__tile:hover { transform:translate(-2px,-3px); box-shadow:6px 6px 0 var(--ink-200); }
-.preview__tile--tall  { grid-row: auto; }
+.sessions-link-all:hover { gap: 10px; }
 
-.tile__label {
-  position:absolute; bottom:0; left:0; right:0;
-  background:linear-gradient(to top, rgba(28,26,22,0.7), transparent);
-  padding:24px 16px 14px;
-  font-family:var(--font-display); font-size:18px; font-style:italic;
-  color:white; font-weight:300;
-}
+.sessions-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
 
-.preview__cta { margin-top:28px; display:flex; justify-content:flex-end; }
-.preview__link {
-  display:inline-flex; align-items:center; gap:6px;
-  font-size:15px; font-weight:600; color:var(--ink-800);
-  text-decoration:none;
-  border-bottom:2px solid var(--sage-400); padding-bottom:2px;
-  transition:color var(--duration-fast), border-color var(--duration-fast);
+/* Featured card */
+.featured-card {
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: var(--border-glass); border-radius: 24px; overflow: hidden;
+  cursor: pointer; transition: all 300ms var(--ease-smooth);
+  box-shadow: var(--glow-card);
 }
-.preview__link:hover { color:var(--sage-600); border-color:var(--sage-600); }
+.featured-card:hover { border-color: rgba(184,245,102,0.28); box-shadow: var(--glow-card-hover); transform: translateY(-4px); }
+.feat-thumb {
+  height: 300px; background: linear-gradient(160deg, var(--forest-600), var(--forest-400));
+  position: relative; overflow: hidden;
+  background-size: cover; background-position: center;
+}
+.feat-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(7,15,10,0.8) 0%, transparent 50%); }
+.feat-type {
+  position: absolute; top: 16px; left: 16px;
+  padding: 5px 14px; border-radius: 999px;
+  background: rgba(7,15,10,0.7); backdrop-filter: blur(8px);
+  font-size: 11px; font-weight: 700; color: var(--lime-400);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  border: 1px solid rgba(184,245,102,0.2);
+}
+.feat-play-btn {
+  position: absolute; bottom: 20px; right: 20px;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--lime-500); display: flex; align-items: center; justify-content: center;
+  color: var(--forest-900); box-shadow: 0 0 24px rgba(184,245,102,0.4);
+  transition: all 200ms; border: none; cursor: pointer;
+}
+.feat-play-btn:hover { transform: scale(1.08); box-shadow: 0 0 40px rgba(184,245,102,0.6); }
+.feat-body { padding: 24px 28px; }
+.feat-body-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.5px; }
+.feat-body-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
+.feat-body-meta { display: flex; gap: 10px; }
 
-@media (max-width:1024px) {
-  .preview__mosaic {
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 220px;
-  }
+/* Sessions list */
+.sessions-list { display: flex; flex-direction: column; gap: 12px; }
+.sess-row {
+  display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center;
+  padding: 14px 16px; background: var(--bg-glass); backdrop-filter: blur(12px);
+  border: var(--border-glass); border-radius: 16px; cursor: pointer;
+  transition: all 250ms var(--ease-smooth);
 }
+.sess-row:hover { border-color: rgba(184,245,102,0.22); box-shadow: var(--glow-card-hover); transform: translateX(4px); }
+.sess-row-thumb {
+  width: 80px; height: 60px; border-radius: 10px; overflow: hidden;
+  background: var(--forest-700); flex-shrink: 0;
+  background-size: cover; background-position: center;
+}
+.sess-row-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.sess-row-cat { font-size: 11px; color: var(--lime-500); font-weight: 600; }
+.sess-row-dur { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
 
-@media (max-width:640px) {
-  .preview__mosaic { grid-template-columns:1fr; grid-template-rows:auto; }
-  .preview__tile { height:190px; }
-  .preview__tile--tall { grid-row:span 1; height:190px; }
-  .preview__tile--short { height:190px; }
-}
+.section-title { font-family: var(--font-display); font-size: clamp(36px,4vw,56px); font-weight: 800; letter-spacing: -2px; color: var(--text-primary); margin-bottom: 0; }
+.lime { color: var(--lime-500); }
+
+@media (max-width: 1024px) { .sessions-grid { grid-template-columns: 1fr; } }
 </style>

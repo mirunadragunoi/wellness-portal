@@ -36,8 +36,9 @@ const uiStore = useUIStore()
   display:none;
   position:fixed; bottom:0; left:0; right:0;
   height:var(--bottom-bar-height);
-  background:var(--bg-surface);
-  border-top: 1px solid var(--ink-200);
+  background: rgba(7,15,10,0.94);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(184,245,102,0.1);
   z-index:80;
   align-items:stretch;
   justify-content:space-around;
@@ -49,11 +50,15 @@ const uiStore = useUIStore()
   text-decoration:none; color:var(--text-muted);
   background:none; border:none; cursor:pointer;
   padding:8px 0;
-  border-top:3px solid transparent;
-  transition:color var(--duration-fast), border-color var(--duration-fast);
+  border-top:2px solid transparent;
+  transition:all var(--duration-fast);
 }
-.tab.active { color:var(--sage-600); border-top-color:var(--sage-500); }
-.tab__icon { opacity:0.7; }
+.tab.active {
+  color:var(--lime-400);
+  border-top-color: rgba(184,245,102,0.65);
+  background: rgba(184,245,102,0.07);
+}
+.tab__icon { opacity:0.8; }
 .tab.active .tab__icon { opacity:1; }
 .tab__label { font-size:10px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; }
 
@@ -61,10 +66,10 @@ const uiStore = useUIStore()
 .tab--sos { flex-shrink:0; margin:0 4px; }
 .tab__sos-pill {
   padding:8px 14px;
-  background:#dc2626; color:white;
+  background:rgba(239,68,68,0.2); color:#f87171;
   font-size:11px; font-weight:800; letter-spacing:1px;
-  border-radius:var(--radius-sm);
-  border:2px solid #b91c1c;
+  border-radius:999px;
+  border:1px solid rgba(239,68,68,0.35);
   transition:transform var(--duration-fast);
 }
 .tab--sos:hover .tab__sos-pill { transform:scale(1.05); }

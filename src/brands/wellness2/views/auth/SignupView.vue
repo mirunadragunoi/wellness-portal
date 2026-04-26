@@ -1,52 +1,57 @@
 <template>
   <div class="auth-page">
-    <RouterLink to="/" class="auth-page__logo">
-      {{ t('brand.name') }}
-    </RouterLink>
-
-    <div class="auth-wrap">
-    <div class="auth-card">
-      <h1 class="auth-card__title">{{ t('auth.signup_title') }}</h1>
-      <p class="auth-card__sub">{{ t('auth.signup_subtitle') }}</p>
-
-      <form class="auth-form" @submit.prevent="submit">
-        <div class="field">
-          <label class="field__label">{{ t('auth.phone_label') }}</label>
-          <input
-            v-model="phone" type="tel" class="field__input"
-            :placeholder="t('auth.phone_placeholder')"
-            autocomplete="tel" required
-          />
-        </div>
-        <div class="field">
-          <label class="field__label">{{ t('auth.code_label') }}</label>
-          <input
-            v-model="code" type="text" class="field__input"
-            :placeholder="t('auth.code_placeholder')"
-            autocomplete="off" required
-            style="text-transform: uppercase; letter-spacing: 2px;"
-          />
-        </div>
-
-        <p v-if="error" class="auth-error">{{ error }}</p>
-
-        <button type="submit" class="auth-btn" :disabled="loading">
-          <span v-if="loading" class="spinner" />
-          {{ loading ? '' : t('auth.signup_btn') }}
-        </button>
-      </form>
-
-      <p class="auth-card__switch">
-        {{ t('auth.have_account') }}
-        <RouterLink to="/login" class="auth-card__link">{{ t('auth.login_link') }}</RouterLink>
-      </p>
-
-      <div class="auth-info">
-        <p>{{ t('auth.no_code') }}</p>
-        <p class="auth-info__detail">{{ t('auth.no_code_info') }}</p>
-        <p class="auth-info__hint">Demo code: <strong>DEMO123</strong></p>
+    <div class="auth-visual">
+      <RouterLink to="/" class="auth-logo"><span class="auth-logo-dot" />{{ t('brand.name') }}</RouterLink>
+      <div>
+        <h2 class="auth-quote">Start your <span>inner</span> journey today</h2>
+        <p class="auth-visual-sub">Join thousands of people finding calm, focus, and better sleep with Innerawake.</p>
       </div>
     </div>
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <span class="auth-kicker">Create account</span>
+        <h1 class="auth-card__title">{{ t('auth.signup_title') }}</h1>
+        <p class="auth-card__sub">{{ t('auth.signup_subtitle') }}</p>
+
+        <form class="auth-form" @submit.prevent="submit">
+          <div class="field">
+            <label class="field__label">{{ t('auth.phone_label') }}</label>
+            <input
+              v-model="phone"
+              type="tel"
+              class="field__input"
+              :placeholder="t('auth.phone_placeholder')"
+              autocomplete="tel"
+              required
+            />
+          </div>
+          <div class="field">
+            <label class="field__label">{{ t('auth.code_label') }}</label>
+            <input
+              v-model="code"
+              type="text"
+              class="field__input"
+              :placeholder="t('auth.code_placeholder')"
+              autocomplete="off"
+              required
+              style="text-transform: uppercase; letter-spacing: 2px;"
+            />
+            <p class="field__hint">{{ t('auth.no_code_info') }}</p>
+          </div>
+
+          <p v-if="error" class="auth-error">{{ error }}</p>
+
+          <button type="submit" class="auth-btn" :disabled="loading">
+            <span v-if="loading" class="spinner" />
+            {{ loading ? 'Creating account...' : t('auth.signup_btn') }}
+          </button>
+        </form>
+
+        <p class="auth-card__switch">
+          {{ t('auth.have_account') }}
+          <RouterLink to="/login" class="auth-card__link">{{ t('auth.login_link') }}</RouterLink>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -84,66 +89,144 @@ async function submit() {
 
 <style scoped>
 .auth-page {
-  min-height: var(--app-min-height); display: flex; flex-direction: column;
-  background: var(--parchment); position: relative; overflow: hidden;
+  min-height: var(--app-min-height);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--forest-900);
 }
-.auth-page::before {
-  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 40%;
-  background: linear-gradient(180deg, var(--sage-700), var(--sage-500)); pointer-events: none;
+.auth-visual {
+  padding: 40px clamp(28px, 5vw, 72px);
+  background: radial-gradient(circle at 20% 10%, rgba(184,245,102,0.14), transparent 38%), var(--forest-850);
+  border-right: 1px solid rgba(184,245,102,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.auth-page__logo {
-  position: relative; z-index: 1;
-  display: inline-flex; align-items: center; gap: 10px; padding: 24px var(--container-pad);
-  font-family: var(--font-display); font-size: 22px; font-weight: 400;
-  color: var(--parchment); text-decoration: none;
+.auth-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
 }
-.auth-wrap {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  padding: 32px var(--container-pad); position: relative; z-index: 1;
+.auth-logo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime-500);
+  box-shadow: 0 0 10px rgba(184,245,102,0.7);
+}
+.auth-quote {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.08;
+  color: var(--text-primary);
+}
+.auth-quote span { color: var(--lime-500); }
+.auth-visual-sub { margin-top: 10px; color: var(--text-secondary); max-width: 440px; }
+.auth-form-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px var(--container-pad);
 }
 .auth-card {
-  width: 100%; max-width: 440px;
-  background: var(--bg-surface);
-  border: 2px solid var(--ink-200); border-radius: var(--radius-lg);
-  padding: 40px; box-shadow: 8px 8px 0 var(--ink-200);
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(18px);
+  border: var(--border-glass);
+  border-radius: 20px;
+  padding: 34px;
+  box-shadow: var(--glow-card);
 }
-.auth-card__title { font-family: var(--font-display); font-size: 30px; font-weight: 300; color: var(--text-primary); margin-bottom: 6px; }
-.auth-card__sub   { font-size: 15px; color: var(--text-secondary); margin-bottom: 28px; line-height: 1.6; }
+.auth-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--lime-500);
+}
+.auth-card__title {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 800;
+  letter-spacing: -1.4px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.auth-card__sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.65;
+}
 .auth-form { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
-.field__label { font-size: 13px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 1px; }
-.field__input {
-  padding: 12px 16px; border-radius: var(--radius-sm);
-  border: 2px solid var(--ink-200); background: var(--parchment);
-  font-family: var(--font-body); font-size: 15px; color: var(--text-primary); outline: none;
-  transition: border-color var(--duration-fast);
+.field__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--lime-500);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
-.field__input:focus { border-color: var(--sage-500); background: white; }
-.auth-error { font-size: 13px; color: #dc2626; background: #fee2e2; padding: 10px 14px; border-radius: var(--radius-sm); border-left: 3px solid #dc2626; }
+.field__input {
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all var(--duration-fast);
+}
+.field__input:focus {
+  border-color: rgba(184,245,102,0.4);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 0 3px rgba(184,245,102,0.08);
+}
+.field__hint { font-size: 12px; color: var(--text-muted); }
+.auth-error {
+  font-size: 13px;
+  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.16);
+  border: 1px solid rgba(220, 38, 38, 0.28);
+  padding: 10px 14px;
+  border-radius: 12px;
+}
 .auth-btn {
-  width: 100%; padding: 14px; border-radius: var(--radius-sm); border: 2px solid var(--sage-600);
-  cursor: pointer; background: var(--sage-500); color: #fff;
-  font-family: var(--font-body); font-size: 15px; font-weight: 700;
-  box-shadow: 4px 4px 0 var(--sage-300);
+  width: 100%;
+  padding: 14px;
+  cursor: pointer;
+  background: var(--lime-500);
+  color: var(--forest-900);
+  border: none;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
   transition: all var(--duration-fast);
   display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px;
 }
-.auth-btn:hover:not(:disabled) { background: var(--sage-600); border-color: var(--sage-600); box-shadow: 2px 2px 0 var(--sage-300); transform: translate(1px,1px); }
+.auth-btn:hover:not(:disabled) {
+  background: var(--lime-400);
+  box-shadow: 0 0 28px rgba(184,245,102,0.35);
+  transform: translateY(-1px);
+}
 .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .auth-card__switch { text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
-.auth-card__link { color: var(--sage-600); font-weight: 600; text-decoration: none; border-bottom: 1.5px solid var(--sage-300); }
-.auth-card__link:hover { color: var(--sage-700); }
-.terms { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 4px; line-height: 1.6; }
-.terms a { color: var(--sage-600); text-decoration: underline; }
-.auth-info { margin-top: 16px; padding: 14px; background: var(--parchment-2); border-radius: var(--radius-sm); border: 1px solid var(--ink-100); }
-.auth-info p { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
-.auth-info__detail { color: var(--text-muted) !important; font-size: 12px !important; }
-.auth-info__hint { font-size: 13px !important; color: var(--ink-900) !important; margin-top: 8px !important; }
+.auth-card__link { color: var(--lime-400); font-weight: 600; text-decoration: none; }
+.auth-card__link:hover { color: var(--lime-300); }
 @media (max-width: 640px) {
-  .auth-page::before { display: none; }
-  .auth-page__logo { color: var(--ink-900); }
-  .auth-card { padding: 24px 18px; box-shadow: 4px 4px 0 var(--ink-200); }
+  .auth-page { grid-template-columns: 1fr; }
+  .auth-visual { display: none; }
+  .auth-card { padding: 24px 18px; }
 }
 </style>

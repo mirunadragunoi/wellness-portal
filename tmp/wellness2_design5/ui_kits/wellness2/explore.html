@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wellness — Explore</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { background:var(--forest-900); min-height:100vh; }
+.explore-wrap { max-width:1280px; margin:0 auto; padding:40px var(--container-pad) 100px; }
+
+/* Header */
+.page-header { margin-bottom:32px; }
+.page-title { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,48px); font-weight:800; letter-spacing:-2px; color:var(--text-primary); margin-bottom:6px; }
+.page-sub { font-size:15px; color:var(--text-secondary); }
+
+/* Search */
+.search-bar {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 20px; border-radius:16px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  margin-bottom:20px; transition:all 200ms;
+}
+.search-bar:focus-within { border-color:rgba(184,245,102,0.35); background:rgba(255,255,255,0.06); box-shadow:0 0 0 3px rgba(184,245,102,0.08); }
+.search-icon { font-size:16px; color:var(--text-muted); flex-shrink:0; }
+.search-input { flex:1; background:none; border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:15px; color:var(--text-primary); }
+.search-input::placeholder { color:var(--text-muted); }
+.search-kbd { padding:3px 8px; background:rgba(255,255,255,0.06); border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); border:1px solid rgba(255,255,255,0.08); }
+
+/* Filters row */
+.filters { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:28px; }
+.filters::-webkit-scrollbar { display:none; }
+.filter-group { display:flex; gap:6px; padding-right:16px; border-right:1px solid rgba(255,255,255,0.06); }
+.filter-group:last-child { border-right:none; padding-right:0; }
+
+/* Results header */
+.results-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.results-count { font-size:13px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+.sort-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:999px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); font-size:13px; color:var(--text-secondary); cursor:pointer; transition:all 150ms; }
+.sort-btn:hover { color:var(--text-primary); background:rgba(255,255,255,0.07); }
+
+/* Grid */
+.sessions-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.s-card {
+  background:var(--bg-glass); backdrop-filter:blur(16px);
+  border:var(--border-glass); border-radius:18px; overflow:hidden; cursor:pointer;
+  transition:all 280ms var(--ease-out);
+}
+.s-card:hover { border-color:rgba(184,245,102,0.25); box-shadow:var(--glow-card-hover); transform:translateY(-4px); }
+.s-thumb { height:150px; background:var(--forest-700); position:relative; overflow:hidden; }
+.s-thumb img { width:100%; height:100%; object-fit:cover; filter:brightness(0.8) saturate(1.2); transition:transform 400ms var(--ease-out); }
+.s-card:hover .s-thumb img { transform:scale(1.06); }
+.s-badge { position:absolute; top:10px; left:10px; padding:3px 10px; border-radius:999px; background:rgba(7,15,10,0.75); backdrop-filter:blur(8px); font-size:9px; font-weight:700; color:var(--lime-400); letter-spacing:1px; text-transform:uppercase; border:1px solid rgba(184,245,102,0.2); }
+.s-fav { position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%; background:rgba(7,15,10,0.6); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; font-size:12px; opacity:0; transition:opacity 200ms; cursor:pointer; }
+.s-card:hover .s-fav { opacity:1; }
+.s-play { position:absolute; bottom:10px; right:10px; width:34px; height:34px; border-radius:50%; background:var(--lime-500); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--forest-900); opacity:0; transform:scale(0.6); transition:all 220ms var(--ease-out); }
+.s-card:hover .s-play { opacity:1; transform:scale(1); }
+.s-info { padding:14px 16px; }
+.s-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:6px; line-height:1.2; }
+.s-meta { display:flex; align-items:center; justify-content:space-between; }
+.s-cat { font-size:11px; color:var(--lime-500); font-weight:600; }
+.s-dur { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted); }
+
+/* gradient thumbs for missing images */
+.g1{background:linear-gradient(135deg,var(--forest-600),var(--forest-400));}
+.g2{background:linear-gradient(135deg,var(--forest-700),#3d8b43);}
+.g3{background:linear-gradient(135deg,#1a3d21,var(--emerald-400));}
+.g4{background:linear-gradient(135deg,var(--forest-800),var(--forest-300));}
+
+@media(max-width:1100px){.sessions-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:768px){.sessions-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.sessions-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav class="app-navbar">
+  <div class="nav-logo"><span class="nav-logo-dot"></span>wellness</div>
+  <div class="nav-tabs">
+    <a href="home.html" class="nav-tab">Home</a>
+    <a href="explore.html" class="nav-tab active">Explore</a>
+    <a href="learn.html" class="nav-tab">Learn</a>
+    <a href="progress.html" class="nav-tab">Progress</a>
+  </div>
+  <div class="nav-right">
+    <a href="sos.html" class="nav-sos">SOS</a>
+    <div class="nav-avatar">A</div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="explore-wrap">
+    <div class="page-header">
+      <h1 class="page-title">Explore</h1>
+      <p class="page-sub">Discover meditations, sleep stories, soundscapes, and more.</p>
+    </div>
+
+    <div class="search-bar">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" placeholder="Search meditations, topics...">
+      <span class="search-kbd">⌘K</span>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <span class="chip chip-default">All</span>
+        <span class="chip chip-active" onclick="filterClick(this)">Meditation</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Breathing</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Sleep Story</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Soundscape</span>
+      </div>
+      <div class="filter-group">
+        <span class="chip chip-default" onclick="filterClick(this)">Stress</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Focus</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Sleep</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Anxiety</span>
+        <span class="chip chip-default" onclick="filterClick(this)">Energy</span>
+      </div>
+      <div class="filter-group">
+        <span class="chip chip-default" onclick="filterClick(this)">1–5 min</span>
+        <span class="chip chip-default" onclick="filterClick(this)">5–10 min</span>
+        <span class="chip chip-default" onclick="filterClick(this)">10–20 min</span>
+      </div>
+    </div>
+
+    <div class="results-head">
+      <span class="results-count">24 sessions found</span>
+      <button class="sort-btn">↑↓ Popular</button>
+    </div>
+
+    <div class="sessions-grid">
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb"><img src="../../assets/landing/preview-1.png" alt=""><div class="s-badge">Meditation</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Morning Clarity</div><div class="s-meta"><span class="s-cat">Focus</span><span class="s-dur">10 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb"><img src="../../assets/landing/preview-2.png" alt=""><div class="s-badge">Sleep Story</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Forest at Night</div><div class="s-meta"><span class="s-cat">Sleep</span><span class="s-dur">25 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g1"><div class="s-badge">Breathing</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Box Breathing 4-4-4</div><div class="s-meta"><span class="s-cat">Anxiety</span><span class="s-dur">5 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g2"><div class="s-badge">Soundscape</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Rain on Leaves</div><div class="s-meta"><span class="s-cat">Mindfulness</span><span class="s-dur">∞</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g3"><div class="s-badge">Motivational</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Your Inner Strength</div><div class="s-meta"><span class="s-cat">Energy</span><span class="s-dur">8 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g4"><div class="s-badge">Meditation</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Deep Belly Breathing</div><div class="s-meta"><span class="s-cat">Stress</span><span class="s-dur">7 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g1"><div class="s-badge">Meditation</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Loving Kindness</div><div class="s-meta"><span class="s-cat">Mindfulness</span><span class="s-dur">12 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g3"><div class="s-badge">Breathing</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">SOS — 1 Minute Relief</div><div class="s-meta"><span class="s-cat">Anxiety</span><span class="s-dur">1 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g2"><div class="s-badge">Sleep Story</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Ocean Waves Drift</div><div class="s-meta"><span class="s-cat">Sleep</span><span class="s-dur">30 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g4"><div class="s-badge">Meditation</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Body Scan Relaxation</div><div class="s-meta"><span class="s-cat">Stress</span><span class="s-dur">18 min</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g1"><div class="s-badge">Soundscape</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">Deep Forest Ambience</div><div class="s-meta"><span class="s-cat">Focus</span><span class="s-dur">∞</span></div></div>
+      </div>
+      <div class="s-card" onclick="window.location='player.html'">
+        <div class="s-thumb g3"><div class="s-badge">Motivational</div><div class="s-fav">♡</div><div class="s-play">▶</div></div>
+        <div class="s-info"><div class="s-title">New Day, New Start</div><div class="s-meta"><span class="s-cat">Energy</span><span class="s-dur">6 min</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <a href="home.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</a>
+  <a href="explore.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Explore</a>
+  <a href="learn.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Learn</a>
+  <a href="progress.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Progress</a>
+</div>
+
+<script>
+function filterClick(el){el.classList.toggle('chip-active');el.classList.toggle('chip-default');}
+</script>
+</body>
+</html>

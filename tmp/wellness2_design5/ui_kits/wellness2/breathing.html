@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wellness — Breathing</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { background:var(--forest-950); overflow:hidden; height:100vh; }
+
+/* Type selector */
+.type-bar {
+  position:fixed; top:0; left:0; right:0; z-index:10;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 clamp(16px,3vw,40px); height:68px;
+  background:rgba(2,10,4,0.8); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(184,245,102,0.06);
+}
+.type-logo { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; display:flex; align-items:center; gap:6px; }
+.type-logo-dot { width:6px; height:6px; border-radius:50%; background:var(--lime-500); box-shadow:0 0 8px rgba(184,245,102,0.8); }
+.type-tabs { display:flex; gap:4px; background:rgba(255,255,255,0.04); border-radius:999px; padding:4px; border:1px solid rgba(255,255,255,0.06); }
+.type-tab { padding:7px 16px; border-radius:999px; font-size:13px; font-weight:600; color:var(--text-muted); cursor:pointer; transition:all 200ms; white-space:nowrap; }
+.type-tab.active { background:var(--lime-500); color:var(--forest-900); }
+.type-tab:hover:not(.active) { color:var(--text-secondary); }
+.back-btn { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:color 150ms; padding:6px 12px; border-radius:999px; }
+.back-btn:hover { color:var(--text-primary); background:rgba(255,255,255,0.05); }
+
+/* Main area */
+.breath-main {
+  height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding-top:68px;
+  position:relative; overflow:hidden;
+}
+
+/* Background glow */
+.bg-glow { position:absolute; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(184,245,102,0.06) 0%, transparent 70%); left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; animation:breathe-bg 8s ease-in-out infinite; }
+@keyframes breathe-bg { 0%,100%{transform:translate(-50%,-50%) scale(1);} 50%{transform:translate(-50%,-50%) scale(1.3);} }
+
+/* Info */
+.breath-info { text-align:center; margin-bottom:48px; z-index:2; }
+.breath-type-badge { display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:999px; background:rgba(184,245,102,0.08); border:1px solid rgba(184,245,102,0.18); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--lime-400); margin-bottom:12px; }
+.breath-title { font-family:'Syne',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:800; letter-spacing:-1px; color:var(--text-primary); margin-bottom:6px; }
+.breath-desc { font-size:14px; color:var(--text-secondary); }
+
+/* Circle */
+.circle-wrap { position:relative; width:280px; height:280px; margin:0 auto 48px; z-index:2; flex-shrink:0; }
+.circle-outer {
+  position:absolute; inset:-20px; border-radius:50%;
+  border:1px solid rgba(184,245,102,0.1);
+  animation:ring-pulse 4s ease-in-out infinite;
+}
+.circle-mid {
+  position:absolute; inset:-8px; border-radius:50%;
+  border:1px solid rgba(184,245,102,0.15);
+  animation:ring-pulse 4s ease-in-out infinite 0.5s;
+}
+.circle-main {
+  position:absolute; inset:0; border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, rgba(184,245,102,0.15) 0%, rgba(34,197,94,0.08) 50%, rgba(13,31,18,0.9) 100%);
+  border:2px solid rgba(184,245,102,0.25);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:transform 0.1s;
+  box-shadow:0 0 0 0 rgba(184,245,102,0);
+}
+.circle-phase { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; letter-spacing:-0.5px; color:var(--lime-400); margin-bottom:6px; }
+.circle-count { font-family:'JetBrains Mono',monospace; font-size:52px; font-weight:400; color:var(--text-primary); line-height:1; }
+.circle-unit { font-size:12px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+
+@keyframes ring-pulse { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+
+/* Rounds */
+.rounds-row { display:flex; align-items:center; gap:12px; margin-bottom:32px; z-index:2; }
+.round-dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.1); transition:all 300ms; }
+.round-dot.done { background:var(--lime-500); box-shadow:0 0 8px rgba(184,245,102,0.5); }
+.round-dot.current { background:rgba(184,245,102,0.4); border:2px solid var(--lime-500); }
+.rounds-label { font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+
+/* Controls */
+.controls { display:flex; align-items:center; gap:16px; z-index:2; }
+.ctrl-btn-ghost { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; transition:all 200ms; color:var(--text-secondary); }
+.ctrl-btn-ghost:hover { background:rgba(255,255,255,0.09); color:var(--text-primary); }
+.ctrl-play {
+  width:72px; height:72px; border-radius:50%; cursor:pointer; transition:all 250ms var(--ease-out);
+  display:flex; align-items:center; justify-content:center; font-size:26px;
+  background:var(--lime-500); color:var(--forest-900);
+  box-shadow:0 0 0 0 rgba(184,245,102,0);
+}
+.ctrl-play:hover { background:var(--lime-400); box-shadow:0 0 40px rgba(184,245,102,0.4); transform:scale(1.05); }
+.ctrl-play.playing { box-shadow:0 0 0 8px rgba(184,245,102,0.12); }
+
+@media(max-width:600px){.type-tabs{gap:2px;}.type-tab{padding:6px 10px;font-size:11px;}.circle-wrap{width:220px;height:220px;}.circle-count{font-size:40px;}}
+@media(max-width:400px){.type-tab{padding:5px 8px;font-size:10px;letter-spacing:0;}}
+</style>
+</head>
+<body>
+<div class="type-bar">
+  <a href="home.html" class="back-btn">← Home</a>
+  <div class="type-tabs">
+    <div class="type-tab active" onclick="setType(this,'Box Breathing','4-4-4-4 · For focus and calm',[4,4,4,4],4)">Box</div>
+    <div class="type-tab" onclick="setType(this,'4-7-8 Breathing','4-7-8 · For sleep and anxiety',[4,7,8,0],4)">4-7-8</div>
+    <div class="type-tab" onclick="setType(this,'Deep Belly','Slow breathing · Relaxation response',[5,2,6,0],6)">Belly</div>
+    <div class="type-tab" onclick="setType(this,'SOS Relief','1-minute quick relief',[2,0,4,0],8)">SOS</div>
+  </div>
+  <div style="width:80px"></div>
+</div>
+
+<div class="breath-main">
+  <div class="bg-glow"></div>
+
+  <div class="breath-info">
+    <div class="breath-type-badge">🌬️ Breathing Exercise</div>
+    <div class="breath-title" id="b-title">Box Breathing</div>
+    <div class="breath-desc" id="b-desc">4-4-4-4 · For focus and calm</div>
+  </div>
+
+  <div class="circle-wrap">
+    <div class="circle-outer"></div>
+    <div class="circle-mid"></div>
+    <div class="circle-main" id="circle">
+      <div class="circle-phase" id="phase-label">Ready</div>
+      <div class="circle-count" id="count-num">—</div>
+      <div class="circle-unit">seconds</div>
+    </div>
+  </div>
+
+  <div class="rounds-row">
+    <span class="rounds-label">Round</span>
+    <div class="round-dot current" id="rd0"></div>
+    <div class="round-dot" id="rd1"></div>
+    <div class="round-dot" id="rd2"></div>
+    <div class="round-dot" id="rd3"></div>
+    <span class="rounds-label" id="round-label">1 / 4</span>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn-ghost" id="stop-btn" onclick="stopEx()" title="Stop">■</button>
+    <button class="ctrl-play" id="play-btn" onclick="togglePlay()">▶</button>
+    <button class="ctrl-btn-ghost" onclick="skipPhase()" title="Skip phase">⏭</button>
+  </div>
+</div>
+
+<script>
+// Breathing engine
+let phases = [4,4,4,4]; // inhale, hold, exhale, hold2
+let totalRounds = 4;
+let phaseNames = ['Inhale','Hold','Exhale','Hold'];
+let playing = false;
+let currentPhase = 0;
+let currentRound = 0;
+let countdown = 0;
+let timer = null;
+
+const circle = document.getElementById('circle');
+const phaseLabel = document.getElementById('phase-label');
+const countNum = document.getElementById('count-num');
+const playBtn = document.getElementById('play-btn');
+const roundLabel = document.getElementById('round-label');
+
+function setType(el, title, desc, ph, rounds) {
+  document.querySelectorAll('.type-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('b-title').textContent = title;
+  document.getElementById('b-desc').textContent = desc;
+  phases = ph;
+  totalRounds = rounds;
+  stopEx();
+}
+
+function togglePlay() {
+  if(playing) pause(); else start();
+}
+
+function start() {
+  playing = true;
+  playBtn.textContent = '⏸';
+  playBtn.classList.add('playing');
+  if(countdown === 0) { currentPhase = 0; currentRound = 0; countdown = phases[0]; }
+  runTick();
+}
+
+function pause() {
+  playing = false; clearTimeout(timer);
+  playBtn.textContent = '▶'; playBtn.classList.remove('playing');
+}
+
+function stopEx() {
+  pause(); currentPhase = 0; currentRound = 0; countdown = 0;
+  phaseLabel.textContent = 'Ready'; countNum.textContent = '—';
+  circle.style.transform = 'scale(1)';
+  circle.style.boxShadow = '0 0 0 0 rgba(184,245,102,0)';
+  updateRoundDots();
+}
+
+function skipPhase() {
+  if(!playing) return;
+  clearTimeout(timer); nextPhase();
+}
+
+function runTick() {
+  if(!playing) return;
+  // Find first active phase
+  while(phases[currentPhase]===0) { currentPhase=(currentPhase+1)%4; if(currentPhase===0){advanceRound();return;} }
+
+  phaseLabel.textContent = phaseNames[currentPhase];
+  countNum.textContent = countdown;
+
+  // Visual
+  const scale = currentPhase===0 ? 1+0.18*(1-countdown/phases[0]) : currentPhase===2 ? 1.18-0.18*(1-countdown/phases[2]) : 1.18;
+  const glow = currentPhase===0 ? `0 0 ${40+30*(1-countdown/phases[0])}px rgba(184,245,102,0.25)` : currentPhase===2 ? `0 0 ${70-30*(1-countdown/phases[2])}px rgba(184,245,102,0.15)` : '0 0 60px rgba(184,245,102,0.2)';
+  circle.style.transform = `scale(${scale})`;
+  circle.style.boxShadow = glow;
+
+  countdown--;
+  if(countdown < 0) { nextPhase(); return; }
+  timer = setTimeout(runTick, 1000);
+}
+
+function nextPhase() {
+  currentPhase++;
+  if(currentPhase >= 4) { currentPhase = 0; advanceRound(); return; }
+  countdown = phases[currentPhase];
+  runTick();
+}
+
+function advanceRound() {
+  currentRound++;
+  updateRoundDots();
+  if(currentRound >= totalRounds) { stopEx(); phaseLabel.textContent = 'Complete ✦'; countNum.textContent = '✓'; return; }
+  currentPhase = 0; countdown = phases[0];
+  timer = setTimeout(runTick, 800);
+}
+
+function updateRoundDots() {
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('rd'+i);
+    if(!d)continue;
+    d.className='round-dot'+(i<currentRound?' done':i===currentRound?' current':'');
+  }
+  roundLabel.textContent = `${Math.min(currentRound+1,totalRounds)} / ${totalRounds}`;
+}
+
+updateRoundDots();
+</script>
+</body>
+</html>

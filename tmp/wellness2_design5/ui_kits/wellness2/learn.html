@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wellness — Learn</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { background:var(--forest-900); min-height:100vh; }
+.learn-wrap { max-width:1280px; margin:0 auto; padding:40px var(--container-pad) 100px; }
+
+.page-header { margin-bottom:32px; }
+.page-title { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,48px); font-weight:800; letter-spacing:-2px; color:var(--text-primary); margin-bottom:6px; }
+.page-sub { font-size:15px; color:var(--text-secondary); }
+
+/* Featured article */
+.featured-article {
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  background:var(--bg-glass); backdrop-filter:blur(20px);
+  border:var(--border-glass); border-radius:24px; overflow:hidden;
+  margin-bottom:36px; cursor:pointer; min-height:320px;
+  transition:all 300ms var(--ease-out);
+}
+.featured-article:hover { border-color:rgba(184,245,102,0.25); box-shadow:var(--glow-card-hover); }
+.feat-img-wrap { position:relative; overflow:hidden; background:var(--forest-700); }
+.feat-img-wrap img { width:100%; height:100%; object-fit:cover; filter:brightness(0.8) saturate(1.3); transition:transform 400ms var(--ease-out); }
+.featured-article:hover .feat-img-wrap img { transform:scale(1.04); }
+.feat-img-wrap::after { content:''; position:absolute; inset:0; background:linear-gradient(to right, transparent, rgba(13,31,18,0.3)); }
+.feat-body { padding:40px; display:flex; flex-direction:column; justify-content:center; }
+.feat-tag-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+.feat-cat-badge { padding:4px 12px; border-radius:999px; background:rgba(184,245,102,0.1); border:1px solid rgba(184,245,102,0.2); font-size:11px; font-weight:700; color:var(--lime-400); letter-spacing:1px; text-transform:uppercase; }
+.feat-read-time { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); }
+.feat-article-title { font-family:'Syne',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:800; letter-spacing:-1px; color:var(--text-primary); line-height:1.15; margin-bottom:14px; }
+.feat-excerpt { font-size:15px; color:var(--text-secondary); line-height:1.7; margin-bottom:24px; }
+.feat-read-btn { display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--lime-500); transition:gap 200ms; }
+.feat-read-btn:hover { gap:12px; }
+
+/* Search + filter */
+.learn-controls { display:flex; align-items:center; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+.search-bar {
+  display:flex; align-items:center; gap:10px; flex:1; min-width:200px;
+  padding:12px 18px; border-radius:12px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  transition:all 200ms;
+}
+.search-bar:focus-within { border-color:rgba(184,245,102,0.35); box-shadow:0 0 0 3px rgba(184,245,102,0.07); }
+.search-icon { color:var(--text-muted); font-size:15px; }
+.search-input { flex:1; background:none; border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text-primary); }
+.search-input::placeholder { color:var(--text-muted); }
+
+.cat-filters { display:flex; gap:6px; overflow-x:auto; }
+.cat-filters::-webkit-scrollbar { display:none; }
+
+/* Articles grid */
+.articles-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.article-card {
+  background:var(--bg-glass); backdrop-filter:blur(16px);
+  border:var(--border-glass); border-radius:20px; overflow:hidden;
+  cursor:pointer; transition:all 280ms var(--ease-out);
+}
+.article-card:hover { border-color:rgba(184,245,102,0.22); box-shadow:var(--glow-card-hover); transform:translateY(-3px); }
+.article-img { height:180px; background:var(--forest-700); overflow:hidden; position:relative; }
+.article-img img { width:100%; height:100%; object-fit:cover; filter:brightness(0.8) saturate(1.2); transition:transform 400ms var(--ease-out); }
+.article-card:hover .article-img img { transform:scale(1.05); }
+.article-img-grad { position:absolute; inset:0; background:linear-gradient(to top, rgba(13,31,18,0.5) 0%, transparent 60%); }
+.article-body { padding:20px; }
+.article-meta-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.article-cat { padding:3px 10px; border-radius:999px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+.cat-stress { background:rgba(239,68,68,0.1); color:#f87171; border:1px solid rgba(239,68,68,0.2); }
+.cat-sleep { background:rgba(139,92,246,0.1); color:#a78bfa; border:1px solid rgba(139,92,246,0.2); }
+.cat-focus { background:rgba(184,245,102,0.1); color:var(--lime-400); border:1px solid rgba(184,245,102,0.2); }
+.cat-mindfulness { background:rgba(52,211,153,0.1); color:var(--emerald-400); border:1px solid rgba(52,211,153,0.2); }
+.cat-anxiety { background:rgba(245,158,11,0.1); color:var(--amber-400); border:1px solid rgba(245,158,11,0.2); }
+.article-read-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-muted); }
+.article-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:var(--text-primary); line-height:1.25; margin-bottom:8px; letter-spacing:-0.3px; }
+.article-excerpt { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px; }
+.article-footer { display:flex; align-items:center; justify-content:space-between; }
+.article-read-link { font-size:12px; font-weight:700; color:var(--lime-500); display:flex; align-items:center; gap:4px; }
+.article-bookmark { font-size:14px; color:var(--text-muted); cursor:pointer; transition:color 150ms; }
+.article-bookmark:hover { color:var(--lime-500); }
+
+/* Gradient fallback thumbs */
+.g1{background:linear-gradient(135deg,var(--forest-600),var(--forest-400))!important;}
+.g2{background:linear-gradient(135deg,#2d1a6b,#4c35a0)!important;}
+.g3{background:linear-gradient(135deg,var(--forest-700),var(--emerald-400))!important;}
+.g4{background:linear-gradient(135deg,#6b1a1a,#a03535)!important;}
+.g5{background:linear-gradient(135deg,#1a4a6b,#3575a0)!important;}
+
+@media(max-width:900px){.featured-article{grid-template-columns:1fr;}.feat-img-wrap{height:200px;}.articles-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.articles-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav class="app-navbar">
+  <div class="nav-logo"><span class="nav-logo-dot"></span>wellness</div>
+  <div class="nav-tabs">
+    <a href="home.html" class="nav-tab">Home</a>
+    <a href="explore.html" class="nav-tab">Explore</a>
+    <a href="learn.html" class="nav-tab active">Learn</a>
+    <a href="progress.html" class="nav-tab">Progress</a>
+  </div>
+  <div class="nav-right">
+    <a href="sos.html" class="nav-sos">SOS</a>
+    <div class="nav-avatar">A</div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="learn-wrap">
+    <div class="page-header">
+      <h1 class="page-title">Learn</h1>
+      <p class="page-sub">Science-backed articles on stress, sleep, focus, and mindfulness.</p>
+    </div>
+
+    <!-- Featured -->
+    <div class="featured-article">
+      <div class="feat-img-wrap">
+        <img src="../../assets/landing/feature-meditation.png" alt="featured">
+      </div>
+      <div class="feat-body">
+        <div class="feat-tag-row">
+          <span class="feat-cat-badge">Mindfulness</span>
+          <span class="feat-read-time">8 min read</span>
+        </div>
+        <h2 class="feat-article-title">Why 5 Minutes of Meditation Changes Your Brain</h2>
+        <p class="feat-excerpt">Neuroscience has shown that even brief daily meditation practice creates measurable changes in brain structure — reducing the amygdala's reactivity to stress within weeks.</p>
+        <span class="feat-read-btn">Read article →</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="learn-controls">
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" placeholder="Search articles...">
+      </div>
+      <div class="cat-filters">
+        <span class="chip chip-default" onclick="catClick(this)">All</span>
+        <span class="chip chip-active" onclick="catClick(this)">Mindfulness</span>
+        <span class="chip chip-default" onclick="catClick(this)">Stress</span>
+        <span class="chip chip-default" onclick="catClick(this)">Sleep</span>
+        <span class="chip chip-default" onclick="catClick(this)">Focus</span>
+        <span class="chip chip-default" onclick="catClick(this)">Anxiety</span>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="articles-grid">
+      <div class="article-card">
+        <div class="article-img g1"><div class="article-img-grad"></div></div>
+        <div class="article-body">
+          <div class="article-meta-row"><span class="article-cat cat-stress">Stress</span><span class="article-read-time">5 min read</span></div>
+          <div class="article-title">The Science of Stress: Why Your Body Reacts the Way It Does</div>
+          <div class="article-excerpt">Understanding cortisol, the HPA axis, and why chronic stress wears us down — explained simply.</div>
+          <div class="article-footer"><span class="article-read-link">Read →</span><span class="article-bookmark">⊕</span></div>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-img g2"><div class="article-img-grad"></div></div>
+        <div class="article-body">
+          <div class="article-meta-row"><span class="article-cat cat-sleep">Sleep</span><span class="article-read-time">6 min read</span></div>
+          <div class="article-title">Why You Can't Sleep: The Real Reasons and What to Do About Them</div>
+          <div class="article-excerpt">Racing thoughts, blue light, cortisol — the biology of sleeplessness and evidence-based fixes that actually work.</div>
+          <div class="article-footer"><span class="article-read-link">Read →</span><span class="article-bookmark">⊕</span></div>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-img g3"><div class="article-img-grad"></div></div>
+        <div class="article-body">
+          <div class="article-meta-row"><span class="article-cat cat-focus">Focus</span><span class="article-read-time">4 min read</span></div>
+          <div class="article-title">Box Breathing: The Navy SEALs' Secret for Instant Focus</div>
+          <div class="article-excerpt">Four seconds in, four seconds hold, four seconds out. How this simple pattern activates your parasympathetic nervous system.</div>
+          <div class="article-footer"><span class="article-read-link">Read →</span><span class="article-bookmark">⊕</span></div>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-img g4"><div class="article-img-grad"></div></div>
+        <div class="article-body">
+          <div class="article-meta-row"><span class="article-cat cat-anxiety">Anxiety</span><span class="article-read-time">7 min read</span></div>
+          <div class="article-title">Grounding Techniques: How to Stop a Panic Attack in Under 2 Minutes</div>
+          <div class="article-excerpt">The 5-4-3-2-1 method and other somatic techniques that interrupt the anxiety spiral before it escalates.</div>
+          <div class="article-footer"><span class="article-read-link">Read →</span><span class="article-bookmark">⊕</span></div>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-img g5"><div class="article-img-grad"></div></div>
+        <div class="article-body">
+          <div class="article-meta-row"><span class="article-cat cat-mindfulness">Mindfulness</span><span class="article-read-time">9 min read</span></div>
+          <div class="article-title">Mindfulness vs. Meditation: What's the Difference and Which Is Right for You?</div>
+          <div class="article-excerpt">Two approaches to presence, and how to choose the one that fits your lifestyle, personality, and goals.</div>
+          <div class="article-footer"><span class="article-read-link">Read →</span><span class="article-bookmark">⊕</span></div>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-img g1"><div class="article-img-grad"></div></div>
+        <div class="article-body">
+          <div class="article-meta-row"><span class="article-cat cat-sleep">Sleep</span><span class="article-read-time">5 min read</span></div>
+          <div class="article-title">The 4-7-8 Breathing Method: Fall Asleep in Under a Minute</div>
+          <div class="article-excerpt">Dr. Andrew Weil's technique explained: the science behind why slowing your exhale activates the vagus nerve and triggers sleep.</div>
+          <div class="article-footer"><span class="article-read-link">Read →</span><span class="article-bookmark">⊕</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <a href="home.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</a>
+  <a href="explore.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Explore</a>
+  <a href="learn.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Learn</a>
+  <a href="progress.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Progress</a>
+</div>
+
+<script>
+function catClick(el){document.querySelectorAll('.cat-filters .chip').forEach(c=>{c.classList.remove('chip-active');c.classList.add('chip-default');});el.classList.remove('chip-default');el.classList.add('chip-active');}
+</script>
+</body>
+</html>

@@ -74,8 +74,10 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 import HeroShader from './HeroShader.vue'
 
+// Importă imaginile de proof
 import proof1 from '@/brands/wellness2/assets/landing/hero-proof-1.png'
 import proof2 from '@/brands/wellness2/assets/landing/hero-proof-2.png'
 

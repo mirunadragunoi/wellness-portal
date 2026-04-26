@@ -1,30 +1,80 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { getBrandKey } from '@/config/brand'
+
+const brand = getBrandKey()
+
+const brandViews = {
+  wellness: {
+    landing: () => import('@/views/LandingView.vue'),
+    login: () => import('@/views/auth/LoginView.vue'),
+    signup: () => import('@/views/auth/SignupView.vue'),
+    onboarding: () => import('@/views/OnboardingView.vue'),
+    home: () => import('@/views/HomeView.vue'),
+    explore: () => import('@/views/ExploreView.vue'),
+    session: () => import('@/views/session/SessionView.vue'),
+    breathing: () => import('@/views/breathing/BreathingView.vue'),
+    learn: () => import('@/views/learn/LearnView.vue'),
+    article: () => import('@/views/learn/ArticleView.vue'),
+    progress: () => import('@/views/ProgressView.vue'),
+    profile: () => import('@/views/ProfileView.vue')
+  },
+  wellness2: {
+    landing: () => import('@/brands/wellness2/views/LandingView.vue'),
+    login: () => import('@/brands/wellness2/views/auth/LoginView.vue'),
+    signup: () => import('@/brands/wellness2/views/auth/SignupView.vue'),
+    onboarding: () => import('@/brands/wellness2/views/OnboardingView.vue'),
+    home: () => import('@/brands/wellness2/views/HomeView.vue'),
+    explore: () => import('@/brands/wellness2/views/ExploreView.vue'),
+    session: () => import('@/brands/wellness2/views/session/SessionView.vue'),
+    breathing: () => import('@/brands/wellness2/views/breathing/BreathingView.vue'),
+    learn: () => import('@/brands/wellness2/views/learn/LearnView.vue'),
+    article: () => import('@/brands/wellness2/views/learn/ArticleView.vue'),
+    progress: () => import('@/brands/wellness2/views/ProgressView.vue'),
+    profile: () => import('@/brands/wellness2/views/ProfileView.vue')
+  },
+  wellness3: {
+    landing: () => import('@/brands/wellness3/views/LandingView.vue'),
+    login: () => import('@/brands/wellness3/views/auth/LoginView.vue'),
+    signup: () => import('@/brands/wellness3/views/auth/SignupView.vue'),
+    onboarding: () => import('@/brands/wellness3/views/OnboardingView.vue'),
+    home: () => import('@/brands/wellness3/views/HomeView.vue'),
+    explore: () => import('@/brands/wellness3/views/ExploreView.vue'),
+    session: () => import('@/brands/wellness3/views/session/SessionView.vue'),
+    breathing: () => import('@/brands/wellness3/views/breathing/BreathingView.vue'),
+    learn: () => import('@/brands/wellness3/views/learn/LearnView.vue'),
+    article: () => import('@/brands/wellness3/views/learn/ArticleView.vue'),
+    progress: () => import('@/brands/wellness3/views/ProgressView.vue'),
+    profile: () => import('@/brands/wellness3/views/ProfileView.vue')
+  }
+}
+
+const views = brandViews[brand] || brandViews.wellness
 
 const routes = [
   // ─── Public ────────────────────────────────────────────
   {
     path: '/',
     name: 'landing',
-    component: () => import('@/views/LandingView.vue'),
+    component: views.landing,
     meta: { public: true }
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/auth/LoginView.vue'),
+    component: views.login,
     meta: { public: true, hideForAuth: true }
   },
   {
     path: '/signup',
     name: 'signup',
-    component: () => import('@/views/auth/SignupView.vue'),
+    component: views.signup,
     meta: { public: true, hideForAuth: true }
   },
   {
     path: '/onboarding',
     name: 'onboarding',
-    component: () => import('@/views/OnboardingView.vue'),
+    component: views.onboarding,
     meta: { public: true } // accessible before & after auth
   },
 
@@ -32,49 +82,49 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import('@/views/HomeView.vue'),
+    component: views.home,
     meta: { requiresAuth: true }
   },
   {
     path: '/explore',
     name: 'explore',
-    component: () => import('@/views/ExploreView.vue'),
+    component: views.explore,
     meta: { requiresAuth: true }
   },
   {
     path: '/session/:id',
     name: 'session',
-    component: () => import('@/views/session/SessionView.vue'),
+    component: views.session,
     meta: { requiresAuth: true }
   },
   {
     path: '/breathing/:type',
     name: 'breathing',
-    component: () => import('@/views/breathing/BreathingView.vue'),
+    component: views.breathing,
     meta: { requiresAuth: true }
   },
   {
     path: '/learn',
     name: 'learn',
-    component: () => import('@/views/learn/LearnView.vue'),
+    component: views.learn,
     meta: { requiresAuth: true }
   },
   {
     path: '/learn/:slug',
     name: 'article',
-    component: () => import('@/views/learn/ArticleView.vue'),
+    component: views.article,
     meta: { requiresAuth: true }
   },
   {
     path: '/progress',
     name: 'progress',
-    component: () => import('@/views/ProgressView.vue'),
+    component: views.progress,
     meta: { requiresAuth: true }
   },
   {
     path: '/profile',
     name: 'profile',
-    component: () => import('@/views/ProfileView.vue'),
+    component: views.profile,
     meta: { requiresAuth: true }
   },
 

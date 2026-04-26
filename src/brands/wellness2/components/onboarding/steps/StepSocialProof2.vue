@@ -24,42 +24,25 @@ const emit = defineEmits(['next'])
 <style scoped>
 .step-proof { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 24px var(--container-pad) 48px; min-height: 65vh; justify-content: center; text-align: center; }
 .proof-visual {
-  width: 220px;
-  min-height: 100px;
-  border-radius: var(--radius-lg);
-  background: var(--sage-50);
-  border: 2px solid var(--sage-200);
-  box-shadow: 6px 6px 0 var(--sage-100);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
+  padding: 20px 24px; border-radius: var(--radius-lg);
+  background: rgba(184,245,102,0.06); border: 1px solid rgba(184,245,102,0.15);
+  display: flex; align-items: center; justify-content: center;
 }
-.proof-community {
-  display: flex;
-  gap: 8px;
-}
+.proof-community { display: flex; gap: 8px; }
 .proof-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid var(--sage-200);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(184,245,102,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lime-400);
 }
-.proof-title { font-family: var(--font-display); font-size: clamp(28px,4vw,40px); font-weight: 300; color: var(--ink-900); line-height: 1.2; }
-.proof-body { font-size: 16px; color: var(--text-secondary); line-height: 1.7; max-width: 520px; }
+.proof-title { font-family: var(--font-display); font-size: clamp(22px,3vw,32px); font-weight: 800; letter-spacing: -1px; color: var(--text-primary); line-height: 1.15; }
+.proof-body { font-size: 15px; color: var(--text-secondary); line-height: 1.7; max-width: 520px; }
 .step-btn {
-  width: 100%;
-  max-width: 340px;
-  padding: 13px 16px;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--sage-600);
-  background: var(--sage-500);
-  color: #fff;
-  font-size: 15px;
-  font-weight: 700;
+  width: 100%; max-width: 340px; padding: 13px 16px;
+  border-radius: var(--radius-pill); border: none;
+  background: var(--lime-500); color: var(--forest-900);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: all 200ms; font-family: var(--font-body);
 }
+.step-btn:hover { background: var(--lime-400); box-shadow: 0 0 28px rgba(184,245,102,0.3); }
 </style>

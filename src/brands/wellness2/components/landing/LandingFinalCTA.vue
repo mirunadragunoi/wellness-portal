@@ -1,82 +1,101 @@
 <template>
   <section class="cta-section">
-    <div class="cta-section__photos">
-      <div class="cta-photo cta-photo--a" :style="{ backgroundImage:`url(${ctaBg1})` }" />
-      <div class="cta-photo cta-photo--b" :style="{ backgroundImage:`url(${ctaBg2})` }" />
-    </div>
-    <div class="cta-section__content">
-      <span class="section-label">{{ t('finalCta.label') }}</span>
-      <h2 class="cta-title">{{ t('finalCta.title_1') }}<br/><em>{{ t('finalCta.title_em') }}</em></h2>
-      <p class="cta-body">{{ t('finalCta.body') }}</p>
-      <div class="cta-actions">
+    <div class="cta-glow" />
+    <div class="cta-inner">
+      <div class="reveal">
+        <h2 class="cta-title">
+          {{ t('finalCta.title_1') }}<br>
+          <span class="lime">{{ t('finalCta.title_em') }}</span>
+        </h2>
+        <p class="cta-body">{{ t('finalCta.body') }}</p>
         <RouterLink to="/signup" class="cta-btn">
           {{ t('finalCta.btn') }}
-          <Icon icon="lucide:arrow-right" class="app-icon app-icon--md" />
+          <Icon icon="lucide:arrow-right" class="app-icon app-icon--sm" />
         </RouterLink>
-        <span class="cta-note">{{ t('finalCta.note') }}</span>
+        <div class="cta-note">{{ t('finalCta.note') }}</div>
+      </div>
+
+      <div class="cta-card reveal reveal-2">
+        <div class="cta-card-title">✦ Create your account</div>
+        <div class="cta-card-sub">Enter your phone and access code to begin your personalized journey.</div>
+        <input class="cta-input" type="text" placeholder="+40 700 000 000" />
+        <input class="cta-input" type="text" placeholder="Access code" />
+        <RouterLink to="/signup" class="cta-submit">Start Your Journey →</RouterLink>
       </div>
     </div>
-    <div class="cta-section__photo-c" :style="{ backgroundImage:`url(${ctaBg3})` }" />
   </section>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
-const { ctaBg1, ctaBg2, ctaBg3 } = LANDING_IMAGES
 </script>
 
 <style scoped>
 .cta-section {
-  display:grid;
-  grid-template-columns:200px 1fr 200px;
-  min-height:480px;
-  border-top:2px solid var(--ink-200);
-  border-bottom:2px solid var(--ink-200);
+  background: var(--forest-950);
+  padding: 100px 0; position: relative; overflow: hidden;
 }
-
-.cta-section__photos { display:flex; flex-direction:column; gap:0; overflow:hidden; }
-.cta-photo { flex:1; background-size:cover; background-position:center; }
-
-.cta-section__content {
-  background:var(--parchment);
-  display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
-  padding:clamp(40px,6vw,80px) clamp(32px,5vw,64px);
-  border-left:2px solid var(--ink-200);
-  border-right:2px solid var(--ink-200);
+.cta-glow {
+  position: absolute; bottom: -200px; left: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(184,245,102,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-inner {
+  max-width: var(--container-max); margin: 0 auto;
+  padding: 0 var(--container-pad);
+  display: grid; grid-template-columns: 1fr 400px; gap: 80px; align-items: center;
 }
 
 .cta-title {
-  font-family:var(--font-display);
-  font-size:clamp(38px,5vw,62px); font-weight:300;
-  line-height:1.05; letter-spacing:-1px;
-  color:var(--ink-900); margin-bottom:20px;
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 68px); font-weight: 800;
+  letter-spacing: -3px; color: var(--text-primary); line-height: 1.0; margin-bottom: 20px;
 }
-.cta-title em { font-style:italic; color:var(--sage-600); }
-
-.cta-body { font-size:17px; color:var(--text-secondary); line-height:1.75; margin-bottom:36px; max-width:440px; }
-
-.cta-actions { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.lime { color: var(--lime-500); }
+.cta-body { font-size: 16px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 36px; }
 .cta-btn {
-  display:inline-flex; align-items:center; gap:10px;
-  padding:15px 36px; font-size:16px; font-weight:700;
-  background:var(--sage-500); color:white;
-  border:2px solid var(--sage-600);
-  border-radius:var(--radius-sm); text-decoration:none;
-  box-shadow:4px 4px 0 var(--sage-700);
-  transition:all var(--duration-fast);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 16px 36px; border-radius: 999px;
+  background: var(--lime-500); color: var(--forest-900);
+  font-size: 16px; font-weight: 700; text-decoration: none;
+  transition: all 220ms var(--ease-smooth);
 }
-.cta-btn:hover { background:var(--sage-600); box-shadow:2px 2px 0 var(--sage-700); transform:translate(1px,1px); }
+.cta-btn:hover { background: var(--lime-400); box-shadow: 0 0 40px rgba(184,245,102,0.35); transform: translateY(-1px); }
+.cta-note { font-size: 13px; color: var(--text-muted); margin-top: 14px; }
 
-.cta-note { font-size:13px; color:var(--text-muted); }
+/* Right card */
+.cta-card {
+  padding: 36px; background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: 1px solid rgba(184,245,102,0.2); border-radius: 24px;
+  box-shadow: 0 0 60px rgba(184,245,102,0.06);
+}
+.cta-card-title {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.5px;
+}
+.cta-card-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 28px; line-height: 1.5; }
+.cta-input {
+  width: 100%; padding: 13px 18px; margin-bottom: 12px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; color: var(--text-primary);
+  font-family: var(--font-body); font-size: 15px;
+  outline: none; transition: border-color 200ms;
+}
+.cta-input:focus { border-color: rgba(184,245,102,0.4); box-shadow: 0 0 0 3px rgba(184,245,102,0.08); }
+.cta-input::placeholder { color: var(--text-muted); }
+.cta-submit {
+  display: block; width: 100%; padding: 14px; border-radius: 12px;
+  background: var(--lime-500); color: var(--forest-900);
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  text-align: center; text-decoration: none;
+  transition: all 200ms;
+}
+.cta-submit:hover { background: var(--lime-400); box-shadow: 0 0 32px rgba(184,245,102,0.3); }
 
-.cta-section__photo-c { background-size:cover; background-position:center; overflow:hidden; }
-
-@media (max-width:900px) {
-  .cta-section { grid-template-columns:1fr; }
-  .cta-section__photos { flex-direction:row; height:200px; }
-  .cta-section__photo-c { display:none; }
-  .cta-section__content { border-left:none; border-right:none; border-top:2px solid var(--ink-200); }
+@media (max-width: 1024px) {
+  .cta-inner { grid-template-columns: 1fr; }
+  .cta-card { display: none; }
 }
 </style>

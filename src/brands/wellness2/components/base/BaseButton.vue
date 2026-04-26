@@ -20,84 +20,71 @@ const props = defineProps({
 
 <style scoped>
 .btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  font-family:var(--font-body); font-weight:600;
-  border-radius:var(--radius-sm);
-  cursor:pointer; border:2px solid transparent;
-  text-decoration:none;
-  transition:all var(--duration-fast) var(--ease-smooth);
-  white-space:nowrap; position:relative;
-  user-select:none; -webkit-tap-highlight-color:transparent;
-  letter-spacing:0.2px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body); font-weight: 700;
+  border-radius: var(--radius-pill);
+  cursor: pointer; border: 1px solid transparent;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap; position: relative;
+  user-select: none; -webkit-tap-highlight-color: transparent;
 }
-.btn:disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-.btn--sm { padding:7px 18px;  font-size:13px; }
-.btn--md { padding:11px 26px; font-size:14px; }
-.btn--lg { padding:15px 36px; font-size:16px; }
-.btn--full { width:100%; }
+.btn--sm { padding: 8px 18px;  font-size: 13px; }
+.btn--md { padding: 12px 26px; font-size: 14px; }
+.btn--lg { padding: 15px 36px; font-size: 16px; }
+.btn--full { width: 100%; }
 
-/* Primary — solid ink */
+/* Primary — lime */
 .btn--primary {
-  background:var(--sage-500); color:#fff;
-  border-color:var(--sage-600);
-  box-shadow:var(--shadow-sm);
+  background: var(--lime-500); color: var(--forest-900);
 }
 .btn--primary:hover:not(:disabled) {
-  background:var(--sage-600); border-color:var(--sage-700);
-  box-shadow:var(--shadow-md);
-  transform:translate(-1px,-2px);
+  background: var(--lime-400);
+  box-shadow: 0 0 32px rgba(184,245,102,0.35);
+  transform: translateY(-1px);
 }
-.btn--primary:active:not(:disabled) { transform:translate(0,0); box-shadow:none; }
+.btn--primary:active:not(:disabled) { transform: scale(0.97); box-shadow: none; }
 
-/* Secondary — outlined */
+/* Secondary — lime outline */
 .btn--secondary {
-  background:#fff; color:var(--sage-700);
-  border-color:var(--sage-300);
+  background: transparent; color: var(--lime-400);
+  border-color: rgba(184,245,102,0.35);
 }
 .btn--secondary:hover:not(:disabled) {
-  background:var(--sage-50); color:var(--sage-700);
-  box-shadow:var(--shadow-sm);
-  transform:translate(-1px,-2px);
+  background: rgba(184,245,102,0.08);
+  border-color: rgba(184,245,102,0.6);
 }
 
 /* Ghost */
 .btn--ghost {
-  background:transparent; color:var(--text-secondary);
-  border-color:transparent;
+  background: rgba(255,255,255,0.05); color: var(--text-primary);
+  border-color: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
 }
-.btn--ghost:hover:not(:disabled) { color:var(--sage-700); background:var(--sage-50); }
-
-/* Sage */
-.btn--sage {
-  background:var(--sage-500); color:white;
-  border-color:var(--sage-600);
-  box-shadow:var(--shadow-sm);
-}
-.btn--sage:hover:not(:disabled) {
-  background:var(--sage-600);
-  box-shadow:var(--shadow-md);
-  transform:translate(-1px,-2px);
-}
+.btn--ghost:hover:not(:disabled) { background: rgba(255,255,255,0.09); }
 
 /* Danger */
-.btn--danger { background:#fee2e2; color:#dc2626; border-color:#fca5a5; }
-.btn--danger:hover:not(:disabled) { background:#fecaca; }
+.btn--danger {
+  background: rgba(239,68,68,0.12); color: #f87171;
+  border-color: rgba(239,68,68,0.25);
+}
+.btn--danger:hover:not(:disabled) { background: rgba(239,68,68,0.2); }
 
 /* Spinner */
 .btn__spinner {
-  width:15px; height:15px; border:2px solid rgba(255,255,255,0.35);
-  border-top-color:white; border-radius:50%;
-  animation:spin 0.7s linear infinite;
+  width: 15px; height: 15px; border: 2px solid rgba(7,15,10,0.2);
+  border-top-color: var(--forest-900); border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
 .btn--secondary .btn__spinner,
 .btn--ghost .btn__spinner {
-  border-color:rgba(28,26,22,0.2); border-top-color:var(--ink-800);
+  border-color: rgba(240,250,242,0.2); border-top-color: var(--text-primary);
 }
-@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@media (max-width:640px) {
-  .btn--md { padding:10px 20px; font-size:14px; }
-  .btn--lg { padding:13px 24px; font-size:15px; }
+@media (max-width: 640px) {
+  .btn--md { padding: 11px 20px; }
+  .btn--lg { padding: 13px 28px; font-size: 15px; }
 }
 </style>

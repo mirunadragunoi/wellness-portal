@@ -25,10 +25,10 @@
 
       <!-- Right actions -->
       <div class="navbar-auth__right">
-        <RouterLink to="/sos" class="sos-btn">
+        <button class="sos-btn" @click="uiStore.openSOS()">
           <Icon icon="lucide:alert-circle" class="app-icon app-icon--sm" />
           {{ t('nav.sos') }}
-        </RouterLink>
+        </button>
         <RouterLink to="/profile" class="avatar-btn">
           <Icon :icon="userIcon" class="app-icon app-icon--sm" />
         </RouterLink>
@@ -64,13 +64,16 @@
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 import { useUserStore } from '@/stores/user'
+import { useUIStore } from '@/stores/ui'
 import { AVATAR_ICONS } from '@/brands/wellness2/constants/appIcons'
 
 const { t } = useI18n()
 const open = ref(false)
+const uiStore = useUIStore()
 const userStore = useUserStore()
-const userIcon = AVATAR_ICONS[userStore.avatar] || 'lucide:user'
+const userIcon = AVATAR_ICONS[userStore.profile?.avatar] || 'lucide:user'
 </script>
 
 <style scoped>

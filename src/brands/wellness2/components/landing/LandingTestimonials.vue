@@ -1,20 +1,50 @@
 <template>
-  <section class="testimonials section">
-    <div class="container">
-      <div class="testimonials__header">
-        <span class="section-label">{{ t('testimonials.label') }}</span>
-        <h2 class="section-title">{{ t('testimonials.title_1') }} <em>{{ t('testimonials.title_em') }}</em></h2>
-      </div>
-      <!-- Staggered quote cards — different from original uniform grid -->
-      <div class="testimonials__grid">
-        <div v-for="(item, i) in items" :key="item.nameKey" class="quote-card" :class="`quote-card--${i}`">
-          <div class="quote-card__mark">"</div>
-          <p class="quote-card__text">{{ t(item.textKey) }}</p>
-          <div class="quote-card__footer">
-            <div class="quote-card__avatar" :style="{ backgroundImage:`url(${item.image})` }" />
-            <div class="quote-card__meta">
-              <span class="quote-card__name">{{ t(item.nameKey) }}</span>
-              <span class="quote-card__role">{{ t(item.roleKey) }}</span>
+  <section class="testi-section">
+    <div class="testi-inner">
+      <span class="section-label reveal">{{ t('testimonials.label') }}</span>
+      <h2 class="section-title reveal reveal-1">
+        {{ t('testimonials.title_1') }} <span class="lime">{{ t('testimonials.title_em') }}</span>
+      </h2>
+
+      <div class="testi-layout">
+        <!-- Featured large testimonial -->
+        <div class="testi-featured reveal">
+          <div>
+            <div class="testi-big-quote">"</div>
+            <p class="testi-big-text">{{ t('testimonials.t1_text') }}</p>
+          </div>
+          <div class="testi-author">
+            <div class="testi-av" :style="{ backgroundImage: `url(${LANDING_IMAGES.testimonial1})` }" />
+            <div>
+              <div class="testi-stars">★★★★★</div>
+              <div class="testi-name">{{ t('testimonials.t1_name') }}</div>
+              <div class="testi-role">{{ t('testimonials.t1_role') }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 small stacked -->
+        <div class="testi-stack">
+          <div class="testi-small-card reveal reveal-1">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-small-text">{{ t('testimonials.t2_text') }}</p>
+            <div class="testi-author">
+              <div class="testi-av" :style="{ backgroundImage: `url(${LANDING_IMAGES.testimonial2})` }" />
+              <div>
+                <div class="testi-name">{{ t('testimonials.t2_name') }}</div>
+                <div class="testi-role">{{ t('testimonials.t2_role') }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-small-card reveal reveal-2">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-small-text">{{ t('testimonials.t3_text') }}</p>
+            <div class="testi-author">
+              <div class="testi-av" :style="{ backgroundImage: `url(${LANDING_IMAGES.testimonial3})` }" />
+              <div>
+                <div class="testi-name">{{ t('testimonials.t3_name') }}</div>
+                <div class="testi-role">{{ t('testimonials.t3_role') }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -27,55 +57,59 @@
 import { useI18n } from 'vue-i18n'
 import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
-const items = [
-  { textKey:'testimonials.t1_text', nameKey:'testimonials.t1_name', roleKey:'testimonials.t1_role', image:LANDING_IMAGES.testimonial1 },
-  { textKey:'testimonials.t2_text', nameKey:'testimonials.t2_name', roleKey:'testimonials.t2_role', image:LANDING_IMAGES.testimonial2 },
-  { textKey:'testimonials.t3_text', nameKey:'testimonials.t3_name', roleKey:'testimonials.t3_role', image:LANDING_IMAGES.testimonial3 },
-]
 </script>
 
 <style scoped>
-.testimonials { background:var(--parchment); }
-.testimonials__header { margin-bottom:52px; }
+.testi-section { background: var(--forest-900); padding: 100px 0; }
+.testi-inner { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-pad); }
 
-.testimonials__grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:24px;
-  align-items:start;
+.section-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 3px; color: var(--lime-500); display: block; margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display); font-size: clamp(36px,4vw,56px);
+  font-weight: 800; letter-spacing: -2px; color: var(--text-primary); margin-bottom: 56px;
+}
+.lime { color: var(--lime-500); }
+
+.testi-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* Featured */
+.testi-featured {
+  padding: 48px; background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: var(--border-glass); border-radius: 24px; box-shadow: var(--glow-card);
+  grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between;
+}
+.testi-big-quote {
+  font-family: var(--font-display); font-size: clamp(40px,5vw,64px);
+  color: var(--lime-500); line-height: 0.8; margin-bottom: 20px;
+}
+.testi-big-text {
+  font-size: clamp(17px,2vw,21px); color: var(--text-primary); line-height: 1.65; margin-bottom: 32px;
 }
 
-.quote-card {
-  background:var(--bg-surface);
-  border:2px solid var(--ink-100);
-  border-radius:var(--radius-lg);
-  padding:32px 28px 24px;
-  position:relative;
-  transition:transform var(--duration-normal), box-shadow var(--duration-normal);
+/* Small cards */
+.testi-stack { display: flex; flex-direction: column; gap: 16px; }
+.testi-small-card {
+  padding: 28px; background: rgba(13,31,18,0.5); backdrop-filter: blur(12px);
+  border: var(--border-glass); border-radius: 20px; box-shadow: var(--glow-card);
 }
-/* Stagger — every third card is taller/shifted */
-.quote-card--1 { margin-top:32px; }
-.quote-card:hover { transform:translate(-3px,-4px); box-shadow:6px 6px 0 var(--sage-200); }
+.testi-small-text { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 20px; }
 
-.quote-card__mark {
-  font-family:var(--font-display); font-size:72px; line-height:0.6;
-  color:var(--sage-200); margin-bottom:20px; display:block;
+/* Author row */
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-av {
+  width: 38px; height: 38px; border-radius: 50%; overflow: hidden;
+  background: var(--forest-600); border: 2px solid rgba(184,245,102,0.15); flex-shrink: 0;
+  background-size: cover; background-position: center;
 }
-.quote-card__text {
-  font-family:var(--font-display); font-size:17px; font-style:italic;
-  color:var(--text-primary); line-height:1.7; margin-bottom:24px;
-}
-.quote-card__footer { display:flex; align-items:center; gap:12px; }
-.quote-card__avatar {
-  width:40px; height:40px; border-radius:50%;
-  background-size:cover; background-position:center;
-  border:2px solid var(--ink-100); flex-shrink:0;
-}
-.quote-card__name { display:block; font-size:14px; font-weight:600; color:var(--ink-900); }
-.quote-card__role { font-size:12px; color:var(--text-muted); }
+.testi-name { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.testi-role { font-size: 12px; color: var(--text-muted); }
+.testi-stars { color: var(--amber-400); font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; }
 
-@media (max-width:768px) {
-  .testimonials__grid { grid-template-columns:1fr; }
-  .quote-card--1 { margin-top:0; }
+@media (max-width: 1024px) {
+  .testi-layout { grid-template-columns: 1fr; }
+  .testi-featured { grid-row: span 1; }
 }
 </style>

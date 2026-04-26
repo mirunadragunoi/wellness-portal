@@ -1,75 +1,106 @@
 <template>
   <div class="landing">
-    <!-- Logged-in users already have AppNavbarAuth from App.vue -->
     <AppNavbarPublic v-if="!authStore.isLoggedIn" />
 
     <main>
       <LandingHero />
-      <LandingFeatures />
-      <LandingHowItWorks />
-      <LandingPreview />
+
+      <!-- Marquee strip -->
+      <div class="marquee-strip">
+        <div class="marquee-inner">
+          <span v-for="(item, i) in marqueeItems.concat(marqueeItems)" :key="i" class="marquee-item">
+            {{ item }}
+          </span>
+        </div>
+      </div>
+
       <LandingMetrics />
+      <LandingFeatures />
+      <LandingPreview />
+      <LandingHowItWorks />
       <LandingTestimonials />
       <LandingFinalCTA />
     </main>
 
-    <!-- Quiz float button -->
     <RouterLink
       :to="quizTarget"
       class="quiz-float"
       :class="{ 'quiz-float--auth-mobile': authStore.isLoggedIn }"
     >
-      <Icon icon="lucide:sparkles" class="quiz-float__icon app-icon app-icon--md" />
+      <Icon icon="lucide:sparkles" class="app-icon app-icon--sm" />
       {{ t('quizFloat') }}
     </RouterLink>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import AppNavbarPublic   from '@/components/layout/AppNavbarPublic.vue'
 import LandingHero       from '@/components/landing/LandingHero.vue'
-import LandingFeatures   from '@/components/landing/LandingFeatures.vue'
-import LandingHowItWorks from '@/components/landing/LandingHowItWorks.vue'
-import LandingPreview    from '@/components/landing/LandingPreview.vue'
 import LandingMetrics    from '@/components/landing/LandingMetrics.vue'
+import LandingFeatures   from '@/components/landing/LandingFeatures.vue'
+import LandingPreview    from '@/components/landing/LandingPreview.vue'
+import LandingHowItWorks from '@/components/landing/LandingHowItWorks.vue'
 import LandingTestimonials from '@/components/landing/LandingTestimonials.vue'
 import LandingFinalCTA   from '@/components/landing/LandingFinalCTA.vue'
+
 const { t } = useI18n()
 const authStore = useAuthStore()
 const quizTarget = computed(() => (authStore.isLoggedIn ? '/onboarding' : '/signup'))
+
+const marqueeItems = ['Breathe', 'Meditate', 'Sleep Better', 'Find Calm', 'Reduce Stress', 'Increase Focus', 'Improve Mood']
+
+onMounted(() => {
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }),
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  )
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el))
+})
 </script>
 
 <style scoped>
-/* flex: 1 alone = flex-basis 0%, which can cap <main> to the viewport and clip sections below the hero */
 .landing {
   min-height: var(--app-min-height);
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--forest-900);
 }
-main {
-  flex: 1 0 auto;
-  min-height: min-content;
-}
+main { flex: 1 0 auto; min-height: min-content; }
 
-.quiz-float {
-  position: fixed; bottom: 32px; left: 32px; z-index: 60;
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 22px; border-radius: var(--radius-sm);
-  background: var(--bg-surface); color: var(--text-primary);
-  font-size: 14px; font-weight: 500; text-decoration: none;
-  border: 1.5px solid var(--border-default);
-  box-shadow: var(--shadow-md);
-  transition: all var(--duration-normal) var(--ease-smooth);
+/* ── Marquee ── */
+.marquee-strip {
+  background: var(--lime-500); overflow: hidden; padding: 14px 0;
+  position: relative; z-index: 3;
 }
-.quiz-float:hover { background: var(--sage-50); border-color: var(--sage-300); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.quiz-float__icon { color: var(--sage-500); font-size: 16px; }
+.marquee-inner {
+  display: flex; white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+.marquee-item {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  color: var(--forest-900); text-transform: uppercase; letter-spacing: 2px;
+  padding: 0 32px; display: inline-flex; align-items: center; gap: 16px;
+}
+.marquee-item::after { content: '✦'; font-size: 10px; }
+
+/* ── Quiz float ── */
+.quiz-float {
+  position: fixed; bottom: 28px; left: 28px; z-index: 90;
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 20px; border-radius: 999px;
+  background: rgba(13,31,18,0.9); backdrop-filter: blur(20px);
+  border: 1px solid rgba(184,245,102,0.22); color: var(--lime-400);
+  font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 24px rgba(2,10,4,0.6); text-decoration: none;
+  transition: all 250ms var(--ease-smooth);
+  animation: fadeInUp 1s var(--ease-smooth) 2s both;
+}
+.quiz-float:hover { border-color: rgba(184,245,102,0.5); transform: translateY(-2px); }
 
 @media (max-width: 640px) {
-  .quiz-float { bottom: 20px; left: 20px; right: 20px; justify-content: center; }
+  .quiz-float { left: 16px; right: 16px; bottom: 16px; justify-content: center; }
 }
 @media (max-width: 768px) {
   .quiz-float--auth-mobile {

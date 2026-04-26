@@ -15,33 +15,23 @@ defineProps({ current: Number, total: Number })
 
 <style scoped>
 .onb-progress {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px;
   padding: 18px var(--container-pad) 8px;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--ink-100);
+  background: rgba(7,15,10,0.9); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(184,245,102,0.08);
 }
 .onb-progress__track {
-  width: min(100%, 560px);
-  height: 8px;
-  background: var(--ink-100);
-  border-radius: 999px;
-  overflow: hidden;
+  width: min(100%, 560px); height: 4px;
+  background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;
 }
 .onb-progress__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--sage-400), var(--sage-600));
+  background: linear-gradient(90deg, var(--emerald-400), var(--lime-500));
   transition: width var(--duration-slow) var(--ease-smooth);
   border-radius: 999px;
 }
 .onb-progress__label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.3px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;
 }
 </style>

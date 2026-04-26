@@ -1,21 +1,13 @@
 <template>
-  <section class="metrics-section">
-    <div class="container">
-      <div class="metrics__inner">
-        <div class="metrics__headline">
-          <h2 class="section-title">{{ t('metrics.title_1') }} <em>{{ t('metrics.title_em') }}</em></h2>
-          <p class="section-subtitle">{{ t('metrics.subtitle') }}</p>
-        </div>
-        <div class="metrics__grid">
-          <div v-for="m in metrics" :key="m.labelKey" class="metric-block">
-            <div class="metric-block__img" :style="{ backgroundImage:`url(${m.image})` }" />
-            <div class="metric-block__val">{{ t(m.valueKey) }}</div>
-            <div class="metric-block__label">{{ t(m.labelKey) }}</div>
-          </div>
-        </div>
+  <div class="metrics-band reveal">
+    <div class="metrics-inner">
+      <div v-for="(m, i) in metrics" :key="i" class="metric-cell">
+        <div class="metric-img" :style="{ backgroundImage: `url(${m.image})` }" />
+        <span class="metric-val">{{ m.value }}</span>
+        <div class="metric-lbl">{{ t(m.labelKey) }}</div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -23,50 +15,48 @@ import { useI18n } from 'vue-i18n'
 import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 const metrics = [
-  { valueKey:'metrics.m1_value', labelKey:'metrics.m1_label', image:LANDING_IMAGES.metric1 },
-  { valueKey:'metrics.m2_value', labelKey:'metrics.m2_label', image:LANDING_IMAGES.metric2 },
-  { valueKey:'metrics.m3_value', labelKey:'metrics.m3_label', image:LANDING_IMAGES.metric3 },
+  { value: '87%',  labelKey: 'metrics.m1_label', image: LANDING_IMAGES.metric1 },
+  { value: '12k+', labelKey: 'metrics.m2_label', image: LANDING_IMAGES.metric2 },
+  { value: '4.8★', labelKey: 'metrics.m3_label', image: LANDING_IMAGES.metric3 },
 ]
 </script>
 
 <style scoped>
-.metrics-section {
-  background:var(--ink-900);
-  padding:80px 0;
+.metrics-band {
+  background: var(--forest-800);
+  padding: 80px var(--container-pad);
 }
-.metrics__inner {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:clamp(32px,5vw,80px); align-items:center;
+.metrics-inner {
+  max-width: var(--container-max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: rgba(184,245,102,0.06);
+  border-radius: 24px; overflow: hidden;
 }
-.metrics__headline .section-title { color:var(--parchment); }
-.metrics__headline .section-title em { color:var(--sage-300); }
-.metrics__headline .section-subtitle { color:var(--ink-400); }
+.metric-cell {
+  padding: 56px 48px;
+  background: var(--forest-800);
+  position: relative; overflow: hidden;
+}
+.metric-cell::after {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(184,245,102,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.metric-img {
+  width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
+  margin-bottom: 20px; background: var(--forest-700);
+  background-size: cover; background-position: center;
+  filter: saturate(0) brightness(0.6);
+}
+.metric-val {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 7vw, 88px); font-weight: 800;
+  letter-spacing: -4px; color: var(--lime-500); line-height: 1;
+  margin-bottom: 12px; display: block;
+}
+.metric-lbl { font-size: 15px; color: var(--text-secondary); line-height: 1.6; max-width: 200px; }
 
-.metrics__grid { display:flex; flex-direction:column; gap:2px; }
-
-.metric-block {
-  display:grid; grid-template-columns:64px 100px 1fr;
-  align-items:center; gap:20px;
-  padding:20px;
-  border-top:1px solid rgba(255,255,255,0.08);
-  transition:background var(--duration-fast);
-}
-.metric-block:last-child { border-bottom:1px solid rgba(255,255,255,0.08); }
-.metric-block:hover { background:rgba(255,255,255,0.04); }
-
-.metric-block__img {
-  width:64px; height:44px; border-radius:var(--radius-sm);
-  background-size:cover; background-position:center;
-  border:1px solid rgba(255,255,255,0.1); flex-shrink:0;
-}
-.metric-block__val {
-  font-family:var(--font-display); font-size:clamp(28px,3.5vw,42px);
-  font-weight:300; color:var(--parchment); letter-spacing:-1px; line-height:1;
-}
-.metric-block__label { font-size:14px; color:var(--ink-400); line-height:1.5; }
-
-@media (max-width:768px) {
-  .metrics__inner { grid-template-columns:1fr; }
-  .metric-block { grid-template-columns:56px 80px 1fr; gap:14px; }
-}
+@media (max-width: 1024px) { .metrics-inner { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .metric-cell { padding: 36px 28px; } }
 </style>
