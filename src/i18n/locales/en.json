@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Wellness portal"
+    "name": "Harmonoria"
   },
   "nav": {
     "explore": "Explore",
@@ -89,7 +89,7 @@
     "contact": "Contact",
     "terms": "Terms",
     "privacy": "Privacy",
-    "copy": "© 2026 Wellness portal. All rights reserved."
+    "copy": "© 2026 Harmonoria. All rights reserved."
   },
   "quizFloat": "Take the Wellness Quiz",
   "auth": {
@@ -124,7 +124,7 @@
     "stress_sometimes": "Sometimes",
     "stress_rarely": "Rarely",
     "step4_title": "You're in good company",
-    "step4_body": "Wellness portal has helped thousands of people reduce stress and sleep better.",
+    "step4_body": "Harmonoria has helped thousands of people reduce stress and sleep better.",
     "step5_title": "Your experience with meditation?",
     "exp_new": "Brand new",
     "exp_tried": "I've tried it",
