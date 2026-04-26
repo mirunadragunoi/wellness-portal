@@ -13,22 +13,22 @@ const phrase = getPhraseOfDay()
 
 <style scoped>
 .phrase-card {
-  background: var(--ink-900); border: 2px solid var(--ink-700);
-  border-radius: var(--radius-lg); padding: 28px;
+  background: var(--bg-glass); backdrop-filter: blur(16px);
+  border: var(--border-glass); border-radius: 18px; padding: 24px;
   position: relative; overflow: hidden; min-width: 0;
-  box-shadow: 4px 4px 0 var(--sage-700);
 }
 .phrase-card__quote {
-  font-family: var(--font-display); font-size: 80px; font-weight: 300;
-  color: rgba(255,255,255,0.12); line-height: 0.7; margin-bottom: 14px;
+  font-family: var(--font-display); font-size: 11px; font-weight: 600;
+  color: var(--lime-500); text-transform: uppercase; letter-spacing: 3px;
+  margin-bottom: 10px;
 }
 .phrase-card__text {
-  font-family: var(--font-display); font-size: 18px; font-weight: 300;
-  font-style: italic; color: var(--parchment); line-height: 1.65; margin-bottom: 14px;
+  font-family: var(--font-display); font-size: 15px; font-weight: 600;
+  color: var(--text-primary); line-height: 1.5; margin-bottom: 10px;
+  font-style: italic;
 }
-.phrase-card__author { font-size: 13px; color: var(--ink-400); font-weight: 600; }
+.phrase-card__author { font-size: 12px; color: var(--text-muted); }
 @media (max-width: 640px) {
   .phrase-card { padding: 18px 16px; }
-  .phrase-card__text { font-size: 16px; }
 }
 </style>

@@ -1,132 +1,170 @@
 <template>
-  <nav class="navbar-auth" :class="{ 'scrolled': scrolled }">
+  <nav class="navbar-auth">
     <div class="navbar-auth__inner">
-      <RouterLink :to="{ name: 'landing' }" class="auth-logo">
-        <span class="auth-logo__name">{{ t('brand.name') }}</span>
+      <!-- Logo -->
+      <RouterLink to="/home" class="navbar-auth__logo">
+        <span class="navbar-auth__logo-dot" />
+        {{ t('brand.name') }}
       </RouterLink>
 
-      <ul class="auth-nav">
-        <li v-for="item in navItems" :key="item.to">
-          <RouterLink :to="item.to" class="auth-nav__link" :class="{ active: route.name === item.name }">
-            {{ item.label }}
-          </RouterLink>
+      <!-- Nav tabs -->
+      <ul class="navbar-auth__tabs">
+        <li>
+          <RouterLink to="/home"     class="nav-tab" active-class="nav-tab--active">{{ t('nav.home') }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/explore"  class="nav-tab" active-class="nav-tab--active">{{ t('nav.explore') }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/learn"    class="nav-tab" active-class="nav-tab--active">{{ t('nav.learn') }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/progress" class="nav-tab" active-class="nav-tab--active">{{ t('nav.progress') }}</RouterLink>
         </li>
       </ul>
 
-      <div class="auth-actions">
-        <div class="streak-tag">
-          <Icon icon="lucide:flame" class="app-icon app-icon--sm" />
-          {{ progressStore.streakDays }}
-        </div>
-        <RouterLink to="/profile" class="avatar-ring">
-          <Icon :icon="AVATAR_ICONS[userStore.avatar] || AVATAR_ICONS['avatar-1']"
-            class="app-icon app-icon--md app-icon--primary" />
+      <!-- Right actions -->
+      <div class="navbar-auth__right">
+        <RouterLink to="/sos" class="sos-btn">
+          <Icon icon="lucide:alert-circle" class="app-icon app-icon--sm" />
+          {{ t('nav.sos') }}
+        </RouterLink>
+        <RouterLink to="/profile" class="avatar-btn">
+          <Icon :icon="userIcon" class="app-icon app-icon--sm" />
         </RouterLink>
       </div>
+
+      <!-- Burger (mobile) -->
+      <button
+        class="navbar-auth__burger"
+        :aria-expanded="open"
+        @click="open = !open"
+      >
+        <span /><span /><span />
+      </button>
     </div>
+
+    <!-- Mobile drawer -->
+    <Transition name="drawer">
+      <div v-if="open" class="navbar-auth__drawer">
+        <RouterLink to="/home"     class="drawer__link" @click="open=false">{{ t('nav.home') }}</RouterLink>
+        <RouterLink to="/explore"  class="drawer__link" @click="open=false">{{ t('nav.explore') }}</RouterLink>
+        <RouterLink to="/learn"    class="drawer__link" @click="open=false">{{ t('nav.learn') }}</RouterLink>
+        <RouterLink to="/progress" class="drawer__link" @click="open=false">{{ t('nav.progress') }}</RouterLink>
+        <hr class="drawer__rule" />
+        <RouterLink to="/profile"  class="drawer__link" @click="open=false">{{ t('nav.profile') }}</RouterLink>
+        <RouterLink to="/sos"      class="sos-btn drawer__sos" @click="open=false">
+          {{ t('nav.sos') }}
+        </RouterLink>
+      </div>
+    </Transition>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { useProgressStore } from '@/stores/progress'
-import { AVATAR_ICONS } from '@/constants/appIcons'
+import { AVATAR_ICONS } from '@/brands/wellness2/constants/appIcons'
+
 const { t } = useI18n()
-const route = useRoute()
+const open = ref(false)
 const userStore = useUserStore()
-const progressStore = useProgressStore()
-const scrolled = ref(false)
-function onScroll() { scrolled.value = window.scrollY > 10 }
-onMounted(() => window.addEventListener('scroll', onScroll))
-onUnmounted(() => window.removeEventListener('scroll', onScroll))
-const navItems = computed(() => [
-  { to:'/home',     name:'home',     label:t('nav.home')     },
-  { to:'/explore',  name:'explore',  label:t('nav.explore')  },
-  { to:'/learn',    name:'learn',    label:t('nav.learn')    },
-  { to:'/progress', name:'progress', label:t('nav.progress') },
-])
+const userIcon = AVATAR_ICONS[userStore.avatar] || 'lucide:user'
 </script>
 
 <style scoped>
 .navbar-auth {
-  position:sticky; top:0; z-index:90;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(7,15,10,0.88); backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(184,245,102,0.08);
 }
+
 .navbar-auth__inner {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 var(--container-pad);
-  min-height:var(--navbar-height);
-  background:var(--bg-surface);
-  border-bottom:2px solid var(--ink-200);
-  transition:border-color var(--duration-normal), box-shadow var(--duration-normal);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--container-pad);
+  height: var(--navbar-height);
+  max-width: var(--container-max);
+  margin: 0 auto;
 }
-.scrolled .navbar-auth__inner {
-  border-bottom-color:var(--sage-300);
-  box-shadow:0 2px 12px rgba(28,26,22,0.06);
-}
-[data-theme="dark"] .navbar-auth__inner { background:var(--bg-surface); }
 
 /* Logo */
-.auth-logo { display:flex; align-items:center; gap:9px; text-decoration:none; }
-.auth-logo__name { font-family:var(--font-display); font-size:20px; font-weight:400; color:var(--text-primary); }
+.navbar-auth__logo {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-display); font-size: 18px; font-weight: 800;
+  color: var(--text-primary); text-decoration: none; letter-spacing: -0.5px;
+}
+.navbar-auth__logo-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--lime-500); box-shadow: 0 0 8px rgba(184,245,102,0.8);
+  animation: pulse-dot 2.5s ease infinite; flex-shrink: 0;
+}
 
-/* Nav */
-.auth-nav { display:flex; align-items:center; gap:2px; list-style:none; min-height:var(--navbar-height); }
-.auth-nav__link {
-  display:flex; align-items:center; justify-content:center;
-  min-height: var(--navbar-height);
-  padding: 10px clamp(10px,1.2vw,18px);
-  font-size:14px; font-weight:500; color:var(--text-secondary);
-  text-decoration:none; position:relative;
-  transition:color var(--duration-fast);
-  line-height: 1;
+/* Nav tabs */
+.navbar-auth__tabs { display: flex; align-items: center; gap: 2px; list-style: none; }
+.nav-tab {
+  display: block; padding: 8px 16px;
+  font-size: 14px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; border-radius: var(--radius-pill);
+  transition: all 150ms;
 }
-.auth-nav__link::after {
-  content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
-  background:var(--sage-500); transform:scaleX(0);
-  transition:transform var(--duration-fast); transform-origin:left;
-}
-.auth-nav__link:hover { color:var(--ink-900); }
-.auth-nav__link.active { color:var(--ink-900); font-weight:600; }
-.auth-nav__link.active::after { transform:scaleX(1); }
+.nav-tab:hover         { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+.nav-tab--active       { color: var(--lime-500); background: rgba(184,245,102,0.08); }
 
 /* Right */
-.auth-actions { display:flex; align-items:center; gap:10px; }
-.streak-tag {
-  display:flex; align-items:center; gap:5px;
-  padding:5px 12px; background:var(--parchment-2);
-  border:1.5px solid var(--parchment-4); border-radius:var(--radius-sm);
-  font-size:13px; font-weight:700; color:#92400e;
-}
-.avatar-ring {
-  width:36px; height:36px; border-radius:50%;
-  background:var(--sage-100); border:2px solid var(--sage-200);
-  display:flex; align-items:center; justify-content:center;
-  text-decoration:none; transition:border-color var(--duration-fast);
-}
-.avatar-ring:hover { border-color:var(--sage-500); }
+.navbar-auth__right { display: flex; align-items: center; gap: 8px; }
 
-@media (max-width:768px) { .auth-nav { display:none; } }
+.sos-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; font-size: 13px; font-weight: 600;
+  border-radius: var(--radius-pill); text-decoration: none;
+  background: rgba(239,68,68,0.1); color: #f87171;
+  border: 1px solid rgba(239,68,68,0.25);
+  transition: all 150ms;
+}
+.sos-btn:hover { background: rgba(239,68,68,0.18); }
 
-@media (max-width: 1024px) {
-  .auth-logo__name {
-    font-size: 18px;
-  }
-  .auth-actions {
-    gap: 8px;
-  }
+.avatar-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--forest-600); border: 2px solid rgba(184,245,102,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lime-400); text-decoration: none;
+  transition: border-color 200ms;
+}
+.avatar-btn:hover { border-color: rgba(184,245,102,0.5); }
+
+/* Burger */
+.navbar-auth__burger {
+  display: none; flex-direction: column; gap: 5px;
+  padding: 4px; background: none; border: none; cursor: pointer;
+}
+.navbar-auth__burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text-primary); border-radius: 1px;
 }
 
-@media (max-width: 640px) {
-  .navbar-auth__inner {
-    min-height: 60px;
-    padding: 0 16px;
-  }
-  .streak-tag {
-    padding: 4px 10px;
-    font-size: 12px;
-  }
+/* Drawer */
+.navbar-auth__drawer {
+  display: flex; flex-direction: column;
+  background: rgba(7,15,10,0.95); backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(184,245,102,0.08);
+  padding: 8px var(--container-pad) 24px;
+}
+.drawer__link {
+  display: block; padding: 14px 0;
+  color: var(--text-primary); font-size: 16px; font-weight: 500;
+  text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: color 150ms;
+}
+.drawer__link:hover { color: var(--lime-400); }
+.drawer__rule { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 8px 0; }
+.drawer__sos  { margin-top: 12px; justify-content: center; }
+
+.drawer-enter-active, .drawer-leave-active { transition: all 300ms var(--ease-smooth); }
+.drawer-enter-from, .drawer-leave-to { opacity: 0; transform: translateY(-10px); }
+
+@media (max-width: 768px) {
+  .navbar-auth__tabs, .navbar-auth__right { display: none; }
+  .navbar-auth__burger { display: flex; }
 }
 </style>

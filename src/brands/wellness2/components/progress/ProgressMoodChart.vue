@@ -38,60 +38,42 @@ const moodStore = useMoodStore()
 
 function moodGradient(value) {
   const colors = {
-    1: '#94a3b8',
-    2: '#64748b',
-    3: 'var(--sage-300)',
-    4: 'var(--sage-500)',
-    5: '#f59e0b'
+    1: 'linear-gradient(to top, var(--forest-400), var(--forest-300))',
+    2: 'linear-gradient(to top, var(--forest-400), var(--forest-300))',
+    3: 'linear-gradient(to top, var(--emerald-500), var(--emerald-400))',
+    4: 'linear-gradient(to top, var(--emerald-500), var(--lime-500))',
+    5: 'linear-gradient(to top, var(--lime-500), var(--lime-400))'
   }
-  return colors[value] || '#e2e8f0'
+  return colors[value] || 'rgba(255,255,255,0.07)'
 }
 </script>
 
 <style scoped>
 .mood-chart-card {
-  background: var(--bg-surface);
-  border: 2px solid var(--ink-200);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  box-shadow: 3px 3px 0 var(--ink-100);
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: var(--border-glass); border-radius: 20px; padding: 28px;
+  margin-bottom: 20px;
 }
 .mood-chart-card__header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1.5px solid var(--ink-100);
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
 }
-.mood-chart-card__title {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--ink-900);
-}
+.mood-chart-card__title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); }
 .mood-chart-card__sub {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
 }
 .mood-chart-card__chart { width: 100%; }
-.mood-bars { display: flex; align-items: flex-end; gap: 8px; min-height: 160px; }
-.mood-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.mood-bar-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.mood-bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; margin-bottom: 12px; }
+.mood-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.mood-bar-col { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; height: 100%; }
 .mood-bar {
-  width: 16px;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  width: 100%; border-radius: 6px 6px 0 0;
   transition: height var(--duration-slow) var(--ease-smooth); min-height: 4px;
+  cursor: pointer;
 }
-.mood-bar-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+.mood-bar:hover { filter: brightness(1.2); }
+.mood-bar-label {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); font-weight: 500;
+}
 
-@media (max-width: 640px) {
-  .mood-chart-card {
-    padding: 16px;
-  }
-}
+@media (max-width: 640px) { .mood-chart-card { padding: 16px; } }
 </style>

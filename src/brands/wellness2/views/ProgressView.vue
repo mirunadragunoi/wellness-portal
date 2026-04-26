@@ -33,31 +33,27 @@ const { t } = useI18n()
 <style scoped>
 .progress-view {
   min-height: var(--app-min-height);
-  background: var(--parchment);
+  background: var(--forest-900);
   padding-bottom: var(--page-pad-bottom-auth);
 }
 .progress-view__head {
-  background: linear-gradient(180deg, var(--sage-100), var(--parchment));
-  padding: 28px 0;
-  border-bottom: 2px solid var(--ink-200);
+  max-width: var(--container-max); margin: 0 auto;
+  padding: 40px var(--container-pad) 28px;
 }
 .progress-view__title {
   font-family: var(--font-display);
-  font-size: clamp(26px, 3.5vw, 40px); font-weight: 300;
-  color: var(--ink-900); letter-spacing: -0.5px;
+  font-size: clamp(28px, 4vw, 48px); font-weight: 800;
+  letter-spacing: -2px; color: var(--text-primary); margin-bottom: 6px;
 }
-.progress-view__sub { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
-.progress-view__body { padding-top: 28px; display: flex; flex-direction: column; gap: 24px; }
+.progress-view__sub { font-size: 15px; color: var(--text-secondary); }
+.progress-view__body {
+  max-width: var(--container-max); margin: 0 auto;
+  padding: 0 var(--container-pad) 100px;
+}
 .progress-view__two-col {
   display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  grid-template-columns: 1fr 400px;
   gap: 20px; align-items: start;
 }
-@media (max-width: 768px) {
-  .progress-view__two-col { grid-template-columns: 1fr; }
-  .progress-view__body {
-    padding-top: 18px;
-    gap: 16px;
-  }
-}
+@media (max-width: 1100px) { .progress-view__two-col { grid-template-columns: 1fr; } }
 </style>

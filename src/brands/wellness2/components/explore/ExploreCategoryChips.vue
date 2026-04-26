@@ -30,19 +30,8 @@ const emit = defineEmits(['update:modelValue'])
 
 <style scoped>
 .category-chips {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 12px var(--container-pad);
-  border-bottom: 2px solid var(--ink-200);
-  background: var(--bg-surface);
+  display: flex; align-items: center; gap: 8px;
+  overflow-x: auto; padding: 0;
 }
-
-@media (max-width: 640px) {
-  .category-chips {
-    gap: 8px;
-    padding: 10px 16px;
-  }
-}
+.category-chips::-webkit-scrollbar { display: none; }
 </style>

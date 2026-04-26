@@ -25,23 +25,27 @@ const emit = defineEmits(['update:modelValue'])
 <style scoped>
 .search-bar { position: relative; }
 .search-bar__input {
-  width: 100%; padding: 10px 16px 10px 42px;
-  border: 2px solid var(--ink-200); border-radius: var(--radius-sm);
-  background: var(--bg-surface);
-  font-family: var(--font-body); font-size: 14px; color: var(--ink-900);
-  outline: none; transition: border-color var(--duration-fast);
+  width: 100%; padding: 14px 20px 14px 46px;
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+  outline: none; transition: all 200ms;
 }
-.search-bar__input:focus { border-color: var(--sage-500); background: white; }
-.search-bar__input::placeholder { color: var(--ink-300); }
+.search-bar__input:focus {
+  border-color: rgba(184,245,102,0.35); background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 3px rgba(184,245,102,0.08);
+}
+.search-bar__input::placeholder { color: var(--text-muted); }
 .search-bar__icon {
-  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  color: var(--ink-300); pointer-events: none;
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
 }
 .search-bar__clear {
-  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-  background: var(--ink-200); border: none; border-radius: var(--radius-sm);
-  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink-600); transition: all var(--duration-fast);
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: rgba(184,245,102,0.1); border: 1px solid rgba(184,245,102,0.2);
+  border-radius: 6px; width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--lime-400); transition: all 150ms;
 }
-.search-bar__clear:hover { background: var(--ink-900); color: var(--parchment); }
+.search-bar__clear:hover { background: rgba(184,245,102,0.18); }
 </style>

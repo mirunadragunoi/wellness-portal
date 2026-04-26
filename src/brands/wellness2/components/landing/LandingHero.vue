@@ -1,188 +1,251 @@
 <template>
   <section class="hero">
-    <!-- LEFT PANEL: typography -->
+    <HeroShader />
+
+    <!-- Left: content -->
     <div class="hero__left">
-      <div class="hero__left-inner">
-        <span class="hero__eyebrow">
-          <span class="hero__eyebrow-dot" />
-          {{ t('hero.badge') }}
-        </span>
-
-        <h1 class="hero__title">
-          {{ t('hero.title_line1') }}<br/>
-          <em>{{ t('hero.title_em') }}</em><br/>
-          {{ t('hero.title_line2') }}
-        </h1>
-
-        <p class="hero__subtitle">{{ t('hero.subtitle') }}</p>
-
-        <div class="hero__actions">
-          <RouterLink to="/signup" class="hero__btn-primary">
-            {{ t('hero.cta_primary') }}
-            <Icon icon="lucide:arrow-right" class="app-icon app-icon--sm" />
-          </RouterLink>
-          <RouterLink to="/explore" class="hero__btn-ghost">
-            {{ t('hero.cta_secondary') }}
-          </RouterLink>
-        </div>
-
-        <!-- Social proof row -->
-        <div class="hero__proof">
-          <div class="hero__proof-avatars">
-            <span v-for="(av, i) in proofAvatars" :key="i" class="hero__proof-av">
-              <img :src="av" alt="" />
-            </span>
-          </div>
-          <p class="hero__proof-text"><strong>12,000+</strong> people finding calm</p>
-        </div>
+      <div class="hero__kicker">
+        <span class="hero__kicker-dot" />
+        {{ t('hero.badge') }}
       </div>
 
-      <!-- Floating stat cards — inside left panel -->
-      <div class="hero__stat hero__stat--a">
-        <Icon icon="lucide:flame" class="app-icon app-icon--sm hero__stat-icon" />
-        <div>
-          <div class="hero__stat-val">21 days</div>
-          <div class="hero__stat-lbl">Current streak</div>
-        </div>
+      <h1 class="hero__title">
+        {{ t('hero.title_line1') }}<br>
+        <span class="hero__title-lime">{{ t('hero.title_em') }}</span><br>
+        <span class="hero__title-stroke">{{ t('hero.title_line2') }}</span>
+      </h1>
+
+      <p class="hero__sub">{{ t('hero.subtitle') }}</p>
+
+      <div class="hero__actions">
+        <RouterLink to="/signup" class="hero__btn-primary">
+          {{ t('hero.cta_primary') }}
+          <Icon icon="lucide:arrow-right" class="app-icon app-icon--sm" />
+        </RouterLink>
+        <RouterLink to="/explore" class="hero__btn-ghost">
+          {{ t('hero.cta_secondary') }}
+        </RouterLink>
       </div>
-      <div class="hero__stat hero__stat--b">
-        <Icon icon="lucide:smile" class="app-icon app-icon--sm hero__stat-icon" />
-        <div>
-          <div class="hero__stat-val">Bright</div>
-          <div class="hero__stat-lbl">Mood today</div>
+
+      <!-- Social proof -->
+      <div class="hero__proof">
+        <div class="hero__proof-avatars">
+          <span
+            v-for="(av, i) in proofAvatars" :key="i"
+            class="hero__proof-av"
+          >
+            <img :src="av" alt="" />
+          </span>
         </div>
+        <p class="hero__proof-text">
+          <strong>12,000+</strong> {{ t('hero.proof_label', 'people finding calm') }}
+        </p>
       </div>
     </div>
 
-    <!-- RIGHT PANEL: full-bleed photo -->
-    <div class="hero__right" :style="{ backgroundImage: `url(${heroPanelImage})` }">
-      <div class="hero__right-overlay" />
+    <!-- Right: floating session cards -->
+    <div class="hero__right">
+      <div
+        v-for="(card, i) in floatCards"
+        :key="i"
+        class="hero__float-card"
+        :style="{ animationDelay: `${i * 1.5}s` }"
+      >
+        <div class="hfc-type">{{ card.type }}</div>
+        <div class="hfc-title">{{ card.title }}</div>
+        <div class="hfc-meta">
+          <span>{{ card.category }}</span>
+          <span>{{ card.duration }}</span>
+        </div>
+        <RouterLink to="/explore" class="hfc-play">
+          <Icon icon="lucide:play" class="app-icon app-icon--xs" />
+          {{ t('home.play', 'Play now') }}
+        </RouterLink>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero__scroll-hint">
+      <div class="hero__scroll-line" />
+      <span class="hero__scroll-label">Scroll</span>
     </div>
   </section>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { LANDING_IMAGES } from '@/constants/landingImages'
-import heroPanelImage from '@/assets/landing/hero-main-wellness2-forest.png'
+import HeroShader from './HeroShader.vue'
+
+import proof1 from '@/brands/wellness2/assets/landing/hero-proof-1.png'
+import proof2 from '@/brands/wellness2/assets/landing/hero-proof-2.png'
+
 const { t } = useI18n()
-const { heroMain, heroProof1, heroProof2 } = LANDING_IMAGES
-const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1]
+
+const proofAvatars = [proof1, proof2, proof1, proof2]
+
+const floatCards = [
+  { type: 'Meditation', title: 'Morning Clarity',   category: 'Focus',  duration: '10 min' },
+  { type: 'Sleep Story', title: 'Forest at Night',  category: 'Sleep',  duration: '25 min' },
+  { type: 'Breathing',  title: 'Box 4-4-4-4',       category: 'Anxiety', duration: '5 min'  },
+]
 </script>
 
 <style scoped>
-/* ── Two-panel split layout ── */
+/* ── Hero layout ── */
 .hero {
-  display:grid;
-  grid-template-columns: 1fr 1fr;
+  position: relative;
   min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  overflow: hidden;
 }
 
-/* ── Left: parchment editorial ── */
+/* ── Left panel ── */
 .hero__left {
-  background:var(--parchment);
-  display:flex; flex-direction:column; justify-content:flex-start;
-  padding:clamp(48px,8vh,88px) clamp(28px,5vw,72px);
-  position:relative;
-  border-right:2px solid var(--ink-200);
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px clamp(24px,4vw,60px) 80px;
 }
-.hero__left-inner { max-width:520px; }
+.hero__left > * { width: 100%; max-width: 560px; }
 
-.hero__eyebrow {
-  display:inline-flex; align-items:center; gap:8px;
-  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:3px;
-  color:var(--sage-600); margin-bottom:28px;
+.hero__kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: var(--radius-pill);
+  background: rgba(184,245,102,0.07); border: 1px solid rgba(184,245,102,0.2);
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;
+  color: var(--lime-400); width: fit-content; margin-bottom: 32px;
+  animation: fadeInUp 0.7s var(--ease-smooth) 0.1s both;
 }
-.hero__eyebrow-dot {
-  width:7px; height:7px; border-radius:50%;
-  background:var(--sage-400); animation:pulse-dot 2.5s ease infinite;
+.hero__kicker-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--lime-500); flex-shrink: 0;
+  animation: pulse-dot 2s ease infinite;
 }
 
 .hero__title {
-  font-family:var(--font-display);
-  font-size:clamp(44px,5.5vw,72px); font-weight:300;
-  line-height:1.05; letter-spacing:-1.5px;
-  color:var(--ink-900); margin-bottom:24px;
+  font-family: var(--font-display);
+  font-size: clamp(48px,6.5vw,100px);
+  font-weight: 800; line-height: 0.95; letter-spacing: -4px;
+  color: var(--text-primary); margin-bottom: 28px;
+  animation: fadeInUp 0.8s var(--ease-smooth) 0.2s both;
 }
-.hero__title em { font-style:italic; color:var(--sage-600); }
+.hero__title-lime   { color: var(--lime-500); display: inline-block; }
+.hero__title-stroke { -webkit-text-stroke: 2px rgba(184,245,102,0.55); color: transparent; }
 
-.hero__subtitle {
-  font-size:17px; line-height:1.75;
-  color:var(--text-secondary); margin-bottom:40px;
-  max-width:400px;
+.hero__sub {
+  font-size: clamp(15px,1.8vw,18px); line-height: 1.75;
+  color: var(--text-secondary); max-width: 440px; margin-bottom: 44px;
+  animation: fadeInUp 0.8s var(--ease-smooth) 0.3s both;
 }
 
-.hero__actions { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:36px; }
+.hero__actions {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.8s var(--ease-smooth) 0.4s both;
+}
 
 .hero__btn-primary {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:14px 32px; font-size:16px; font-weight:600;
-  background:var(--ink-900); color:var(--parchment);
-  border:2px solid var(--ink-900); border-radius:var(--radius-sm);
-  text-decoration:none;
-  transition:all var(--duration-fast);
-  box-shadow:4px 4px 0 var(--sage-300);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: var(--radius-pill);
+  background: var(--lime-500); color: var(--forest-900);
+  font-size: 16px; font-weight: 700; text-decoration: none;
+  transition: all 250ms var(--ease-smooth);
 }
-.hero__btn-primary:hover { background:var(--sage-600); border-color:var(--sage-600); box-shadow:4px 4px 0 var(--sage-200); transform:translate(-1px,-1px); }
+.hero__btn-primary:hover {
+  background: var(--lime-400);
+  box-shadow: 0 0 48px rgba(184,245,102,0.4);
+  transform: translateY(-2px);
+}
 
 .hero__btn-ghost {
-  font-size:15px; font-weight:500; color:var(--text-secondary);
-  text-decoration:none; padding:4px 0;
-  border-bottom:2px solid var(--ink-300);
-  transition:color var(--duration-fast), border-color var(--duration-fast);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 24px; border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.05); color: var(--text-primary);
+  font-size: 16px; font-weight: 500; text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+  transition: all 200ms;
 }
-.hero__btn-ghost:hover { color:var(--ink-900); border-color:var(--ink-800); }
+.hero__btn-ghost:hover { background: rgba(255,255,255,0.09); }
 
-/* Proof */
-.hero__proof { display:flex; align-items:center; gap:12px; }
-.hero__proof-avatars { display:flex; }
+/* Social proof */
+.hero__proof {
+  display: flex; align-items: center; gap: 12px;
+  animation: fadeInUp 0.8s var(--ease-smooth) 0.5s both;
+}
+.hero__proof-avatars { display: flex; }
 .hero__proof-av {
-  width:28px; height:28px; border-radius:50%;
-  border:2px solid var(--parchment); overflow:hidden; margin-left:-7px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--forest-900); overflow: hidden;
+  margin-left: -7px; background: var(--forest-600);
 }
-.hero__proof-av:first-child { margin-left:0; }
-.hero__proof-av img { width:100%; height:100%; object-fit:cover; }
-.hero__proof-text { font-size:13px; color:var(--text-secondary); }
-.hero__proof-text strong { color:var(--ink-900); }
+.hero__proof-av:first-child { margin-left: 0; }
+.hero__proof-av img { width: 100%; height: 100%; object-fit: cover; }
+.hero__proof-text { font-size: 13px; color: var(--text-secondary); }
+.hero__proof-text strong { color: var(--lime-400); }
 
-/* Stat cards */
-.hero__stat {
-  position:absolute;
-  display:flex; align-items:center; gap:10px;
-  background:white; border:2px solid var(--ink-200); border-radius:var(--radius);
-  padding:12px 16px;
-  box-shadow:3px 3px 0 var(--ink-200);
-}
-.hero__stat-icon { color:var(--sage-500); flex-shrink:0; }
-.hero__stat-val  { font-size:14px; font-weight:700; color:var(--ink-900); line-height:1.2; }
-.hero__stat-lbl  { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
-.hero__stat--a { bottom:clamp(32px,6%,60px); right:clamp(16px,4%,40px); animation:float-slow 7s ease-in-out infinite; }
-.hero__stat--b { top:clamp(32px,6%,60px);    right:clamp(16px,4%,40px); animation:float-slow 9s ease-in-out infinite 2s; }
-
-/* ── Right: photo panel ── */
+/* ── Right: floating cards ── */
 .hero__right {
-  position:relative; background-size:cover; background-position:center;
-  min-height:520px;
-}
-.hero__right-overlay {
-  position:absolute; inset:0;
-  background:linear-gradient(160deg, rgba(28,26,22,0.2) 0%, rgba(28,26,22,0.08) 100%);
-}
-
-/* Mobile */
-@media (max-width:900px) {
-  .hero { grid-template-columns:1fr; }
-  .hero__left { padding:clamp(32px,6vw,56px); border-right:none; border-bottom:2px solid var(--ink-200); }
-  .hero__left-inner { max-width:100%; }
-  .hero__right { min-height:320px; }
-  .hero__stat--a, .hero__stat--b { display:none; }
-}
-@media (max-width:600px) {
-  .hero__title { font-size:clamp(38px,10vw,52px); }
-  .hero__actions { flex-direction:column; align-items:stretch; }
-  .hero__btn-primary { justify-content:center; }
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: flex-end;
+  padding: 120px 40px 80px 0; gap: 14px;
+  animation: fadeInUp 1s var(--ease-smooth) 0.6s both;
 }
 
-@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.75);} }
-@keyframes float-slow { 0%,100%{transform:translate(0,0);} 33%{transform:translate(6px,-10px);} 66%{transform:translate(-4px,6px);} }
+.hero__float-card {
+  width: 220px; padding: 16px 18px;
+  background: rgba(13,31,18,0.75); backdrop-filter: blur(20px);
+  border: 1px solid rgba(184,245,102,0.15); border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(2,10,4,0.5);
+  animation: float 7s ease-in-out infinite;
+}
+.hero__float-card:nth-child(2) { transform: translateX(-20px); animation-duration: 9s; }
+.hero__float-card:nth-child(3) { transform: translateX(-8px);  animation-duration: 6s; }
+
+.hfc-type {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--lime-500); margin-bottom: 6px;
+}
+.hfc-title {
+  font-family: var(--font-display); font-size: 14px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 4px;
+}
+.hfc-meta {
+  font-size: 11px; color: var(--text-muted);
+  display: flex; justify-content: space-between; margin-bottom: 10px;
+}
+.hfc-play {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: var(--lime-400);
+  text-decoration: none; transition: gap 150ms;
+}
+.hfc-play:hover { gap: 8px; }
+
+/* ── Scroll hint ── */
+.hero__scroll-hint {
+  position: absolute; bottom: 28px; left: clamp(24px,4vw,60px); z-index: 2;
+  display: flex; align-items: center; gap: 10px;
+  animation: fadeInUp 1s var(--ease-smooth) 1.4s both;
+}
+.hero__scroll-line {
+  width: 48px; height: 1px;
+  background: linear-gradient(to right, rgba(184,245,102,0.6), transparent);
+}
+.hero__scroll-label {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero__right { display: none; }
+  .hero__left { padding: 120px var(--container-pad) 80px; align-items: flex-start; }
+}
+@media (max-width: 600px) {
+  .hero__title { font-size: clamp(42px,10vw,64px); letter-spacing: -3px; }
+  .hero__actions { flex-direction: column; align-items: stretch; }
+  .hero__btn-primary, .hero__btn-ghost { justify-content: center; }
+}
 </style>

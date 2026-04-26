@@ -32,17 +32,18 @@ const userCategories = computed(() => {
 
 <style scoped>
 .categories {
-  background: var(--bg-surface); border: 2px solid var(--ink-200);
-  border-radius: var(--radius-lg); padding: 20px; box-shadow: 3px 3px 0 var(--ink-100);
+  background: var(--bg-glass); backdrop-filter: blur(16px);
+  border: var(--border-glass); border-radius: 18px; padding: 20px;
 }
-.categories__title { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--ink-900); margin-bottom: 14px; }
-.categories__grid  { display: flex; flex-wrap: wrap; gap: 8px; }
+.categories__title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; }
+.categories__grid  { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
 .cat-btn {
-  display: flex; align-items: center; gap: 7px;
-  padding: 8px 14px; border-radius: var(--radius-sm);
-  font-size: 13px; font-weight: 600; text-decoration: none;
-  transition: all var(--duration-fast);
-  border: 2px solid transparent;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 8px; border-radius: 14px; text-align: center;
+  font-size: 11px; font-weight: 600; text-decoration: none;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  transition: all 200ms var(--ease-smooth);
 }
-.cat-btn:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
+.cat-btn:hover { background: rgba(184,245,102,0.07); border-color: rgba(184,245,102,0.18); color: var(--lime-400); transform: translateY(-2px); }
 </style>

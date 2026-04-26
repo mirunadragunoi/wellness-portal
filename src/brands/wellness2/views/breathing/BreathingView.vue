@@ -15,10 +15,9 @@
 
       <!-- Circle -->
       <BreathingCircle
-        :phase="isRunning ? currentPhase : null"
-        :countdown="phaseCountdown"
-        :is-running="isRunning"
-        :color="config.color"
+        :phase="isRunning ? currentPhase?.phase : 'idle'"
+        :count="phaseCountdown"
+        :total-duration="currentPhase?.duration || 4"
       />
 
       <!-- Progress / remaining -->
@@ -81,19 +80,19 @@ const {
 .breathing-view {
   min-height: var(--app-min-height);
   display: flex; align-items: center; justify-content: center;
-  background: var(--parchment);
+  background: var(--bg-base);
   padding: 24px; position: relative; overflow: hidden;
 }
 .breathing-view::before {
   content: ''; position: absolute; top: -15%; right: -10%;
   width: 500px; height: 500px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(71,127,60,0.12) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(184,245,102,0.06) 0%, transparent 65%);
   pointer-events: none;
 }
 .breathing-view::after {
   content: ''; position: absolute; bottom: -20%; left: -10%;
   width: 400px; height: 400px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(71,127,60,0.08) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(34,197,94,0.04) 0%, transparent 65%);
   pointer-events: none;
 }
 .breathing-view__inner {
@@ -103,44 +102,44 @@ const {
 .breathing-view__header { text-align: center; width: 100%; }
 .breathing-view__back {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 13px; font-weight: 600; color: var(--sage-700);
+  font-size: 13px; font-weight: 600; color: var(--lime-400);
   text-decoration: none; margin-bottom: 24px;
-  padding: 7px 14px; border: 1.5px solid var(--sage-300);
-  border-radius: var(--radius-sm); transition: all var(--duration-fast);
+  padding: 7px 14px; border: 1px solid rgba(184,245,102,0.2);
+  border-radius: var(--radius-pill); transition: all var(--duration-fast);
 }
-.breathing-view__back:hover { color: var(--sage-800); border-color: var(--sage-500); }
-.breathing-view__title { font-family: var(--font-display); font-size: 36px; font-weight: 300; color: var(--ink-900); margin-bottom: 8px; }
+.breathing-view__back:hover { color: var(--lime-300); border-color: rgba(184,245,102,0.4); }
+.breathing-view__title { font-family: var(--font-display); font-size: 36px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -1px; }
 .breathing-view__desc  { font-size: 15px; color: var(--text-secondary); }
 .breathing-view__stats { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.breathing-view__remaining { font-family: var(--font-display); font-size: 24px; color: var(--sage-700); }
+.breathing-view__remaining { font-family: var(--font-mono); font-size: 24px; color: var(--lime-400); }
 .breathing-view__rounds    { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
 .breathing-complete {
   position: fixed; inset: 0; z-index: 200;
-  background: rgba(250, 246, 238, 0.96);
-  backdrop-filter: blur(4px);
+  background: rgba(7, 15, 10, 0.96);
+  backdrop-filter: blur(20px);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 24px; text-align: center; padding: 24px;
 }
 .breathing-complete__check {
-  width: 80px; height: 80px; border-radius: var(--radius);
-  background: var(--sage-500); border: 3px solid var(--sage-400);
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(184,245,102,0.12); border: 2px solid rgba(184,245,102,0.4);
   display: flex; align-items: center; justify-content: center;
-  color: white; animation: bounceIn 0.6s var(--ease-bounce);
-  box-shadow: 4px 4px 0 color-mix(in srgb, var(--sage-700), black 10%);
+  color: var(--lime-400); animation: bounceIn 0.6s var(--ease-bounce);
+  box-shadow: 0 0 40px rgba(184,245,102,0.2);
 }
-.breathing-complete h2 { font-family: var(--font-display); font-size: 36px; font-weight: 300; color: var(--ink-900); }
+.breathing-complete h2 { font-family: var(--font-display); font-size: 36px; font-weight: 800; color: var(--text-primary); letter-spacing: -1.5px; }
 .breathing-complete p  { font-size: 15px; color: var(--text-secondary); max-width: 360px; line-height: 1.6; }
 .breathing-complete__btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 .bc-btn {
-  padding: 13px 30px; border-radius: var(--radius-sm); font-family: var(--font-body);
-  font-size: 14px; font-weight: 700; cursor: pointer; border: 2px solid transparent;
+  padding: 13px 30px; border-radius: var(--radius-pill); font-family: var(--font-body);
+  font-size: 14px; font-weight: 700; cursor: pointer; border: 1px solid transparent;
   text-decoration: none; display: inline-flex; align-items: center; transition: all var(--duration-fast);
 }
-.bc-btn--primary { background: var(--sage-500); color: white; border-color: var(--sage-600); box-shadow: 3px 3px 0 var(--sage-700); }
-.bc-btn--primary:hover { background: var(--sage-600); transform: translate(-1px,-1px); }
-.bc-btn--ghost { background: #fff; color: var(--sage-700); border-color: var(--sage-300); }
-.bc-btn--ghost:hover { color: var(--sage-800); border-color: var(--sage-500); }
+.bc-btn--primary { background: var(--lime-500); color: var(--forest-900); }
+.bc-btn--primary:hover { background: var(--lime-400); box-shadow: 0 0 24px rgba(184,245,102,0.35); }
+.bc-btn--ghost { background: rgba(255,255,255,0.05); color: var(--text-primary); border-color: rgba(255,255,255,0.12); }
+.bc-btn--ghost:hover { background: rgba(255,255,255,0.09); }
 
 @media (max-width: 640px) {
   .breathing-view {

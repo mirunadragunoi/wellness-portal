@@ -1,120 +1,169 @@
 <template>
   <div class="breathing-wrap">
-    <!-- Outer rings -->
-    <div class="ring ring--3" :style="ringStyle" />
-    <div class="ring ring--2" :style="ringStyle" />
-    <div class="ring ring--1" :style="ringStyle" />
+    <!-- Rings -->
+    <div class="ring ring--outer" />
+    <div class="ring ring--mid" />
 
-    <!-- Main orb -->
-    <div class="orb" :class="orbClass" :style="orbStyle">
-      <Transition name="phase" mode="out-in">
-        <div :key="phase?.phase" class="orb__content">
-          <span class="orb__label">{{ phase?.label || 'Ready' }}</span>
-          <span class="orb__count">{{ isRunning ? countdown : '' }}</span>
-        </div>
-      </Transition>
+    <!-- Main circle -->
+    <div
+      class="circle"
+      :class="[`circle--${phase}`]"
+      :style="circleStyle"
+    >
+      <span class="circle__phase">{{ phaseLabel }}</span>
+      <span class="circle__count">{{ displayCount }}</span>
+      <span class="circle__unit">{{ phase === 'idle' ? '' : 'sec' }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
-  phase:     { type: Object, default: null },
-  countdown: { type: Number, default: 0 },
-  isRunning: { type: Boolean, default: false },
-  color:     { type: String, default: 'var(--sage-500)' }
+  phase: {
+    type: String,
+    default: 'idle', // idle | inhale | hold | exhale | hold2
+  },
+  count: {
+    type: Number,
+    default: 0,
+  },
+  totalDuration: {
+    type: Number,
+    default: 4,
+  },
 })
 
-const orbClass = computed(() => ({
-  'orb--idle':   !props.isRunning,
-  'orb--inhale': props.phase?.phase === 'inhale',
-  'orb--hold':   props.phase?.phase === 'hold',
-  'orb--exhale': props.phase?.phase === 'exhale',
-  'orb--pause':  props.phase?.phase === 'pause'
-}))
+const { t } = useI18n()
 
-const orbStyle = computed(() => ({
-  '--orb-color': props.color,
-  '--orb-color-light': props.color + '33'
-}))
+const phaseLabel = computed(() => {
+  const map = {
+    idle:   '✦',
+    inhale: t('breathing.inhale'),
+    hold:   t('breathing.hold'),
+    exhale: t('breathing.exhale'),
+    hold2:  t('breathing.hold'),
+  }
+  return map[props.phase] ?? '—'
+})
 
-const ringStyle = computed(() => ({ '--ring-color': props.color }))
+const displayCount = computed(() =>
+  props.phase === 'idle' ? '—' : props.count
+)
+
+// Dynamic scale based on phase + progress within phase
+const circleStyle = computed(() => {
+  const progress = props.totalDuration > 0 ? 1 - props.count / props.totalDuration : 0
+  let scale = 1
+  let glow  = '0 0 0 0 rgba(184,245,102,0)'
+
+  if (props.phase === 'inhale') {
+    scale = 1 + 0.18 * progress
+    const g = Math.round(40 + 30 * progress)
+    glow  = `0 0 ${g}px rgba(184,245,102,0.25)`
+  } else if (props.phase === 'exhale') {
+    scale = 1.18 - 0.18 * progress
+    const g = Math.round(70 - 30 * progress)
+    glow  = `0 0 ${g}px rgba(184,245,102,0.15)`
+  } else if (props.phase === 'hold' || props.phase === 'hold2') {
+    scale = 1.18
+    glow  = '0 0 60px rgba(184,245,102,0.2)'
+  }
+
+  return {
+    transform: `scale(${scale})`,
+    boxShadow: glow,
+  }
+})
 </script>
 
 <style scoped>
+/* ── Wrapper ── */
 .breathing-wrap {
   position: relative;
-  width: min(84vw, 330px);
-  height: min(84vw, 330px);
+  width: 280px;
+  height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+/* ── Rings ── */
 .ring {
   position: absolute;
   border-radius: 50%;
-  border: 1.5px solid color-mix(in srgb, var(--ring-color), white 55%);
-  opacity: 0.5;
+  border: 1px solid rgba(184,245,102,0.1);
+  animation: ring-pulse 4s ease-in-out infinite;
 }
-.ring--1 { width: 260px; height: 260px; }
-.ring--2 { width: 292px; height: 292px; opacity: 0.35; }
-.ring--3 { width: 324px; height: 324px; opacity: 0.22; }
+.ring--outer { inset: -20px; animation-delay: 0s; }
+.ring--mid   { inset: -8px;  animation-delay: 0.5s; }
 
-.orb {
-  width: 222px;
-  height: 222px;
+/* ── Main circle ── */
+.circle {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  border: 2px solid color-mix(in srgb, var(--orb-color), white 40%);
-  background: radial-gradient(circle at 28% 24%, #ffffff, color-mix(in srgb, var(--orb-color-light), #ffffff 45%));
-  box-shadow: 0 18px 40px rgba(40, 72, 59, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.5s var(--ease-smooth), box-shadow 0.3s ease;
-}
-.orb--idle {
-  animation: idlePulse 7s ease-in-out infinite;
-}
-.orb--inhale {
-  transform: scale(1.08);
-}
-.orb--hold {
-  transform: scale(1.09);
-}
-.orb--exhale {
-  transform: scale(0.92);
-}
-.orb--pause {
-  transform: scale(0.97);
-}
-
-.orb__content {
-  text-align: center;
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(184,245,102,0.15) 0%,
+    rgba(34,197,94,0.08)   40%,
+    rgba(13,31,18,0.9)     100%
+  );
+  border: 2px solid rgba(184,245,102,0.25);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s linear, box-shadow 0.15s linear;
+  cursor: default;
 }
-.orb__label {
-  font-family: var(--font-display);
-  font-size: 24px;
-  color: var(--ink-900);
+
+/* Idle state — slow breathe animation */
+.circle--idle {
+  animation: breathe 8s ease-in-out infinite;
 }
-.orb__count {
+
+/* ── Text inside circle ── */
+.circle__phase {
   font-family: var(--font-display);
-  font-size: 42px;
-  color: var(--sage-700);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--lime-400);
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
   line-height: 1;
 }
+.circle__count {
+  font-family: var(--font-mono);
+  font-size: 52px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.circle__unit {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 4px;
+  min-height: 14px;
+}
 
-.phase-enter-active,
-.phase-leave-active { transition: opacity .2s ease, transform .2s ease; }
-.phase-enter-from,
-.phase-leave-to { opacity: 0; transform: translateY(6px); }
+/* ── Keyframes (defined here for scoped usage; also in animations.css) ── */
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.04); }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(184,245,102,0.1); }
+  50%       { transform: scale(1.1); box-shadow: 0 0 40px 8px rgba(184,245,102,0.08); }
+}
 
-@keyframes idlePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .breathing-wrap { width: 220px; height: 220px; }
+  .circle__count  { font-size: 40px; }
 }
 </style>

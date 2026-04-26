@@ -73,116 +73,67 @@ const durationLabel = computed(() => {
 <style scoped>
 .session-card {
   position: relative;
-  background: var(--bg-surface);
-  border: 2px solid var(--ink-200);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  transition: all var(--duration-normal);
-  box-shadow: 3px 3px 0 var(--ink-100);
+  background: var(--bg-glass); backdrop-filter: blur(16px);
+  border: var(--border-glass); border-radius: 18px;
+  overflow: hidden; display: flex; flex-direction: column;
+  cursor: pointer; transition: all 280ms var(--ease-smooth);
+  box-shadow: var(--glow-card);
 }
-.session-card:hover { transform: translate(-2px,-3px); box-shadow: 6px 6px 0 var(--sage-200); border-color: var(--sage-300); }
+.session-card:hover { border-color: rgba(184,245,102,0.25); box-shadow: var(--glow-card-hover); transform: translateY(-4px); }
 
 .session-card__img {
-  height: 148px;
-  position: relative;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
+  height: 150px; position: relative; overflow: hidden;
+  background: var(--forest-700);
+  background-size: cover; background-position: center;
 }
 .session-card__img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(28,26,22,0.42), transparent 62%);
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(184,245,102,0.08), rgba(7,15,10,0.5));
 }
 .session-card__badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1;
-  padding: 4px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  padding: 3px 10px; border-radius: 999px;
+  background: rgba(7,15,10,0.75); backdrop-filter: blur(8px);
+  font-size: 9px; font-weight: 700; color: var(--lime-400);
+  letter-spacing: 1px; text-transform: uppercase;
+  border: 1px solid rgba(184,245,102,0.2);
 }
 .session-card__play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
 }
 .play-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.65);
-  background: rgba(255,255,255,0.9);
-  color: var(--ink-900);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-  transition: transform var(--duration-fast), background var(--duration-fast);
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--lime-500); color: var(--forest-900);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(0.6); transition: all 220ms var(--ease-smooth);
 }
-.play-btn:hover { background: var(--sage-500); color: #fff; transform: scale(1.05); }
+.session-card:hover .play-btn { opacity: 1; transform: scale(1); }
 .session-card__type {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 1;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255,255,255,0.5);
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; left: 10px; bottom: 10px; z-index: 2;
+  padding: 3px 8px; border-radius: 999px;
+  background: rgba(7,15,10,0.6); backdrop-filter: blur(4px);
+  font-size: 9px; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center;
 }
 
-.session-card__body {
-  padding: 16px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+.session-card__body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .session-card__title {
-  font-family: var(--font-display); font-size: 18px; font-weight: 400;
-  color: var(--ink-900); line-height: 1.3;
+  font-family: var(--font-display); font-size: 14px; font-weight: 700;
+  color: var(--text-primary); line-height: 1.2;
 }
-.session-card__meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
-.session-card__duration,
-.session-card__level,
-.session-card__dot {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 600;
-}
+.session-card__meta { display: flex; align-items: center; justify-content: space-between; }
+.session-card__duration { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+.session-card__dot { display: none; }
+.session-card__level { font-size: 11px; color: var(--lime-500); font-weight: 600; }
 .session-card__fav {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  color: var(--text-muted);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: color var(--duration-fast), background var(--duration-fast);
+  position: absolute; right: 10px; top: 10px; z-index: 2;
+  background: rgba(7,15,10,0.6); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+  color: var(--text-muted); width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all 150ms;
 }
-.session-card__fav--active { color: var(--terracotta); }
-.session-card__fav:hover { color: var(--terracotta); background: #fff; }
+.session-card:hover .session-card__fav { opacity: 1; }
+.session-card__fav--active { color: #f87171; opacity: 1; }
+.session-card__fav:hover { color: #f87171; background: rgba(239,68,68,0.1); }
 </style>

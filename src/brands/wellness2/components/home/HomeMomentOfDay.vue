@@ -35,105 +35,42 @@ function goToSession() {
 
 <style scoped>
 .moment-card {
-  background: var(--bg-surface);
-  border: 1.5px solid var(--ink-200);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  min-width: 0;
-  box-shadow: 0 10px 24px rgba(28, 26, 22, 0.08);
+  padding: 24px;
+  background: linear-gradient(135deg, var(--forest-700), var(--forest-600));
+  border: var(--border-glass); border-radius: 18px;
+  position: relative; overflow: hidden;
   cursor: pointer;
-  transition: transform var(--duration-fast), box-shadow var(--duration-fast), border-color var(--duration-fast);
+  transition: all 280ms var(--ease-smooth);
 }
-.moment-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--sage-300);
-  box-shadow: 0 16px 28px rgba(28, 26, 22, 0.12);
+.moment-card::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(184,245,102,0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
-.moment-card__img {
-  position: relative;
-  min-height: 136px;
-  padding: 14px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-.moment-card__img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgba(16, 24, 18, 0.12) 0%, rgba(16, 24, 18, 0.45) 100%);
-}
+.moment-card:hover { border-color: rgba(184,245,102,0.22); box-shadow: var(--glow-card-hover); }
+.moment-card__img { display: none; }
 .moment-card__time-label,
-.moment-card__play {
-  position: relative;
-  z-index: 1;
-}
+.moment-card__play { position: relative; z-index: 1; }
 .moment-card__time-label {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--ink-900);
+  display: block; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 3px; color: var(--lime-500); margin-bottom: 10px;
 }
 .moment-card__play {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 34px;
-  padding: 0 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  background: rgba(16, 24, 18, 0.6);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all var(--duration-fast);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0; background: none; border: none;
+  color: var(--lime-400); font-size: 13px; font-weight: 600;
+  cursor: pointer; margin-top: 16px; transition: gap 150ms;
 }
-.moment-card__play:hover {
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--ink-900);
-}
-.moment-card__body {
-  padding: 14px 16px 16px;
-  display: grid;
-  gap: 6px;
-}
+.moment-card__play:hover { gap: 10px; }
+.moment-card__body { padding: 0; }
 .moment-card__sub {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--sage-600);
+  margin: 0; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 3px; color: var(--lime-500); margin-bottom: 10px;
 }
 .moment-card__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 22px;
-  line-height: 1.12;
-  font-weight: 400;
-  color: var(--ink-900);
+  margin: 0; font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  color: var(--text-primary); line-height: 1.3;
 }
-.moment-card__meta {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-
-@media (max-width: 640px) {
-  .moment-card__img {
-    min-height: 122px;
-    padding: 12px;
-  }
-  .moment-card__title {
-    font-size: 20px;
-  }
-}
+.moment-card__meta { margin: 0; color: var(--text-muted); font-size: 12px; margin-top: 6px; }
 </style>

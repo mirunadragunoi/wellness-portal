@@ -1,35 +1,41 @@
 <template>
-  <nav class="navbar" :class="{ 'navbar--pinned': scrolled }">
-    <div class="navbar__band">
+  <nav class="navbar" :class="{ 'navbar--scrolled': scrolled }">
+    <div class="navbar__inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar__logo">
-        <span class="navbar__logo-name">{{ t('brand.name') }}</span>
+        <span class="navbar__logo-dot" />
+        {{ t('brand.name') }}
       </RouterLink>
 
       <!-- Links -->
       <ul class="navbar__links">
-        <li><RouterLink to="/explore" class="navbar__link">{{ t('nav.explore') }}</RouterLink></li>
-        <li><RouterLink to="/learn"   class="navbar__link">{{ t('nav.learn') }}</RouterLink></li>
-        <li><a href="#about"          class="navbar__link">{{ t('nav.about') }}</a></li>
+        <li><a href="#features" class="navbar__link">{{ t('nav.explore') }}</a></li>
+        <li><a href="#sessions" class="navbar__link">Sessions</a></li>
+        <li><a href="#how"      class="navbar__link">{{ t('nav.about') }}</a></li>
       </ul>
 
-      <!-- CTA group -->
+      <!-- CTA -->
       <div class="navbar__cta">
         <RouterLink to="/login"  class="navbar__ghost">{{ t('nav.login') }}</RouterLink>
         <RouterLink to="/signup" class="navbar__btn">{{ t('nav.cta') }}</RouterLink>
       </div>
 
-      <!-- Burger -->
-      <button class="navbar__burger" @click="open = !open" :aria-expanded="open">
-        <span /><span /><span />
+      <!-- Burger (mobile) -->
+      <button
+        class="navbar__burger"
+        :aria-expanded="open"
+        @click="open = !open"
+      >
+        <span :class="{ open }" /><span :class="{ open }" /><span :class="{ open }" />
       </button>
     </div>
 
     <!-- Mobile drawer -->
     <Transition name="drawer">
       <div v-if="open" class="navbar__drawer">
-        <RouterLink to="/explore" class="drawer__link" @click="open=false">{{ t('nav.explore') }}</RouterLink>
-        <RouterLink to="/learn"   class="drawer__link" @click="open=false">{{ t('nav.learn') }}</RouterLink>
+        <a href="#features" class="drawer__link" @click="open=false">Features</a>
+        <a href="#sessions" class="drawer__link" @click="open=false">Sessions</a>
+        <a href="#how"      class="drawer__link" @click="open=false">How it works</a>
         <hr class="drawer__rule" />
         <RouterLink to="/login"  class="drawer__link" @click="open=false">{{ t('nav.login') }}</RouterLink>
         <RouterLink to="/signup" class="navbar__btn drawer__btn" @click="open=false">{{ t('nav.cta') }}</RouterLink>
@@ -41,95 +47,123 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
 const scrolled = ref(false)
 const open = ref(false)
-function onScroll() { scrolled.value = window.scrollY > 24 }
-onMounted(() => window.addEventListener('scroll', onScroll))
+
+function onScroll() { scrolled.value = window.scrollY > 40 }
+onMounted(()  => window.addEventListener('scroll', onScroll))
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>
 
 <style scoped>
-/* ── Band ── */
-.navbar { position:fixed; top:0; left:0; right:0; z-index:100; }
-
-.navbar__band {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 var(--container-pad);
-  height:var(--navbar-height);
-  background:var(--parchment);
-  border-bottom:2px solid var(--ink-200);
-  transition:border-color var(--duration-normal);
+/* ── Navbar ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(0px);
+  transition: all 400ms var(--ease-smooth);
 }
-.navbar--pinned .navbar__band {
-  border-bottom-color:var(--sage-400);
-  box-shadow:0 2px 0 var(--sage-100);
+.navbar--scrolled {
+  background: rgba(7,15,10,0.88);
+  backdrop-filter: blur(24px);
+  border-bottom-color: rgba(184,245,102,0.08);
+}
+
+.navbar__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--container-pad);
+  height: var(--navbar-height);
+  max-width: var(--container-max);
+  margin: 0 auto;
 }
 
 /* Logo */
-.navbar__logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-.navbar__logo-name {
-  font-family:var(--font-display); font-size:22px; font-weight:400;
-  color:var(--text-primary); letter-spacing:-0.3px;
+.navbar__logo {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-display); font-size: 19px; font-weight: 800;
+  color: var(--text-primary); text-decoration: none; letter-spacing: -0.5px;
+}
+.navbar__logo-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--lime-500);
+  box-shadow: 0 0 8px rgba(184,245,102,0.8);
+  animation: pulse-dot 2.5s ease infinite;
+  flex-shrink: 0;
 }
 
 /* Links */
-.navbar__links { display:flex; align-items:center; gap:0; list-style:none; }
+.navbar__links {
+  display: flex; align-items: center; gap: 2px; list-style: none;
+}
 .navbar__link {
-  display:block; padding:8px 18px;
-  font-size:14px; font-weight:500; color:var(--text-secondary);
-  text-decoration:none; position:relative;
-  transition:color var(--duration-fast);
+  display: block; padding: 8px 16px;
+  font-size: 14px; font-weight: 500; color: rgba(240,250,242,0.7);
+  text-decoration: none; border-radius: var(--radius-pill);
+  transition: all 150ms;
 }
-.navbar__link::after {
-  content:''; position:absolute; bottom:0; left:18px; right:18px; height:2px;
-  background:var(--sage-500); transform:scaleX(0); transition:transform var(--duration-fast);
-  transform-origin:left;
-}
-.navbar__link:hover { color:var(--ink-900); }
-.navbar__link:hover::after { transform:scaleX(1); }
+.navbar__link:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
 
 /* CTA */
-.navbar__cta { display:flex; align-items:center; gap:8px; }
+.navbar__cta { display: flex; align-items: center; gap: 8px; }
 .navbar__ghost {
-  padding:8px 16px; font-size:14px; font-weight:500;
-  color:var(--text-secondary); text-decoration:none;
-  border-radius:var(--radius-sm);
-  transition:color var(--duration-fast), background var(--duration-fast);
+  padding: 8px 18px; font-size: 14px; font-weight: 500;
+  color: rgba(240,250,242,0.65); text-decoration: none;
+  transition: color 150ms;
 }
-.navbar__ghost:hover { color:var(--ink-900); background:var(--parchment-2); }
+.navbar__ghost:hover { color: var(--text-primary); }
+
 .navbar__btn {
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:9px 22px; font-size:14px; font-weight:600;
-  background:var(--ink-900); color:var(--parchment);
-  text-decoration:none; border-radius:var(--radius-sm);
-  border:2px solid var(--ink-900);
-  transition:all var(--duration-fast);
+  display: inline-flex; align-items: center;
+  padding: 10px 22px; font-size: 14px; font-weight: 700;
+  background: var(--lime-500); color: var(--forest-900);
+  text-decoration: none; border-radius: var(--radius-pill);
+  transition: all 200ms;
 }
-.navbar__btn:hover { background:var(--sage-600); border-color:var(--sage-600); }
+.navbar__btn:hover {
+  background: var(--lime-400);
+  box-shadow: 0 0 24px rgba(184,245,102,0.4);
+}
 
 /* Burger */
-.navbar__burger { display:none; flex-direction:column; gap:5px; padding:4px; background:none; border:none; cursor:pointer; }
-.navbar__burger span { display:block; width:22px; height:2px; background:var(--ink-800); border-radius:1px; transition:all var(--duration-normal); }
+.navbar__burger {
+  display: none; flex-direction: column; gap: 5px;
+  padding: 4px; background: none; border: none; cursor: pointer;
+}
+.navbar__burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text-primary); border-radius: 1px;
+  transition: all 300ms var(--ease-smooth);
+}
+.navbar__burger span.open:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.navbar__burger span.open:nth-child(2) { opacity: 0; transform: translateX(-8px); }
+.navbar__burger span.open:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
 
-/* Drawer */
+/* Mobile drawer */
 .navbar__drawer {
-  display:flex; flex-direction:column; gap:0;
-  background:var(--parchment); border-bottom:2px solid var(--sage-400);
-  padding:8px 24px 20px;
+  display: flex; flex-direction: column;
+  background: rgba(7,15,10,0.95); backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(184,245,102,0.1);
+  padding: 8px var(--container-pad) 24px;
 }
 .drawer__link {
-  display:block; padding:14px 0; color:var(--text-primary); font-size:16px; font-weight:500;
-  text-decoration:none; border-bottom:1px solid var(--ink-100);
+  display: block; padding: 14px 0;
+  color: var(--text-primary); font-size: 16px; font-weight: 500;
+  text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: color 150ms;
 }
-.drawer__rule { border:none; border-top:1px solid var(--ink-200); margin:8px 0; }
-.drawer__btn { width:100%; justify-content:center; margin-top:12px; }
+.drawer__link:hover { color: var(--lime-400); }
+.drawer__rule { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 8px 0; }
+.drawer__btn  { width: 100%; justify-content: center; margin-top: 12px; }
 
-.drawer-enter-active, .drawer-leave-active { transition:all var(--duration-normal) var(--ease-smooth); }
-.drawer-enter-from, .drawer-leave-to { opacity:0; transform:translateY(-8px); }
+/* Drawer transition */
+.drawer-enter-active, .drawer-leave-active { transition: all 300ms var(--ease-smooth); }
+.drawer-enter-from, .drawer-leave-to { opacity: 0; transform: translateY(-10px); }
 
-@media (max-width:768px) {
-  .navbar__links, .navbar__cta { display:none; }
-  .navbar__burger { display:flex; }
+@media (max-width: 768px) {
+  .navbar__links, .navbar__cta { display: none; }
+  .navbar__burger { display: flex; }
 }
 </style>

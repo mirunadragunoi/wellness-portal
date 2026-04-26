@@ -21,33 +21,16 @@ const formattedDate = dayjs().format('dddd, MMMM D')
 </script>
 
 <style scoped>
-.greeting {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-  padding: 24px var(--container-pad) 20px;
-  background: var(--bg-surface); border-bottom: 2px solid var(--ink-200);
-  
-}
+.greeting { display: flex; flex-direction: column; gap: 6px; margin-bottom: 32px; }
 .greeting__text {
-  font-family: var(--font-display); font-size: clamp(24px,3vw,34px);
-  font-weight: 300; color: var(--ink-900); line-height: 1.2;
+  font-family: var(--font-display);
+  font-size: clamp(28px,3.5vw,44px);
+  font-weight: 800; letter-spacing: -1.5px; color: var(--text-primary); line-height: 1.1;
 }
-.greeting__sub { font-size: 15px; color: var(--text-secondary); margin-top: 4px; }
+.greeting__sub { font-size: 15px; color: var(--text-secondary); }
 .greeting__date {
-  font-size: 13px; color: var(--text-muted); white-space: nowrap; padding-top: 4px;
-  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-}
-
-@media (max-width: 640px) {
-  .greeting {
-    padding: 18px 16px 16px;
-    gap: 8px;
-  }
-  .greeting__sub {
-    font-size: 14px;
-  }
-  .greeting__date {
-    font-size: 12px;
-  }
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--lime-500); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 8px;
 }
 </style>

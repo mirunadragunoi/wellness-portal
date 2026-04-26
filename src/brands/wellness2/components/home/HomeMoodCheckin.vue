@@ -57,34 +57,33 @@ function checkIn(id) {
 
 <style scoped>
 .mood-card {
-  background: var(--bg-surface); border: 2px solid var(--ink-200);
-  border-radius: var(--radius-lg); padding: 22px; box-shadow: 3px 3px 0 var(--ink-100);
+  margin-bottom: 36px;
 }
-.mood-prompt__q { font-family: var(--font-display); font-size: 19px; font-weight: 400; color: var(--ink-900); margin-bottom: 18px; }
-.mood-prompt__options { display: flex; gap: 8px; flex-wrap: wrap; }
+.mood-prompt__q { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; }
+.mood-prompt__options { display: flex; gap: 10px; }
 .mood-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  padding: 12px 14px; border-radius: var(--radius);
-  background: var(--parchment-2); border: 2px solid var(--ink-100);
-  cursor: pointer; flex: 1; min-width: 60px; transition: all var(--duration-fast);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 20px; border-radius: 16px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; flex: 1; transition: all 200ms var(--ease-smooth);
 }
-.mood-btn:hover { background: var(--sage-50); border-color: var(--sage-300); transform: translateY(-2px); }
-.mood-btn__icon  { color: var(--text-secondary); }
-.mood-btn:hover .mood-btn__icon { color: var(--sage-600); }
-.mood-btn__label { font-size: 10px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.mood-done { display: flex; align-items: center; gap: 14px; }
-.mood-done__icon { flex-shrink: 0; color: var(--sage-500); }
-.mood-done__label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-.mood-done__value { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--ink-900); }
+.mood-btn:hover { background: rgba(184,245,102,0.07); border-color: rgba(184,245,102,0.2); transform: translateY(-2px); }
+.mood-btn__icon  { color: var(--text-secondary); font-size: 24px; }
+.mood-btn:hover .mood-btn__icon { color: var(--lime-400); }
+.mood-btn__label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.mood-btn:hover .mood-btn__label { color: var(--lime-400); }
+.mood-done { display: flex; align-items: center; gap: 14px; padding: 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; }
+.mood-done__icon { flex-shrink: 0; color: var(--lime-400); }
+.mood-done__label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.mood-done__value { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); }
 .mood-done__change {
-  font-size: 13px; color: var(--sage-600); background: var(--sage-50);
-  border: 1.5px solid var(--sage-200); border-radius: var(--radius-sm);
-  padding: 5px 12px; cursor: pointer; transition: all var(--duration-fast); margin-left: auto;
+  font-size: 12px; color: var(--lime-400); background: rgba(184,245,102,0.07);
+  border: 1px solid rgba(184,245,102,0.2); border-radius: var(--radius-pill);
+  padding: 6px 14px; cursor: pointer; transition: all var(--duration-fast); margin-left: auto;
 }
-.mood-done__change:hover { background: var(--sage-100); }
+.mood-done__change:hover { background: rgba(184,245,102,0.12); }
 @media (max-width: 640px) {
-  .mood-card { padding: 16px; }
-  .mood-prompt__options { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-  .mood-btn { min-width: 0; padding: 10px 6px; }
+  .mood-prompt__options { gap: 6px; }
+  .mood-btn { padding: 10px 6px; }
 }
 </style>

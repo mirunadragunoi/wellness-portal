@@ -81,68 +81,60 @@ function checkMood(id) {
 .post-session {
   min-height: var(--app-min-height); display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  background: var(--parchment); padding: 34px var(--container-pad); text-align: center;
+  background: var(--forest-900); padding: 48px var(--container-pad); text-align: center;
 }
 .post-session__check {
-  width: 72px; height: 72px; border-radius: var(--radius);
-  background: var(--sage-500); border: 3px solid var(--sage-400);
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(184,245,102,0.12); border: 2px solid rgba(184,245,102,0.4);
   display: flex; align-items: center; justify-content: center;
-  color: white; animation: bounceIn 0.6s var(--ease-bounce);
-  box-shadow: 4px 4px 0 var(--sage-700); margin-bottom: 14px;
+  color: var(--lime-400); animation: bounceIn 0.6s var(--ease-bounce);
+  box-shadow: 0 0 40px rgba(184,245,102,0.2); margin-bottom: 16px;
 }
-.post-session__title { font-family: var(--font-display); font-size: 36px; font-weight: 300; color: var(--ink-900); margin-bottom: 8px; }
-.post-session__body   { font-size: 16px; color: var(--text-secondary); max-width: 420px; line-height: 1.7; margin-bottom: 20px; }
-.post-session__mood  { margin-bottom: 26px; }
-.post-session__mood-q { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 600; }
+.post-session__title { font-family: var(--font-display); font-size: clamp(28px,4vw,44px); font-weight: 800; letter-spacing: -2px; color: var(--text-primary); margin-bottom: 8px; }
+.post-session__body   { font-size: 15px; color: var(--text-secondary); max-width: 420px; line-height: 1.7; margin-bottom: 36px; }
+.post-session__mood  { margin-bottom: 32px; }
+.post-session__mood-q { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
 .mood-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .mood-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 86px;
-  padding: 10px 12px; border-radius: var(--radius-sm);
-  background: #fff; border: 2px solid var(--ink-200);
-  cursor: pointer; transition: all var(--duration-fast); color: var(--ink-700);
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 12px 16px; border-radius: 14px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; transition: all 200ms; font-size: 22px;
 }
-.mood-btn:hover { border-color: var(--sage-400); color: var(--sage-700); background: var(--sage-50); }
+.mood-btn:hover { background: rgba(184,245,102,0.08); border-color: rgba(184,245,102,0.2); transform: translateY(-2px); }
 .post-session__streak {
   display: flex; align-items: center; gap: 12px;
-  padding: 14px 24px; border: 2px solid var(--sage-200);
-  border-radius: var(--radius); margin-bottom: 20px;
-  background: var(--sage-50);
+  padding: 14px 24px; border: 1px solid rgba(184,245,102,0.15);
+  border-radius: var(--radius); margin-bottom: 28px;
+  background: rgba(13,31,18,0.6); backdrop-filter: blur(16px);
 }
-.streak-fire { color: #f59e0b; }
-.streak-value { font-family: var(--font-display); font-size: 24px; font-weight: 300; color: var(--ink-900); text-align: left; }
-.streak-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+.streak-fire { color: var(--amber-400); }
+.streak-value { font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--lime-500); text-align: left; letter-spacing: -1px; }
+.streak-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; text-align: left; font-weight: 600; }
 
-.post-session__suggestions {
-  width: min(100%, 520px);
-  text-align: left;
-  margin-bottom: 18px;
+.post-session__suggestions { width: min(100%, 520px); text-align: left; margin-bottom: 28px; }
+.post-session__suggestions-title {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;
+  color: var(--lime-500); margin-bottom: 14px;
 }
-.post-session__suggestions-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; }
-.suggestions-list { display: flex; flex-direction: column; gap: 8px; }
+.suggestions-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .suggestion-card {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px; border-radius: var(--radius);
-  background: #fff; border: 1.5px solid var(--ink-100);
+  padding: 14px 16px; border-radius: 14px; cursor: pointer;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  transition: all 200ms;
 }
-.suggestion-card__img {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-sm);
-  background-size: cover;
-  background-position: center;
-}
-.suggestion-card__title { font-size: 14px; font-weight: 600; color: var(--ink-900); }
-.suggestion-card__meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.suggestion-card:hover { border-color: rgba(184,245,102,0.18); background: rgba(184,245,102,0.05); }
+.suggestion-card__img { display: none; }
+.suggestion-card__title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+.suggestion-card__meta { font-size: 11px; color: var(--text-muted); }
 
 .back-btn {
-  padding: 12px 24px;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--sage-600);
-  background: var(--sage-500);
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 700;
+  display: inline-flex; align-items: center;
+  padding: 13px 30px; border-radius: 999px;
+  background: var(--lime-500); color: var(--forest-900);
+  text-decoration: none; font-size: 15px; font-weight: 700;
+  transition: all 220ms;
 }
-@keyframes bounceIn { 0%{transform:scale(0.5);opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+.back-btn:hover { background: var(--lime-400); box-shadow: 0 0 40px rgba(184,245,102,0.35); }
+@keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 60%{transform:scale(1.1)} 80%{transform:scale(0.95)} 100%{transform:scale(1);opacity:1} }
 </style>

@@ -37,54 +37,50 @@ const emit = defineEmits(['bookmark'])
 
 <style scoped>
 .article-card {
-  background: var(--bg-surface);
-  border: 2px solid var(--ink-200); border-radius: var(--radius-lg);
+  background: var(--bg-glass); backdrop-filter: blur(16px);
+  border: var(--border-glass); border-radius: 20px;
   overflow: hidden; display: flex; flex-direction: column;
   text-decoration: none; cursor: pointer;
-  transition: all var(--duration-normal); box-shadow: 3px 3px 0 var(--ink-100);
+  transition: all 280ms var(--ease-smooth);
 }
-.article-card:hover { transform: translate(-2px,-3px); box-shadow: 6px 6px 0 var(--sage-200); border-color: var(--sage-300); }
+.article-card:hover { border-color: rgba(184,245,102,0.22); box-shadow: var(--glow-card-hover); transform: translateY(-3px); }
 
 .article-card__img {
-  height: 160px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  padding: 12px;
+  height: 180px; background: var(--forest-700);
+  background-size: cover; background-position: center;
+  position: relative; overflow: hidden;
+  display: flex; align-items: flex-start; padding: 12px;
 }
 .article-card__img::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(28,26,22,0.4), transparent 60%);
+  background: linear-gradient(to top, rgba(13,31,18,0.5) 0%, transparent 60%);
 }
 .article-card__bookmark {
-  width: 32px; height: 32px; border-radius: var(--radius-sm);
-  background: white; border: 1px solid var(--ink-100); cursor: pointer;
+  position: relative; z-index: 1; margin-left: auto;
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
+  background: rgba(7,15,10,0.6); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  color: var(--ink-400); transition: all var(--duration-fast);
+  color: var(--text-muted); transition: all 150ms;
 }
-.article-card__bookmark:hover { background: var(--sage-100); color: var(--sage-600); }
-.article-card__bookmark.active { color: var(--sage-600); background: var(--sage-50); border-color: var(--sage-200); }
+.article-card__bookmark:hover { color: var(--lime-400); border-color: rgba(184,245,102,0.2); }
+.article-card__bookmark.active { color: var(--lime-400); }
 
-.article-card__body { padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.article-card__body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
 .article-card__cat {
-  display: inline-block; padding: 3px 10px;
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
-  background: var(--sage-100); color: var(--sage-700);
-  border-radius: var(--radius-sm); border: 1px solid var(--sage-200);
-  position: relative;
-  z-index: 1;
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  background: rgba(184,245,102,0.1); color: var(--lime-400);
+  border: 1px solid rgba(184,245,102,0.2);
+  position: relative; z-index: 1;
 }
 .article-card__title {
-  font-family: var(--font-display); font-size: 20px; font-weight: 400;
-  color: var(--ink-900); line-height: 1.3;
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  color: var(--text-primary); line-height: 1.25; letter-spacing: -0.3px;
 }
 .article-card__excerpt { font-size: 13px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
-.article-card__meta { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.article-card__meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
 .article-card__time {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 600;
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
 }
 </style>

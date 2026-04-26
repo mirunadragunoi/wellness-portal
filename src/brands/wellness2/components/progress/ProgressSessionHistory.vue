@@ -29,52 +29,46 @@ const progressStore = useProgressStore()
 const formatDate = (iso) => dayjs(iso).format('MMM D, YYYY')
 
 const catColors = {
-  stress:      { bg: 'var(--sage-100)', color: '#1e40af' },
-  anxiety:     { bg: '#f0f7ee', color: 'var(--sage-700)' },
-  sleep:       { bg: '#e0e7ff', color: '#3730a3' },
-  focus:       { bg: 'var(--parchment-2)', color: 'var(--ink-700)' },
-  mindfulness: { bg: '#dcfce7', color: '#166534' },
-  energy:      { bg: '#fef3c7', color: '#92400e' }
+  stress:      { bg: 'rgba(239,68,68,0.1)',    color: '#f87171' },
+  anxiety:     { bg: 'rgba(245,158,11,0.1)',   color: 'var(--amber-400)' },
+  sleep:       { bg: 'rgba(139,92,246,0.1)',   color: '#a78bfa' },
+  focus:       { bg: 'rgba(184,245,102,0.1)',  color: 'var(--lime-400)' },
+  mindfulness: { bg: 'rgba(52,211,153,0.1)',   color: 'var(--emerald-400)' },
+  energy:      { bg: 'rgba(251,191,36,0.1)',   color: 'var(--amber-300)' }
 }
 const catStyle = (cat) => {
-  const c = catColors[cat] || { bg: '#f1f5f9', color: '#475569' }
+  const c = catColors[cat] || { bg: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }
   return { background: c.bg, color: c.color }
 }
 </script>
 
 <style scoped>
 .session-history {
-  background: var(--bg-surface); border: 2px solid var(--ink-200);
-  border-radius: var(--radius-lg); overflow: hidden; box-shadow: 3px 3px 0 var(--ink-100);
-}
-.session-history__head {
-  padding: 18px 20px 14px; border-bottom: 1.5px solid var(--ink-100);
-  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: var(--border-glass); border-radius: 20px; padding: 28px;
 }
 .session-history__title {
-  font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--ink-900);
-  padding: 16px 20px 10px;
-  border-bottom: 1.5px solid var(--ink-100);
+  font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 20px;
 }
 .session-history__list { display: flex; flex-direction: column; }
 .history-item {
-  display: flex; align-items: center; gap: 14px; padding: 14px 20px;
-  border-bottom: 1px solid var(--ink-100); transition: background var(--duration-fast);
+  display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
 }
-.history-item:last-child { border-bottom: none; }
-.history-item:hover { background: var(--parchment); }
+.history-item:last-child { border-bottom: none; padding-bottom: 0; }
 .history-item__icon {
-  width: 40px; height: 40px; border-radius: var(--radius-sm); flex-shrink: 0;
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  background: rgba(184,245,102,0.08); border: 1px solid rgba(184,245,102,0.12);
   display: flex; align-items: center; justify-content: center;
-  border: 1.5px solid var(--ink-100);
-  background: #fff;
+  color: var(--lime-400);
 }
 .history-item__info { flex: 1; min-width: 0; }
-.history-item__title { font-size: 14px; font-weight: 600; color: var(--ink-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.history-item__meta  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.history-item__title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-item__meta  { font-size: 11px; color: var(--text-muted); }
 .history-item__cat {
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-  padding: 3px 8px; border-radius: var(--radius-sm);
+  font-family: var(--font-mono); font-size: 11px; color: var(--lime-500); font-weight: 500;
+  padding: 3px 8px; border-radius: 999px;
 }
 .session-history__empty { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 14px; }
 </style>

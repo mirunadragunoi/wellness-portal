@@ -46,28 +46,35 @@ const isToday = (date) => dayjs(date).isSame(dayjs(), 'day')
 
 <style scoped>
 .streak-card {
-  background: var(--ink-900); color: var(--parchment);
-  border: 2px solid var(--ink-700); border-radius: var(--radius-lg);
-  padding: 24px 28px; display: flex; flex-direction: column; gap: 20px;
+  padding: 28px;
+  background: linear-gradient(160deg, var(--forest-700), var(--forest-600));
+  border: 1px solid rgba(184,245,102,0.15); border-radius: 20px;
+  display: flex; flex-direction: column; gap: 16px;
+  position: relative; overflow: hidden;
+}
+.streak-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(184,245,102,0.08) 0%, transparent 60%);
+  pointer-events: none;
 }
 .streak-card__top { display: flex; align-items: center; justify-content: space-between; }
 .streak-main { display: flex; align-items: center; gap: 14px; }
-.streak-fire { color: #f97316; flex-shrink: 0; }
-.streak-number { font-family: var(--font-display); font-size: 42px; font-weight: 300; color: var(--parchment); line-height: 1; }
-.streak-label  { font-size: 12px; color: var(--ink-400); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.streak-fire { color: var(--amber-400); flex-shrink: 0; }
+.streak-number { font-family: var(--font-display); font-size: 56px; font-weight: 800; letter-spacing: -3px; color: var(--lime-500); line-height: 1; }
+.streak-label  { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 3px; }
 .streak-longest { text-align: right; }
-.streak-longest__label { display: block; font-size: 11px; color: var(--ink-400); text-transform: uppercase; letter-spacing: 1px; }
-.streak-longest__value { font-size: 16px; font-weight: 700; color: var(--parchment); }
-.streak-week { display: flex; justify-content: space-between; gap: 4px; }
+.streak-longest__label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.streak-longest__value { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.streak-week { display: flex; justify-content: space-between; gap: 6px; }
 .streak-day { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
 .streak-day__dot {
-  width: 26px; height: 26px; border-radius: var(--radius-sm);
-  background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.12);
+  width: 100%; height: 6px; border-radius: 999px;
+  background: rgba(255,255,255,0.08);
   transition: all var(--duration-normal);
 }
-.streak-day--done .streak-day__dot { background: var(--sage-500); border-color: var(--sage-400); }
-.streak-day--today .streak-day__dot { border-color: var(--sage-400); background: rgba(71,127,60,0.2); }
-.streak-day__label { font-size: 10px; color: var(--ink-400); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.streak-summary { font-size: 13px; color: var(--ink-400); text-align: center; margin: 0; }
-@media (max-width: 640px) { .streak-card { padding: 16px; } }
+.streak-day--done .streak-day__dot { background: var(--lime-500); }
+.streak-day--today .streak-day__dot { background: rgba(184,245,102,0.4); animation: pulse-dot 2s ease infinite; }
+.streak-day__label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.streak-summary { font-size: 13px; color: var(--text-secondary); text-align: center; margin: 0; }
+@media (max-width: 640px) { .streak-card { padding: 20px; } }
 </style>

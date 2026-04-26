@@ -1,43 +1,40 @@
 <template>
   <div class="explore-view">
 
-    <!-- Full-width header -->
+    <!-- Header -->
     <div class="explore-view__head">
-      <div class="container">
-        <h1 class="explore-view__title">{{ t('explore.title') }}</h1>
-        <div class="explore-view__top">
-          <ExploreSearch v-model="query" />
-        </div>
+      <h1 class="explore-view__title">{{ t('explore.title') }}</h1>
+      <p class="explore-view__sub">Discover meditations, sleep stories, soundscapes, and more.</p>
+
+      <div class="explore-view__top">
+        <ExploreSearch v-model="query" />
+      </div>
+
+      <div class="explore-view__filters">
+        <ExploreCategoryChips v-model="activeCategory" />
       </div>
     </div>
 
-    <!-- Full-width category tabs -->
-    <ExploreCategoryChips v-model="activeCategory" />
-
-    <!-- Body: sidebar + results -->
-    <div class="container">
-      <div class="explore-view__body">
-        <aside class="explore-view__sidebar">
-          <ExploreFilterPanel v-model:filters="filters" />
-        </aside>
-
-        <div class="explore-view__results">
-          <Transition name="fade" mode="out-in">
-            <div v-if="filtered.length" class="sessions-grid" :key="filtered.length">
-              <ExploreSessionCard
-                v-for="s in filtered" :key="s.id"
-                :session="s"
-                @play="playSession"
-                @favorite="progressStore.toggleFavorite($event)"
-              />
-            </div>
-            <div v-else class="explore-view__empty" key="empty">
-              <Icon icon="lucide:search" class="app-icon app-icon--2xl app-icon--muted" />
-              <p>{{ t('explore.no_results') }}</p>
-            </div>
-          </Transition>
-        </div>
+    <!-- Results -->
+    <div class="explore-view__body">
+      <div class="explore-view__results-head">
+        <span class="explore-view__count">{{ filtered.length }} sessions found</span>
       </div>
+
+      <Transition name="fade" mode="out-in">
+        <div v-if="filtered.length" class="sessions-grid" :key="filtered.length">
+          <ExploreSessionCard
+            v-for="s in filtered" :key="s.id"
+            :session="s"
+            @play="playSession"
+            @favorite="progressStore.toggleFavorite($event)"
+          />
+        </div>
+        <div v-else class="explore-view__empty" key="empty">
+          <Icon icon="lucide:search" class="app-icon app-icon--2xl app-icon--muted" />
+          <p>{{ t('explore.no_results') }}</p>
+        </div>
+      </Transition>
     </div>
 
   </div>
@@ -102,85 +99,49 @@ function playSession(session) {
 <style scoped>
 .explore-view {
   min-height: var(--app-min-height);
-  background: var(--parchment);
+  background: var(--forest-900);
   padding-bottom: var(--page-pad-bottom-auth);
 }
 
-/* Full-width head */
 .explore-view__head {
-  background: var(--bg-surface);
-  border-bottom: 2px solid var(--ink-200);
-  padding: 30px 0 24px;
+  max-width: var(--container-max); margin: 0 auto;
+  padding: 40px var(--container-pad) 28px;
 }
 .explore-view__title {
   font-family: var(--font-display);
-  font-size: clamp(26px, 3.5vw, 40px);
-  font-weight: 300; color: var(--text-primary);
-  letter-spacing: -0.5px; margin-bottom: 16px;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800; letter-spacing: -2px; color: var(--text-primary); margin-bottom: 6px;
 }
-.explore-view__top { max-width: 400px; }
+.explore-view__sub { font-size: 15px; color: var(--text-secondary); margin-bottom: 20px; }
+.explore-view__top { margin-bottom: 20px; }
+.explore-view__filters {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 28px;
+}
+.explore-view__filters::-webkit-scrollbar { display: none; }
 
-/* Body grid */
 .explore-view__body {
-  display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  align-items: start;
-  gap: 20px;
-  margin-top: 18px;
+  max-width: var(--container-max); margin: 0 auto;
+  padding: 0 var(--container-pad) 100px;
 }
-.explore-view__sidebar {
-  border: 1.5px solid var(--ink-200);
-  border-radius: var(--radius-lg);
-  padding: 20px 16px;
-  position: sticky; top: var(--navbar-height);
-  max-height: calc(100vh - var(--navbar-height));
-  overflow-y: auto;
-  background: var(--bg-surface);
+.explore-view__results-head {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
 }
-.explore-view__results {
-  padding: 8px 0 32px;
-}
+.explore-view__count { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+.explore-view__sidebar { display: none; }
+
 .sessions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
 }
 .explore-view__empty {
   text-align: center; padding: 80px 20px;
   display: flex; flex-direction: column; align-items: center; gap: 16px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 .explore-view__empty p { font-size: 15px; }
 
-@media (max-width: 900px) {
-  .explore-view__body { grid-template-columns: 1fr; }
-  .explore-view__sidebar {
-    position: static;
-    border-radius: var(--radius);
-    max-height: none;
-    padding: 14px;
-  }
-  .explore-view__results {
-    padding: 12px 0 26px;
-  }
-}
-
-@media (max-width: 640px) {
-  .explore-view__head {
-    padding: 22px 0 18px;
-  }
-  .explore-view__title {
-    margin-bottom: 12px;
-  }
-  .explore-view__sidebar {
-    padding: 12px;
-  }
-  .explore-view__results {
-    padding: 12px 0 16px;
-  }
-  .sessions-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
+@media (max-width: 1100px) { .sessions-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px)  { .sessions-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px)  { .sessions-grid { grid-template-columns: 1fr; } }
 </style>

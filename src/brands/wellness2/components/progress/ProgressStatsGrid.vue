@@ -25,22 +25,29 @@ const stats = computed(() => [
 </script>
 
 <style scoped>
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 16px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
 .stat-card {
-  background: var(--bg-surface);
-  border: 2px solid var(--ink-200); border-radius: var(--radius-lg);
-  padding: 20px; display: flex; flex-direction: column; gap: 10px;
-  box-shadow: 3px 3px 0 var(--ink-100); position: relative; overflow: hidden;
+  padding: 28px 24px; border-radius: 20px;
+  background: var(--bg-glass); backdrop-filter: blur(20px);
+  border: var(--border-glass);
+  position: relative; overflow: hidden;
+  transition: all 280ms var(--ease-smooth);
 }
+.stat-card:hover { border-color: rgba(184,245,102,0.22); box-shadow: var(--glow-card-hover); transform: translateY(-2px); }
 .stat-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: var(--sage-400);
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(184,245,102,0.06) 0%, transparent 70%);
+  pointer-events: none;
 }
-.stat-card__icon { color: var(--sage-500); }
+.stat-card__icon { font-size: 22px; margin-bottom: 14px; color: var(--text-muted); }
 .stat-card__value {
-  font-family: var(--font-display); font-size: 36px; font-weight: 300;
-  color: var(--ink-900); line-height: 1; letter-spacing: -1px;
+  font-family: var(--font-display); font-size: clamp(32px, 3.5vw, 48px); font-weight: 800;
+  letter-spacing: -2px; color: var(--lime-500); line-height: 1; margin-bottom: 6px;
 }
-.stat-card__label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-.stat-card__sub   { font-size: 13px; color: var(--text-secondary); }
+.stat-card__label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+.stat-card__sub   { margin-top: 10px; font-size: 12px; color: var(--emerald-400); font-weight: 600; }
+
+@media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .stats-grid { grid-template-columns: 1fr 1fr; } }
 </style>
