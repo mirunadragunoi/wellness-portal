@@ -24,12 +24,17 @@
         <p class="hero__subtitle anim-fade-up-2">{{ t('hero.subtitle') }}</p>
 
         <div class="hero__ctas anim-fade-up-3">
-          <RouterLink to="/signup" class="btn btn--primary btn--lg">
-            {{ t('hero.cta_primary') }}
+          <RouterLink v-if="authStore.isLoggedIn" to="/home" class="btn btn--primary btn--lg">
+            Go to Dashboard
           </RouterLink>
-          <RouterLink to="/explore" class="btn btn--secondary btn--lg">
-            {{ t('hero.cta_secondary') }}
-          </RouterLink>
+          <template v-else>
+            <RouterLink to="/signup" class="btn btn--primary btn--lg">
+              {{ t('hero.cta_primary') }}
+            </RouterLink>
+            <RouterLink to="/explore" class="btn btn--secondary btn--lg">
+              {{ t('hero.cta_secondary') }}
+            </RouterLink>
+          </template>
         </div>
 
         <!-- Social proof mini -->
@@ -84,9 +89,11 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 import { LANDING_IMAGES } from '@/constants/landingImages'
 
 const { t } = useI18n()
+const authStore = useAuthStore()
 const { heroMain, heroOrbBg, heroProof1, heroProof2 } = LANDING_IMAGES
 
 const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1, heroProof2]
