@@ -110,27 +110,6 @@
             <h3 class="profile-card__title">{{ t('profile.account_title') }}</h3>
 
             <div class="settings-list">
-              <!-- Language -->
-              <div class="setting-row">
-                <span class="setting-row__label">{{ t('profile.language_label') }}</span>
-                <select class="setting-select" v-model="selectedLang" @change="changeLanguage">
-                  <option value="en">English</option>
-                  <option value="ro">Română</option>
-                </select>
-              </div>
-
-              <!-- Dark mode -->
-              <div class="setting-row">
-                <span class="setting-row__label">{{ t('profile.dark_mode_label') }}</span>
-                <button
-                  class="toggle-btn"
-                  :class="{ 'toggle-btn--on': userStore.darkMode }"
-                  @click="userStore.toggleDarkMode()"
-                >
-                  <span class="toggle-btn__knob" />
-                </button>
-              </div>
-
               <!-- Phone -->
               <div class="setting-row">
                 <span class="setting-row__label">{{ t('profile.phone_label') }}</span>
@@ -165,7 +144,6 @@ import { useRouter } from 'vue-router'
 import { useUserStore }     from '@/stores/user'
 import { useAuthStore }     from '@/stores/auth'
 import { useProgressStore } from '@/stores/progress'
-import { setLocale }        from '@/i18n/index'
 import { sessions }         from '@/data/sessions'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { AVATAR_ICONS, ONBOARDING_OBJECTIVE_ICONS, sessionTypeIcon } from '@/constants/appIcons'
@@ -182,7 +160,6 @@ const progressStore = useProgressStore()
 const editing       = ref(false)
 const editName      = ref('')
 const showLogout    = ref(false)
-const selectedLang  = ref(userStore.language)
 
 const memberSince = computed(() =>
   userStore.memberSince ? dayjs(userStore.memberSince).format('MMMM YYYY') : '—'
@@ -202,7 +179,6 @@ function startEdit()  { editName.value = userStore.firstName; editing.value = tr
 function saveEdit()   { userStore.firstName = editName.value.trim(); editing.value = false }
 function cancelEdit() { editing.value = false }
 
-function changeLanguage() { setLocale(selectedLang.value); userStore.language = selectedLang.value }
 function confirmLogout()  { showLogout.value = true }
 function logout()         { authStore.logout(); router.push({ name: 'landing' }) }
 
@@ -311,26 +287,6 @@ function logout()         { authStore.logout(); router.push({ name: 'landing' })
 .setting-row:last-child { border-bottom: none; }
 .setting-row__label { font-size: 15px; color: var(--text-primary); font-weight: 500; }
 .setting-row__val   { font-size: 14px; color: var(--text-muted); }
-.setting-select {
-  padding: 6px 12px; border-radius: var(--radius-sm);
-  border: 1.5px solid var(--border-default); background: var(--bg-base);
-  font-family: var(--font-body); font-size: 14px; color: var(--text-primary); cursor: pointer;
-}
-
-/* Toggle */
-.toggle-btn {
-  width: 48px; height: 26px; border-radius: 100px;
-  background: var(--bg-muted); border: none; cursor: pointer;
-  position: relative; transition: background var(--duration-normal);
-}
-.toggle-btn--on { background: var(--sky-500); }
-.toggle-btn__knob {
-  position: absolute; top: 3px; left: 3px;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  transition: transform var(--duration-normal) var(--ease-bounce);
-}
-.toggle-btn--on .toggle-btn__knob { transform: translateX(22px); }
 
 /* Logout */
 .logout-btn {
