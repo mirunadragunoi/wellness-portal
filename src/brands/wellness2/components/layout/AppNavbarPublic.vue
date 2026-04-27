@@ -83,13 +83,14 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 /* Logo */
 .navbar__logo {
   display: flex; align-items: center; gap: 7px;
-  font-family: var(--font-display); font-size: 19px; font-weight: 800;
-  color: var(--text-primary); text-decoration: none; letter-spacing: -0.5px;
+  font-family: var(--font-display); font-size: 24px; font-weight: 700;
+  color: #f3fff4; text-decoration: none; letter-spacing: -0.2px;
+  text-shadow: 0 0 12px rgba(184,245,102,0.25);
 }
 .navbar__logo-dot {
-  width: 7px; height: 7px; border-radius: 50%;
+  width: 9px; height: 9px; border-radius: 50%;
   background: var(--lime-500);
-  box-shadow: 0 0 8px rgba(184,245,102,0.8);
+  box-shadow: 0 0 12px rgba(184,245,102,0.9);
   animation: pulse-dot 2.5s ease infinite;
   flex-shrink: 0;
 }

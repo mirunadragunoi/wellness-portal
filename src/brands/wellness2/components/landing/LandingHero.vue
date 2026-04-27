@@ -1,6 +1,15 @@
 <template>
   <section class="hero">
-    <HeroShader />
+    <video
+      class="hero__video-bg"
+      :src="heroBackgroundVideo"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    />
+    <div class="hero__video-overlay" />
 
     <!-- Left: content -->
     <div class="hero__left">
@@ -75,7 +84,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import HeroShader from './HeroShader.vue'
+import heroBackgroundVideo from '@/brands/wellness2/assets/landing/hero-background.mp4'
 
 // Importă imaginile de proof
 import proof1 from '@/brands/wellness2/assets/landing/hero-proof-1.png'
@@ -96,20 +105,36 @@ const floatCards = [
 /* ── Hero layout ── */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: clamp(785px, 94vh, 1055px);
   display: grid;
   grid-template-columns: 1fr 400px;
   overflow: hidden;
+}
+.hero__video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.hero__video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(80% 65% at 15% 50%, rgba(8, 20, 12, 0.72), transparent 72%),
+    linear-gradient(90deg, rgba(3, 8, 5, 0.75) 0%, rgba(3, 8, 5, 0.44) 48%, rgba(3, 8, 5, 0.7) 100%);
 }
 
 /* ── Left panel ── */
 .hero__left {
   position: relative; z-index: 2;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 120px clamp(24px,4vw,60px) 80px;
+  align-items: flex-start; justify-content: center;
+  padding: 96px clamp(24px,4vw,60px) 56px;
 }
-.hero__left > * { width: 100%; max-width: 560px; }
+.hero__left > * { width: 100%; max-width: 600px; }
 
 .hero__kicker {
   display: inline-flex; align-items: center; gap: 8px;
@@ -127,23 +152,23 @@ const floatCards = [
 
 .hero__title {
   font-family: var(--font-display);
-  font-size: clamp(48px,6.5vw,100px);
-  font-weight: 800; line-height: 0.95; letter-spacing: -4px;
-  color: var(--text-primary); margin-bottom: 28px;
+  font-size: clamp(42px,5.2vw,78px);
+  font-weight: 700; line-height: 0.98; letter-spacing: 0.1px;
+  color: var(--text-primary); margin-bottom: 20px;
   animation: fadeInUp 0.8s var(--ease-smooth) 0.2s both;
 }
 .hero__title-lime   { color: var(--lime-500); display: inline-block; }
 .hero__title-stroke { -webkit-text-stroke: 2px rgba(184,245,102,0.55); color: transparent; }
 
 .hero__sub {
-  font-size: clamp(15px,1.8vw,18px); line-height: 1.75;
-  color: var(--text-secondary); max-width: 440px; margin-bottom: 44px;
+  font-size: clamp(14px,1.35vw,17px); line-height: 1.65;
+  color: var(--text-secondary); max-width: 500px; margin-bottom: 30px;
   animation: fadeInUp 0.8s var(--ease-smooth) 0.3s both;
 }
 
 .hero__actions {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  margin-bottom: 48px;
+  margin-bottom: 30px;
   animation: fadeInUp 0.8s var(--ease-smooth) 0.4s both;
 }
 
@@ -190,8 +215,8 @@ const floatCards = [
 .hero__right {
   position: relative; z-index: 2;
   display: flex; flex-direction: column;
-  justify-content: center; align-items: flex-end;
-  padding: 120px 40px 80px 0; gap: 14px;
+  justify-content: flex-start; align-items: flex-end;
+  padding: 132px 40px 40px 0; gap: 12px;
   animation: fadeInUp 1s var(--ease-smooth) 0.6s both;
 }
 
@@ -243,10 +268,11 @@ const floatCards = [
 @media (max-width: 1024px) {
   .hero { grid-template-columns: 1fr; }
   .hero__right { display: none; }
-  .hero__left { padding: 120px var(--container-pad) 80px; align-items: flex-start; }
+  .hero__left { padding: 88px var(--container-pad) 42px; align-items: flex-start; }
 }
 @media (max-width: 600px) {
-  .hero__title { font-size: clamp(42px,10vw,64px); letter-spacing: -3px; }
+  .hero { min-height: clamp(695px, 86vh, 875px); }
+  .hero__title { font-size: clamp(34px,8.4vw,54px); letter-spacing: 0px; }
   .hero__actions { flex-direction: column; align-items: stretch; }
   .hero__btn-primary, .hero__btn-ghost { justify-content: center; }
 }

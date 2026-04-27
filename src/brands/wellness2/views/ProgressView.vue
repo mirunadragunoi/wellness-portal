@@ -111,27 +111,27 @@ const formatDate = (v) => dayjs(v).format('ddd, MMM D')
 .stat-card { padding: 28px 24px; border-radius: 20px; background: var(--bg-glass); backdrop-filter: blur(20px); border: var(--border-glass); }
 .stat-icon { color: var(--lime-400); margin-bottom: 14px; }
 .stat-val { font-family: var(--font-display); font-size: clamp(32px, 3.5vw, 48px); font-weight: 800; letter-spacing: -2px; color: var(--lime-500); line-height: 1; margin-bottom: 6px; }
-.stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+.stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
 .bottom-grid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
 .chart-card, .history-card { background: var(--bg-glass); backdrop-filter: blur(20px); border: var(--border-glass); border-radius: 20px; padding: 28px; margin-bottom: 20px; }
 .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-.chart-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); }
-.chart-period { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+.chart-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.chart-period { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
 .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 110px; }
 .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .bar { width: 100%; border-radius: 6px 6px 0 0; background: linear-gradient(to top, var(--emerald-500), var(--lime-500)); min-height: 8px; }
-.bar-day { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
-.history-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; }
+.bar-day { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+.history-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; }
 .history-item { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
 .history-item:last-child { border-bottom: none; padding-bottom: 0; }
 .history-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(184,245,102,0.08); border: 1px solid rgba(184,245,102,0.12); display: flex; align-items: center; justify-content: center; color: var(--lime-400); }
-.history-title-text { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
-.history-date { font-size: 11px; color: var(--text-muted); text-transform: capitalize; }
-.history-dur { font-family: var(--font-mono); font-size: 12px; color: var(--lime-500); }
+.history-title-text { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.history-date { font-size: 12px; color: var(--text-muted); text-transform: capitalize; }
+.history-dur { font-family: var(--font-mono); font-size: 13px; color: var(--lime-500); }
 .streak-big { padding: 28px; background: linear-gradient(160deg, var(--forest-700), var(--forest-600)); border: 1px solid rgba(184,245,102,0.12); border-radius: 20px; }
-.streak-big-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 8px; display: block; }
+.streak-big-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 8px; display: block; }
 .streak-big-val { font-family: var(--font-display); font-size: 52px; font-weight: 800; letter-spacing: -3px; color: var(--lime-500); line-height: 1; margin-bottom: 4px; }
-.streak-big-unit { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+.streak-big-unit { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
 .streak-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .cal-day { aspect-ratio: 1; border-radius: 4px; }
 .cal-done { background: var(--lime-500); }

@@ -39,7 +39,7 @@
   --amber-300: #fcd34d;
 
   /* ── Typography ── */
-  --font-display: 'Syne', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
   --font-body:    'DM Sans', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
