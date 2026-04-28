@@ -26,4 +26,8 @@ app.use(pinia)
 app.use(router)
 app.use(i18n)
 
+const t = i18n.global.t
+document.title = `${t('brand.name')} — ${t('brand.tagline')}`
+document.querySelector('meta[name="description"]')?.setAttribute('content', t('brand.description'))
+
 app.mount('#app')

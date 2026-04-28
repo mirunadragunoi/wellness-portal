@@ -1,6 +1,8 @@
 {
   "brand": {
-    "name": "Innerawake"
+    "name": "Innerawake",
+    "tagline": "Awaken Your Inner Calm",
+    "description": "Awaken your calm with guided meditations, breathing exercises, and sleep stories."
   },
   "nav": {
     "explore": "Explore",
