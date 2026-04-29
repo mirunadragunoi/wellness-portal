@@ -1,6 +1,8 @@
 {
   "brand": {
-    "name": "Calmasoul"
+    "name": "Calmasoul",
+    "tagline": "Restore Your Soul",
+    "description": "Guided meditations, breathing rituals, and deep-focus tools for a calmer nervous system."
   },
   "nav": {
     "explore": "Explore",

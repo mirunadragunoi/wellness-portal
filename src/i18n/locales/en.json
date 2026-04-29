@@ -1,6 +1,8 @@
 {
   "brand": {
-    "name": "Harmonoria"
+    "name": "Harmonoria",
+    "tagline": "Find Your Calm",
+    "description": "Guided meditations, breathing exercises, and personalized wellness tools — all in one place."
   },
   "nav": {
     "explore": "Explore",

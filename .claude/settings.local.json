@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm --version)",
-      "Bash(nvm version:*)"
+      "Bash(nvm version:*)",
+      "Bash(ffmpeg -version)",
+      "PowerShell(Get-Command ffmpeg -ErrorAction SilentlyContinue)",
+      "PowerShell(if \\(-not $?\\) { \"no ffmpeg in PATH\" })",
+      "PowerShell($paths = @\\(\"C:\\\\ffmpeg\\\\bin\\\\ffmpeg.exe\",\"C:\\\\Program Files\\\\ffmpeg\\\\bin\\\\ffmpeg.exe\",\"C:\\\\Users\\\\runva\\\\scoop\\\\apps\\\\ffmpeg\\\\current\\\\bin\\\\ffmpeg.exe\",\"C:\\\\ProgramData\\\\chocolatey\\\\bin\\\\ffmpeg.exe\"\\); $paths | ForEach-Object { if \\(Test-Path $_\\) { \"FOUND: $_\" } }; winget list --id Gyan.FFmpeg 2>$null | Select-String \"FFmpeg\")"
     ]
   }
 }
