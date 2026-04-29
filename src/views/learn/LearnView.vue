@@ -1,7 +1,6 @@
 <template>
   <div class="learn-view">
     <div class="container">
-      <!-- Header -->
       <div class="learn-view__header">
         <div>
           <h1 class="learn-view__title">{{ t('learn.title') }}</h1>
@@ -12,7 +11,6 @@
         </div>
       </div>
 
-      <!-- Category tabs -->
       <div class="learn-view__tabs no-scrollbar">
         <button
           v-for="cat in tabs" :key="cat.id"
@@ -24,7 +22,6 @@
         </button>
       </div>
 
-      <!-- Articles grid -->
       <Transition name="fade" mode="out-in">
         <div v-if="filtered.length" class="learn-view__grid" :key="activeCategory + query">
           <LearnArticleCard
@@ -45,13 +42,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { articles, getArticlesByCategory } from '@/data/articles'
+import { useProductsStore } from '@/stores/products'
+import { articles as mockArticles, getArticlesByCategory } from '@/data/articles'
 import ExploreSearch    from '@/components/explore/ExploreSearch.vue'
 import LearnArticleCard from '@/components/learn/LearnArticleCard.vue'
 
-const { t } = useI18n()
+const { t }          = useI18n()
+const productsStore  = useProductsStore()
 
 const query          = ref('')
 const activeCategory = ref('all')
@@ -66,16 +65,43 @@ const tabs = [
   { id: 'mindfulness', label: 'Mindfulness' }
 ]
 
+// Use API articles if available, fall back to mock data
+const allArticles = computed(() => {
+  const apiArticles = productsStore.articles
+  if (apiArticles.length) {
+    return apiArticles.map(p => ({
+      id: p.id,
+      slug: String(p.id),
+      category: p.category,
+      title: p.title,
+      excerpt: p.descriptionShort || p.description,
+      readTime: 5,
+      thumbnail: p.thumbnail,
+      thumbnailGradient: p.thumbnailGradient,
+      content: p.description,
+      datePublished: null
+    }))
+  }
+  return mockArticles
+})
+
 const filtered = computed(() => {
-  let pool = getArticlesByCategory(activeCategory.value)
+  let pool = activeCategory.value === 'all'
+    ? allArticles.value
+    : allArticles.value.filter(a => a.category === activeCategory.value)
+
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(a =>
       a.title.toLowerCase().includes(q) ||
-      a.excerpt.toLowerCase().includes(q)
+      (a.excerpt || '').toLowerCase().includes(q)
     )
   }
   return pool
+})
+
+onMounted(() => {
+  if (!productsStore.loaded) productsStore.fetchProducts()
 })
 
 function toggleBookmark(id) {
@@ -85,69 +111,31 @@ function toggleBookmark(id) {
 </script>
 
 <style scoped>
-.learn-view {
-  padding: 40px 0 var(--page-pad-bottom-auth);
-  min-height: var(--app-min-height);
-}
+.learn-view { padding: 40px 0 var(--page-pad-bottom-auth); min-height: var(--app-min-height); }
 .learn-view__header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 24px; margin-bottom: 32px; flex-wrap: wrap;
 }
 .learn-view__title {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 300;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
-  margin-bottom: 8px;
+  font-family: var(--font-display); font-size: clamp(32px, 4vw, 48px);
+  font-weight: 300; color: var(--text-primary); letter-spacing: -0.5px; margin-bottom: 8px;
 }
-.learn-view__subtitle {
-  font-size: 16px;
-  color: var(--text-secondary);
-  max-width: 480px;
-}
+.learn-view__subtitle { font-size: 16px; color: var(--text-secondary); max-width: 480px; }
 .learn-view__search { width: 100%; max-width: 320px; }
 
 .learn-view__tabs {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  margin-bottom: 32px;
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 32px;
 }
 .tab-btn {
-  padding: 8px 20px;
-  border-radius: 100px;
-  background: var(--bg-surface);
-  border: 1.5px solid var(--border-subtle);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--duration-fast) var(--ease-smooth);
+  padding: 8px 20px; border-radius: 100px; background: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle); font-family: var(--font-body);
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  cursor: pointer; white-space: nowrap; transition: all var(--duration-fast) var(--ease-smooth);
 }
 .tab-btn:hover { border-color: var(--sky-300); color: var(--sky-600); background: var(--sky-50); }
 .tab-btn--active { border-color: var(--sky-500); background: var(--sky-50); color: var(--sky-700); }
 
-.learn-view__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  gap: 24px;
-}
-.learn-view__empty {
-  text-align: center;
-  padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-.learn-view__empty span { font-size: 40px; }
-.learn-view__empty p    { color: var(--text-secondary); font-size: 16px; }
+.learn-view__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 24px; }
+.learn-view__empty { text-align: center; padding: 80px 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.learn-view__empty p { color: var(--text-secondary); font-size: 16px; }
 </style>

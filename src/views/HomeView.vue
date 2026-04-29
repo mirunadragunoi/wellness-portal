@@ -44,22 +44,28 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { useMoodStore } from '@/stores/mood'
+import { useMoodStore }     from '@/stores/mood'
 import { useProgressStore } from '@/stores/progress'
-import HomeGreeting      from '@/components/home/HomeGreeting.vue'
-import HomeMoodCheckin   from '@/components/home/HomeMoodCheckin.vue'
-import HomeStreakCard     from '@/components/home/HomeStreakCard.vue'
-import HomeRecommended   from '@/components/home/HomeRecommended.vue'
-import HomeMomentOfDay   from '@/components/home/HomeMomentOfDay.vue'
-import HomePhraseOfDay   from '@/components/home/HomePhraseOfDay.vue'
+import { useProductsStore } from '@/stores/products'
+import HomeGreeting       from '@/components/home/HomeGreeting.vue'
+import HomeMoodCheckin    from '@/components/home/HomeMoodCheckin.vue'
+import HomeStreakCard      from '@/components/home/HomeStreakCard.vue'
+import HomeRecommended    from '@/components/home/HomeRecommended.vue'
+import HomeMomentOfDay    from '@/components/home/HomeMomentOfDay.vue'
+import HomePhraseOfDay    from '@/components/home/HomePhraseOfDay.vue'
 import HomeCategoriesGrid from '@/components/home/HomeCategoriesGrid.vue'
 
 const moodStore     = useMoodStore()
 const progressStore = useProgressStore()
+const productsStore = useProductsStore()
 
 onMounted(() => {
   moodStore.syncDay()
   progressStore.syncStreak()
+  if (!productsStore.loaded) productsStore.fetchProducts()
+  progressStore.fetchStats()
+  moodStore.fetchHistory()
+  progressStore.fetchFavorites()
 })
 
 const breathingShortcuts = [

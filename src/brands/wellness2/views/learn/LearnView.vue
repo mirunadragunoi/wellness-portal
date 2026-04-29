@@ -72,11 +72,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { articles, getArticlesByCategory } from '@/data/articles'
+import { articles as mockArticles, getArticlesByCategory } from '@/data/articles'
+import { useProductsStore } from '@/stores/products'
 
-const { t } = useI18n()
+const { t }          = useI18n()
+const productsStore  = useProductsStore()
 const query          = ref('')
 const activeCategory = ref('all')
 const bookmarks      = ref(new Set())
@@ -89,15 +91,33 @@ const tabs = [
   { id: 'habits',      label: 'Habits'      },
   { id: 'mindfulness', label: 'Mindfulness' },
 ]
-const featured = computed(() => articles[0] || null)
+
+onMounted(() => {
+  if (!productsStore.loaded) productsStore.fetchProducts()
+})
+
+const allArticles = computed(() => {
+  const api = productsStore.articles
+  if (api.length) return api.map(p => ({
+    id: p.id, slug: String(p.id), category: p.category,
+    title: p.title, excerpt: p.descriptionShort || p.description,
+    readTime: 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
+    content: p.description
+  }))
+  return mockArticles
+})
+
+const featured = computed(() => allArticles.value[0] || null)
 
 const filtered = computed(() => {
-  let pool = getArticlesByCategory(activeCategory.value)
+  let pool = activeCategory.value === 'all'
+    ? allArticles.value
+    : allArticles.value.filter(a => a.category === activeCategory.value)
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(a =>
       a.title.toLowerCase().includes(q) ||
-      a.excerpt.toLowerCase().includes(q)
+      (a.excerpt || '').toLowerCase().includes(q)
     )
   }
   return pool

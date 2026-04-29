@@ -68,18 +68,23 @@ import { useMoodStore, moodOptions } from '@/stores/mood'
 import { useProgressStore } from '@/stores/progress'
 import { useUserStore } from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
-import { sessions } from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 import ExploreSessionCard from '@/components/explore/ExploreSessionCard.vue'
 
 const moodStore = useMoodStore()
 const progressStore = useProgressStore()
 const userStore = useUserStore()
 const playerStore = usePlayerStore()
+const productsStore = useProductsStore()
 const router = useRouter()
 
 onMounted(() => {
   moodStore.syncDay()
   progressStore.syncStreak()
+  if (!productsStore.loaded) productsStore.fetchProducts()
+  progressStore.fetchStats()
+  moodStore.fetchHistory()
+  progressStore.fetchFavorites()
 })
 
 const displayName = computed(() => userStore.firstName || 'friend')
@@ -90,7 +95,7 @@ const greetingPart = computed(() => {
   return 'evening'
 })
 
-const recommended = computed(() => sessions.slice(0, 4))
+const recommended = computed(() => productsStore.sessions.slice(0, 4))
 
 const breathingShortcuts = [
   { id: 'box', label: 'Box 4-4-4' },

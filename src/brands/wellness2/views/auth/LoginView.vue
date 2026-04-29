@@ -58,8 +58,13 @@ const loading = ref(false)
 async function submit() {
   error.value = ''; loading.value = true
   try {
-    await auth.login(code.value)
-    router.push(user.onboardingCompleted ? { name: 'home' } : { name: 'onboarding' })
+    const data = await auth.login(code.value)
+    if (data.profile) {
+      user._applyApiProfile(data.profile)
+      router.push({ name: 'home' })
+    } else {
+      router.push(user.onboardingCompleted ? { name: 'home' } : { name: 'onboarding' })
+    }
   } catch {
     error.value = t('auth.invalid_code')
   } finally { loading.value = false }

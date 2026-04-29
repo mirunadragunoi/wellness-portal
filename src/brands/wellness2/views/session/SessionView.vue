@@ -50,27 +50,29 @@ import { useI18n } from 'vue-i18n'
 import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { useAudioPlayer }   from '@/composables/useAudioPlayer'
-import { getSessionById }   from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 import PlayerPrePlay     from '@/components/player/PlayerPrePlay.vue'
 import PlayerAudio       from '@/components/player/PlayerAudio.vue'
 import PlayerPostSession from '@/components/player/PlayerPostSession.vue'
 
-const { t }         = useI18n()
-const route         = useRoute()
-const router        = useRouter()
-const playerStore   = usePlayerStore()
-const progressStore = useProgressStore()
-const { load, play, toggle } = useAudioPlayer()
+const { t }          = useI18n()
+const route          = useRoute()
+const router         = useRouter()
+const playerStore    = usePlayerStore()
+const progressStore  = useProgressStore()
+const productsStore  = useProductsStore()
+const { load, play } = useAudioPlayer()
 
 const hasStarted = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
   const id = route.params.id
-  if (!playerStore.currentSession || playerStore.currentSession.id !== id) {
-    const session = getSessionById(id)
-    if (session) {
-      load(session)
+  if (!playerStore.currentSession || String(playerStore.currentSession.id) !== String(id)) {
+    let session = productsStore.getById(id)
+    if (!session) {
+      try { session = await productsStore.fetchProductById(id) } catch {}
     }
+    if (session) load(session)
   }
 })
 

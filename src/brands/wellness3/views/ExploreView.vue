@@ -31,31 +31,35 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { usePlayerStore } from '@/stores/player'
+import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
-import { sessions } from '@/data/sessions'
-import ExploreSearch       from '@/components/explore/ExploreSearch.vue'
+import { useProductsStore } from '@/stores/products'
+import ExploreSearch        from '@/components/explore/ExploreSearch.vue'
 import ExploreCategoryChips from '@/components/explore/ExploreCategoryChips.vue'
-import ExploreFilterPanel  from '@/components/explore/ExploreFilterPanel.vue'
-import ExploreSessionCard  from '@/components/explore/ExploreSessionCard.vue'
+import ExploreFilterPanel   from '@/components/explore/ExploreFilterPanel.vue'
+import ExploreSessionCard   from '@/components/explore/ExploreSessionCard.vue'
 
-const { t }         = useI18n()
-const route         = useRoute()
-const router        = useRouter()
-const playerStore   = usePlayerStore()
-const progressStore = useProgressStore()
+const { t }          = useI18n()
+const route          = useRoute()
+const router         = useRouter()
+const playerStore    = usePlayerStore()
+const progressStore  = useProgressStore()
+const productsStore  = useProductsStore()
 
 const query          = ref('')
 const activeCategory = ref(route.query.category || 'all')
 const filters        = ref({ type: 'all', duration: 'all', sort: 'popular' })
 
-const filtered = computed(() => {
-  let pool = [...sessions]
+onMounted(() => {
+  if (!productsStore.loaded) productsStore.fetchProducts()
+})
 
-  // Search
+const filtered = computed(() => {
+  let pool = [...productsStore.sessions]
+
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(s =>
@@ -64,25 +68,19 @@ const filtered = computed(() => {
       s.tags?.some(t => t.includes(q))
     )
   }
-  // Category
   if (activeCategory.value !== 'all') {
     pool = pool.filter(s => s.category === activeCategory.value)
   }
-  // Type
   if (filters.value.type !== 'all') {
     pool = pool.filter(s => s.type === filters.value.type)
   }
-  // Duration
   const durMap = { '1-5': [0, 300], '5-10': [300, 600], '10-20': [600, 1200], '20+': [1200, Infinity] }
   if (filters.value.duration !== 'all' && durMap[filters.value.duration]) {
     const [min, max] = durMap[filters.value.duration]
     pool = pool.filter(s => s.duration >= min && s.duration < max)
   }
-  // Sort
   if (filters.value.sort === 'popular') {
     pool.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0))
-  } else if (filters.value.sort === 'newest') {
-    pool.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
   }
 
   return pool

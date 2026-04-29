@@ -58,16 +58,20 @@
 </template>
 
 <script setup>
+import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useBreathing } from '@/composables/useBreathing'
+import { api } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
 import BreathingCircle   from '@/components/breathing/BreathingCircle.vue'
 import BreathingControls from '@/components/breathing/BreathingControls.vue'
 import BaseProgressBar   from '@/components/base/BaseProgressBar.vue'
 
-const { t }  = useI18n()
-const route  = useRoute()
-const typeId = route.params.type || 'box'
+const { t }   = useI18n()
+const route   = useRoute()
+const auth    = useAuthStore()
+const typeId  = route.params.type || 'box'
 
 const {
   config, isRunning, isPaused, isComplete,
@@ -75,6 +79,11 @@ const {
   totalDuration, progress, formattedRemaining,
   start, pause, stop, reset
 } = useBreathing(typeId)
+
+watch(isComplete, (done) => {
+  if (!done) return
+  api.completeBreathing(auth.accessCode, typeId, totalDuration.value).catch(() => {})
+})
 </script>
 
 <style scoped>

@@ -144,18 +144,19 @@ import { useRouter } from 'vue-router'
 import { useUserStore }     from '@/stores/user'
 import { useAuthStore }     from '@/stores/auth'
 import { useProgressStore } from '@/stores/progress'
-import { sessions }         from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { AVATAR_ICONS, ONBOARDING_OBJECTIVE_ICONS, sessionTypeIcon } from '@/constants/appIcons'
 import dayjs from 'dayjs'
 
 const avatarKeys = Object.keys(AVATAR_ICONS)
 
-const { t }         = useI18n()
-const router        = useRouter()
-const userStore     = useUserStore()
-const authStore     = useAuthStore()
-const progressStore = useProgressStore()
+const { t }          = useI18n()
+const router         = useRouter()
+const userStore      = useUserStore()
+const authStore      = useAuthStore()
+const progressStore  = useProgressStore()
+const productsStore  = useProductsStore()
 
 const editing       = ref(false)
 const editName      = ref('')
@@ -168,11 +169,13 @@ const memberSince = computed(() =>
 const miniStats = computed(() => [
   { icon: 'lucide:headphones', value: progressStore.totalSessions, label: 'Sessions' },
   { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted, label: 'Total time' },
-  { icon: 'lucide:flame',      value: progressStore.streakDays + 'd', label: 'Streak' }
+  { icon: 'lucide:flame',      value: progressStore.currentStreak + 'd', label: 'Streak' }
 ])
 
 const favoriteSessions = computed(() =>
-  sessions.filter(s => progressStore.favorites.includes(s.id))
+  productsStore.sessions.filter(s =>
+    progressStore.favorites.some(f => String(f) === String(s.id))
+  )
 )
 
 function startEdit()  { editName.value = userStore.firstName; editing.value = true }

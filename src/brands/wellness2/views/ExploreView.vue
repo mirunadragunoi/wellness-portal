@@ -64,17 +64,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
-import { sessions }          from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 
-const { t }         = useI18n()
-const router        = useRouter()
-const playerStore   = usePlayerStore()
-const progressStore = useProgressStore()
+const { t }          = useI18n()
+const router         = useRouter()
+const playerStore    = usePlayerStore()
+const progressStore  = useProgressStore()
+const productsStore  = useProductsStore()
 
 const query          = ref('')
 const activeCategory = ref('all')
@@ -88,8 +89,12 @@ const categoryChips = [
   { id: 'energy', label: 'Energy' }
 ]
 
+onMounted(() => {
+  if (!productsStore.loaded) productsStore.fetchProducts()
+})
+
 const filtered = computed(() => {
-  let pool = [...sessions]
+  let pool = [...productsStore.sessions]
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(s =>

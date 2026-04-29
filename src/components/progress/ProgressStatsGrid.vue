@@ -17,10 +17,10 @@ const { t }         = useI18n()
 const progressStore = useProgressStore()
 
 const stats = computed(() => [
-  { icon: 'lucide:headphones', value: progressStore.totalSessions,        labelKey: 'progress.total_sessions' },
-  { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted,   labelKey: 'progress.total_time'     },
-  { icon: 'lucide:flame',      value: `${progressStore.streakDays}d`,     labelKey: 'progress.current_streak' },
-  { icon: 'lucide:trophy',     value: `${progressStore.longestStreak}d`,  labelKey: 'progress.longest_streak' }
+  { icon: 'lucide:headphones', value: progressStore.totalSessions,           labelKey: 'progress.total_sessions' },
+  { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted,      labelKey: 'progress.total_time'     },
+  { icon: 'lucide:flame',      value: `${progressStore.currentStreak}d`,     labelKey: 'progress.current_streak' },
+  { icon: 'lucide:trophy',     value: `${progressStore.longestStreakVal}d`,   labelKey: 'progress.longest_streak' }
 ])
 </script>
 

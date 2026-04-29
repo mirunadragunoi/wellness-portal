@@ -55,19 +55,20 @@ import { useRouter } from 'vue-router'
 import { useProgressStore } from '@/stores/progress'
 import { useMoodStore, moodOptions } from '@/stores/mood'
 import { useUIStore } from '@/stores/ui'
-import { sessions } from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 
 const { t }          = useI18n()
 const router         = useRouter()
 const progressStore  = useProgressStore()
 const moodStore      = useMoodStore()
 const uiStore        = useUIStore()
+const productsStore  = useProductsStore()
 
 const props = defineProps({ session: Object })
 
 const suggestions = computed(() =>
-  sessions
-    .filter(s => s.id !== props.session?.id && s.category === props.session?.category)
+  productsStore.sessions
+    .filter(s => String(s.id) !== String(props.session?.id) && s.category === props.session?.category)
     .slice(0, 3)
 )
 

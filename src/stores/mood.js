@@ -1,13 +1,20 @@
 import { defineStore } from 'pinia'
 import dayjs from 'dayjs'
 import { MOOD_ICONS } from '@/constants/appIcons'
+import { api } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
+
+function scoreToMood(score) {
+  const map = { 1: 'low', 2: 'foggy', 3: 'okay', 4: 'bright', 5: 'glowing' }
+  return map[score] || 'okay'
+}
 
 export const useMoodStore = defineStore('mood', {
   state: () => ({
     todayMood: null,
     moodCheckedToday: false,
     lastCheckinDate: null,
-    moodHistory: [] // [{ date, mood, value }]
+    moodHistory: []
   }),
 
   getters: {
@@ -31,26 +38,48 @@ export const useMoodStore = defineStore('mood', {
   },
 
   actions: {
-    checkIn(mood) {
+    async checkIn(mood) {
       const today = dayjs().format('YYYY-MM-DD')
-      const moodData = moodOptions.find(m => m.id === mood)
+      const score = moodValues[mood] || 3
 
       this.todayMood = mood
       this.moodCheckedToday = true
       this.lastCheckinDate = today
 
-      // Update or add to history
       const existingIdx = this.moodHistory.findIndex(m => m.date === today)
-      const entry = { date: today, mood, value: moodValues[mood] }
-
+      const entry = { date: today, mood, value: score }
       if (existingIdx >= 0) {
         this.moodHistory[existingIdx] = entry
       } else {
         this.moodHistory.push(entry)
-        // Keep only last 30 days
-        if (this.moodHistory.length > 30) {
+        if (this.moodHistory.length > 30) this.moodHistory = this.moodHistory.slice(-30)
+      }
+
+      try {
+        const auth = useAuthStore()
+        await api.saveMood(auth.accessCode, score, mood)
+      } catch (e) {
+        console.warn('Failed to save mood:', e.message)
+      }
+    },
+
+    async fetchHistory() {
+      try {
+        const auth = useAuthStore()
+        const data = await api.getMoodHistory(auth.accessCode, 30)
+        if (data.data) {
+          for (const item of data.data) {
+            const date = dayjs(item.recorded_at).format('YYYY-MM-DD')
+            const mood = item.mood_tag || scoreToMood(item.mood_score)
+            const entry = { date, mood, value: item.mood_score }
+            const idx = this.moodHistory.findIndex(m => m.date === date)
+            if (idx >= 0) this.moodHistory[idx] = entry
+            else this.moodHistory.push(entry)
+          }
           this.moodHistory = this.moodHistory.slice(-30)
         }
+      } catch (e) {
+        console.warn('Failed to fetch mood history:', e.message)
       }
     },
 

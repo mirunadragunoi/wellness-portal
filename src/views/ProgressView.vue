@@ -23,12 +23,23 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useProgressStore } from '@/stores/progress'
+import { useMoodStore }     from '@/stores/mood'
 import ProgressStatsGrid      from '@/components/progress/ProgressStatsGrid.vue'
 import ProgressMoodChart      from '@/components/progress/ProgressMoodChart.vue'
 import ProgressSessionHistory from '@/components/progress/ProgressSessionHistory.vue'
 
-const { t } = useI18n()
+const { t }         = useI18n()
+const progressStore = useProgressStore()
+const moodStore     = useMoodStore()
+
+onMounted(() => {
+  progressStore.fetchStats()
+  progressStore.fetchHistory()
+  moodStore.fetchHistory()
+})
 </script>
 
 <style scoped>

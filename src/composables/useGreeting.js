@@ -1,14 +1,10 @@
-// ═══════════════════════════════════
-// useGreeting
-// ═══════════════════════════════════
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 
 export function useGreeting(firstName) {
   const { t } = useI18n()
-
-  const hour = dayjs().hour()
+  const hour  = dayjs().hour()
 
   const period = computed(() => {
     if (hour >= 5  && hour < 12) return 'morning'
@@ -36,10 +32,11 @@ export function useGreeting(firstName) {
 // ═══════════════════════════════════
 // useMomentOfDay
 // ═══════════════════════════════════
-import { sessions } from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 
 export function useMomentOfDay() {
-  const hour = dayjs().hour()
+  const hour           = dayjs().hour()
+  const productsStore  = useProductsStore()
 
   let categoryPriority
   let label
@@ -59,11 +56,12 @@ export function useMomentOfDay() {
   }
 
   const session = computed(() => {
+    const pool = productsStore.sessions
     for (const cat of categoryPriority) {
-      const match = sessions.find(s => s.category === cat && s.type === 'meditation')
+      const match = pool.find(s => s.category === cat && s.type === 'meditation')
       if (match) return match
     }
-    return sessions[0]
+    return pool[0] || null
   })
 
   return { session, label }
@@ -72,30 +70,23 @@ export function useMomentOfDay() {
 // ═══════════════════════════════════
 // useRecommendations
 // ═══════════════════════════════════
-import { useUserStore }  from '@/stores/user'
-import { useMoodStore }  from '@/stores/mood'
+import { useUserStore }     from '@/stores/user'
+import { useMoodStore }     from '@/stores/mood'
 
 export function useRecommendations(limit = 6) {
-  const userStore = useUserStore()
-  const moodStore = useMoodStore()
+  const userStore     = useUserStore()
+  const moodStore     = useMoodStore()
+  const productsStore = useProductsStore()
 
   const recommended = computed(() => {
-    let pool = [...sessions]
+    let pool = [...productsStore.sessions]
 
-    // Filter by experience level
-    if (userStore.meditationExp === 'new' || userStore.meditationExp === 'tried') {
+    if (userStore.meditationExp === 'new' || userStore.meditationExp === 'tried' || userStore.meditationExp === 'beginner') {
       pool = pool.filter(s => s.level === 'beginner' || s.level === 'all')
     }
 
-    // Filter by preferred duration (within 50% range)
-    const prefDur = userStore.preferredDurationSeconds
-    if (prefDur) {
-      pool = pool.filter(s => Math.abs(s.duration - prefDur) <= prefDur * 0.6)
-    }
-
-    // Mood-based boosting
     const mood = moodStore.todayMood
-    let priorityCategories = userStore.categories.map(c => c.id)
+    let priorityCategories = (userStore.categories || []).map(c => c.id || c)
 
     if (mood === 'low' || mood === 'foggy') {
       priorityCategories = ['stress', 'anxiety', 'mindfulness', ...priorityCategories]
@@ -103,7 +94,6 @@ export function useRecommendations(limit = 6) {
       priorityCategories = ['focus', 'energy', ...priorityCategories]
     }
 
-    // Sort: priority categories first, then popular
     pool.sort((a, b) => {
       const aIdx = priorityCategories.indexOf(a.category)
       const bIdx = priorityCategories.indexOf(b.category)

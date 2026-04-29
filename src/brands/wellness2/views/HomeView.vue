@@ -124,7 +124,7 @@ import { useUserStore } from '@/stores/user'
 import { useMoodStore, moodOptions } from '@/stores/mood'
 import { useProgressStore } from '@/stores/progress'
 import { usePlayerStore } from '@/stores/player'
-import { sessions } from '@/data/sessions'
+import { useProductsStore } from '@/stores/products'
 import { CATEGORY_ICONS } from '@/constants/appIcons'
 
 const router = useRouter()
@@ -132,17 +132,22 @@ const userStore = useUserStore()
 const moodStore = useMoodStore()
 const progressStore = useProgressStore()
 const playerStore = usePlayerStore()
+const productsStore = useProductsStore()
 
 onMounted(() => {
   moodStore.syncDay()
   progressStore.syncStreak()
+  if (!productsStore.loaded) productsStore.fetchProducts()
+  progressStore.fetchStats()
+  moodStore.fetchHistory()
+  progressStore.fetchFavorites()
 })
 
 const displayName = computed(() => userStore.firstName || 'friend')
 const hour = new Date().getHours()
 const dayPart = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening'
 
-const recommended = computed(() => sessions.filter((s) => s.featured).slice(0, 5))
+const recommended = computed(() => productsStore.sessions.filter(s => s.featured).slice(0, 5))
 
 const categories = [
   { id: 'stress', label: 'Stress', icon: CATEGORY_ICONS.stress },
