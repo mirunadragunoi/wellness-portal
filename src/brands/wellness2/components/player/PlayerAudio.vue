@@ -1,13 +1,13 @@
 <template>
   <div class="audio-player">
     <!-- Background blurred cover -->
-    <div class="audio-player__bg" :style="{ background: session?.thumbnailGradient }" />
+    <div class="audio-player__bg" :style="bgStyle" />
     <div class="audio-player__overlay" />
 
     <div class="audio-player__inner">
       <!-- Cover art -->
-      <div class="audio-player__cover" :style="{ background: session?.thumbnailGradient }">
-        <Icon :icon="coverIcon" class="audio-player__cover-icon app-icon app-icon--3xl" />
+      <div class="audio-player__cover" :style="coverStyle">
+        <Icon v-if="!session?.thumbnail" :icon="coverIcon" class="audio-player__cover-icon app-icon app-icon--3xl" />
       </div>
 
       <!-- Track info -->
@@ -68,6 +68,10 @@ const player       = usePlayerStore()
 const progressRef  = ref(null)
 
 const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
+const coverStyle = computed(() => props.session?.thumbnail
+  ? { backgroundImage: `url("${props.session.thumbnail}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  : { background: props.session?.thumbnailGradient })
+const bgStyle = coverStyle
 
 const volumeIcon = computed(() => {
   const v = playerStore.volume

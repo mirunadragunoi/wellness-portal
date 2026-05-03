@@ -1,7 +1,17 @@
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001').replace(/\/$/, '')
+import { getBrandConfig } from '@/config/brand'
+
+const brand = getBrandConfig()
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || brand.apiBaseUrl).replace(/\/$/, '')
+const PORTAL_NAME = brand.portalName
 
 async function request(method, path, { params = {}, body = null } = {}) {
   let url = `${BASE_URL}${path}`
+
+  if (method === 'GET') {
+    params = { ...params, portal_name: PORTAL_NAME }
+  } else {
+    body = { ...(body || {}), portal_name: PORTAL_NAME }
+  }
 
   const filteredParams = Object.fromEntries(
     Object.entries(params).filter(([, v]) => v !== null && v !== undefined)

@@ -1,7 +1,7 @@
 <template>
   <div class="pre-play">
-    <div class="pre-play__cover" :style="{ background: session?.thumbnailGradient }">
-      <Icon :icon="coverIcon" class="pre-play__type-icon app-icon app-icon--3xl" />
+    <div class="pre-play__cover" :style="coverStyle">
+      <Icon v-if="!session?.thumbnail" :icon="coverIcon" class="pre-play__type-icon app-icon app-icon--3xl" />
     </div>
 
     <div class="pre-play__content">
@@ -43,6 +43,9 @@ const progressStore = useProgressStore()
 
 const isFavorite = computed(() => progressStore.isFavorite(props.session?.id))
 const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
+const coverStyle = computed(() => props.session?.thumbnail
+  ? { backgroundImage: `url("${props.session.thumbnail}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  : { background: props.session?.thumbnailGradient })
 const durationLabel = computed(() => {
   const m = Math.round((props.session?.duration || 0) / 60)
   return `${m} ${t('explore.min')}`

@@ -1,31 +1,43 @@
-import { ref, watch, onUnmounted } from 'vue'
+import { watch } from 'vue'
 import { Howl } from 'howler'
 import { usePlayerStore } from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
+
+let howl = null
+let ticker = null
+let mode = 'idle'
+let watcherInstalled = false
 
 export function useAudioPlayer() {
   const playerStore   = usePlayerStore()
   const progressStore = useProgressStore()
 
-  let howl = null
-  let ticker = null
+  if (!watcherInstalled) {
+    watch(() => playerStore.volume, v => {
+      if (howl) howl.volume(v)
+    })
+    watcherInstalled = true
+  }
 
   function load(session) {
-    // Clean up previous
     destroy()
-
     playerStore.loadSession(session)
 
-    // If no real audio yet — use a silent simulation
     if (!session.audioUrl) {
+      mode = 'sim'
       simulatePlayback(session.duration)
       return
     }
 
+    mode = 'real'
     howl = new Howl({
       src: [session.audioUrl],
       html5: true,
       volume: playerStore.volume,
+      onload: () => {
+        const realDuration = howl?.duration() || 0
+        if (realDuration) playerStore.duration = realDuration
+      },
       onplay: () => {
         playerStore.play()
         startTicker()
@@ -44,6 +56,9 @@ export function useAudioPlayer() {
       },
       onloaderror: (_, err) => {
         console.error('Audio load error', err)
+      },
+      onplayerror: (_, err) => {
+        console.error('Audio play error', err)
       }
     })
   }
@@ -51,7 +66,7 @@ export function useAudioPlayer() {
   function play() {
     if (howl) {
       howl.play()
-    } else {
+    } else if (mode === 'sim') {
       playerStore.play()
       startTicker()
     }
@@ -60,7 +75,7 @@ export function useAudioPlayer() {
   function pause() {
     if (howl) {
       howl.pause()
-    } else {
+    } else if (mode === 'sim') {
       playerStore.pause()
       stopTicker()
     }
@@ -72,8 +87,9 @@ export function useAudioPlayer() {
   }
 
   function seek(seconds) {
-    playerStore.seek(seconds)
-    if (howl) howl.seek(seconds)
+    const clamped = Math.max(0, Math.min(seconds, playerStore.duration || 0))
+    playerStore.seek(clamped)
+    if (howl) howl.seek(clamped)
   }
 
   function skipBack()    { seek(playerStore.currentTime - 15) }
@@ -95,6 +111,14 @@ export function useAudioPlayer() {
     stopTicker()
     ticker = setInterval(() => {
       if (!playerStore.isPlaying) return
+
+      if (mode === 'real' && howl) {
+        const t = howl.seek()
+        if (typeof t === 'number') playerStore.tick(t)
+        return
+      }
+
+      // simulation mode — drive playback ourselves
       const next = playerStore.currentTime + 1
       if (next >= playerStore.duration) {
         playerStore.tick(playerStore.duration)
@@ -110,7 +134,6 @@ export function useAudioPlayer() {
     if (ticker) { clearInterval(ticker); ticker = null }
   }
 
-  // Simulation mode — no real audio file yet
   function simulatePlayback(duration) {
     playerStore.duration = duration
     playerStore.play()
@@ -123,14 +146,8 @@ export function useAudioPlayer() {
       howl.unload()
       howl = null
     }
+    mode = 'idle'
   }
-
-  // Sync volume changes
-  watch(() => playerStore.volume, v => {
-    if (howl) howl.volume(v)
-  })
-
-  onUnmounted(destroy)
 
   return {
     load, play, pause, toggle,

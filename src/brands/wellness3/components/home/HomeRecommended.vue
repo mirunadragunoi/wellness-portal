@@ -53,17 +53,20 @@ const player   = usePlayerStore()
 const { recommended } = useRecommendations(8)
 
 const categoryColors = {
-  stress:      { bg: '#dbeafe', color: '#1e40af' },
-  anxiety:     { bg: '#ede9fe', color: '#5b21b6' },
-  sleep:       { bg: '#e0e7ff', color: '#3730a3' },
-  focus:       { bg: '#fef9c3', color: '#854d0e' },
-  mindfulness: { bg: '#dcfce7', color: '#166534' },
-  energy:      { bg: '#fef3c7', color: '#92400e' }
+  stress:      '#1e40af',
+  anxiety:     '#5b21b6',
+  sleep:       '#3730a3',
+  focus:       '#854d0e',
+  mindfulness: '#166534',
+  energy:      '#92400e',
+  meditation:  '#0369a1',
+  breathing:   '#0f766e',
+  relax:       '#0e7490',
+  calm:        '#155e75'
 }
 
 function getBadgeStyle(cat) {
-  const c = categoryColors[cat] || { bg: '#f1f5f9', color: '#475569' }
-  return { background: c.bg, color: c.color }
+  return { color: categoryColors[cat] || '#334155' }
 }
 
 function goToSession(session) {
@@ -100,7 +103,11 @@ function goToSession(session) {
 .session-card__badge {
   position: absolute; top: 10px; left: 10px;
   padding: 3px 8px; border-radius: 100px;
-  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .session-card__play {
   width: 40px; height: 40px; border-radius: 50%;
