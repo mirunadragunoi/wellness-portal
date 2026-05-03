@@ -108,7 +108,6 @@ function setMood(id) {
 }
 
 function playSession(session) {
-  playerStore.loadSession(session)
   router.push({ name: 'session', params: { id: session.id } })
 }
 </script>

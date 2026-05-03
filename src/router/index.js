@@ -144,6 +144,25 @@ const router = createRouter({
   }
 })
 
+// ─── Stale chunk recovery ───────────────────────────────
+// After a redeploy, the browser may hold an old index.js that references
+// chunk filenames which no longer exist. The dynamic import fails — reload
+// to fetch the fresh asset manifest.
+router.onError((error, to) => {
+  const msg = error?.message || ''
+  const isChunkError =
+    msg.includes('Failed to fetch dynamically imported module') ||
+    msg.includes('error loading dynamically imported module') ||
+    msg.includes('Importing a module script failed')
+  if (isChunkError) {
+    if (to?.fullPath) {
+      window.location.href = to.fullPath
+    } else {
+      window.location.reload()
+    }
+  }
+})
+
 // ─── Global navigation guard ────────────────────────────
 router.beforeEach((to) => {
   // Must use inside guard to avoid setup-time store access issues

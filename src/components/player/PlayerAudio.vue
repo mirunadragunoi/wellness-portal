@@ -30,13 +30,13 @@
 
       <!-- Controls -->
       <div class="audio-player__controls">
-        <button class="ctrl-btn ctrl-btn--sm" @click="player.skipBack()" title="Back 15s">
+        <button class="ctrl-btn ctrl-btn--sm" @click="skipBack()" title="Back 15s">
           ⟨15
         </button>
         <button type="button" class="ctrl-btn ctrl-btn--play" @click="toggle" :aria-label="playerStore.isPlaying ? 'Pause' : 'Play'">
           <Icon :icon="playerStore.isPlaying ? 'lucide:pause' : 'lucide:play'" class="app-icon app-icon--xl" />
         </button>
-        <button class="ctrl-btn ctrl-btn--sm" @click="player.skipForward()" title="Forward 15s">
+        <button class="ctrl-btn ctrl-btn--sm" @click="skipForward()" title="Forward 15s">
           15⟩
         </button>
       </div>
@@ -48,7 +48,7 @@
           class="volume-slider"
           type="range" min="0" max="1" step="0.01"
           :value="playerStore.volume"
-          @input="player.setVolume(+$event.target.value)"
+          @input="setVolume(+$event.target.value)"
         />
       </div>
     </div>
@@ -63,15 +63,19 @@ import { sessionTypeIcon } from '@/constants/appIcons'
 
 const props = defineProps({ session: Object })
 const playerStore  = usePlayerStore()
-const { toggle, seek } = useAudioPlayer()
-const player       = usePlayerStore()
+const { toggle, seek, skipBack, skipForward, setVolume } = useAudioPlayer()
 const progressRef  = ref(null)
 
 const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
 const coverStyle = computed(() => props.session?.thumbnail
   ? { backgroundImage: `url("${props.session.thumbnail}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
   : { background: props.session?.thumbnailGradient })
-const bgStyle = coverStyle
+const bgStyle = computed(() => {
+  const src = props.session?.banner || props.session?.thumbnail
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: props.session?.thumbnailGradient }
+})
 
 const volumeIcon = computed(() => {
   const v = playerStore.volume
@@ -96,15 +100,17 @@ function onProgressClick(e) {
   overflow-y: auto;
 }
 .audio-player__bg {
-  position: absolute; inset: -40px;
-  filter: blur(60px) saturate(1.5);
-  opacity: 0.4;
+  position: absolute;
+  top: var(--navbar-height); right: 0; bottom: 0; left: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-surface);
 }
 .audio-player__overlay {
-  position: absolute; inset: 0;
-  background: rgba(248,250,252,0.88);
+  position: absolute;
+  top: var(--navbar-height); right: 0; bottom: 0; left: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.85) 100%);
 }
-[data-theme="dark"] .audio-player__overlay { background: rgba(11,18,32,0.88); }
 
 .audio-player__inner {
   position: relative; z-index: 1;
@@ -123,9 +129,10 @@ function onProgressClick(e) {
 .audio-player__info { text-align: center; }
 .audio-player__title {
   font-family: var(--font-display); font-size: 28px; font-weight: 400;
-  color: var(--text-primary); margin-bottom: 6px;
+  color: #ffffff; margin-bottom: 6px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
 }
-.audio-player__meta { font-size: 14px; color: var(--text-muted); text-transform: capitalize; }
+.audio-player__meta { font-size: 14px; color: rgba(255,255,255,0.85); text-transform: capitalize; text-shadow: 0 1px 6px rgba(0,0,0,0.4); }
 
 .audio-player__progress { width: 100%; cursor: pointer; }
 .progress-track {
@@ -142,7 +149,7 @@ function onProgressClick(e) {
   background: var(--sky-600); box-shadow: 0 2px 6px rgba(14,165,233,0.4);
   transition: left 1s linear;
 }
-.progress-times { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+.progress-times { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.85); }
 
 .audio-player__controls { display: flex; align-items: center; gap: 20px; }
 .ctrl-btn {

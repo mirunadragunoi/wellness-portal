@@ -14,7 +14,7 @@
         <!-- Article -->
         <article class="article-content">
           <!-- Cover -->
-          <div class="article-content__cover" :style="{ background: article.thumbnailGradient }">
+          <div class="article-content__cover" :style="coverStyle(article)">
             <span class="article-content__cat">{{ article.category }}</span>
           </div>
 
@@ -74,7 +74,7 @@
               :to="{ name: 'article', params: { slug: rel.slug } }"
               class="related-item"
             >
-              <div class="related-item__img" :style="{ background: rel.thumbnailGradient }" />
+              <div class="related-item__img" :style="relStyle(rel)" />
               <div class="related-item__info">
                 <p class="related-item__title">{{ rel.title }}</p>
                 <p class="related-item__time">{{ t('learn.read_time', { n: rel.readTime }) }}</p>
@@ -107,6 +107,25 @@ const { article, related, loading } = useArticlePage()
 const isBookmarked = ref(false)
 
 const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
+
+function coverStyle(a) {
+  const src = a.thumbnail || a.banner
+  return src
+    ? {
+        backgroundImage: `url("${src}")`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }
+    : { background: a.thumbnailGradient }
+}
+
+function relStyle(r) {
+  const src = r.thumbnail || r.banner
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: r.thumbnailGradient }
+}
 </script>
 
 <style scoped>
@@ -129,10 +148,11 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 
 /* Article */
 .article-content__cover {
-  width: 100%; height: 280px;
+  width: 100%; height: 380px;
   border-radius: var(--radius-xl);
   margin-bottom: 28px;
   display: flex; align-items: flex-end; padding: 20px;
+  background-color: var(--bg-muted);
 }
 .article-content__cat {
   background: rgba(255,255,255,0.9);

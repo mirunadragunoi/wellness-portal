@@ -9,15 +9,15 @@
       />
 
       <!-- Active player -->
-      <div v-else-if="playerStore.isVisible" key="player" class="session-view__player">
+      <div v-else-if="viewSession || playerStore.isVisible" key="player" class="session-view__player">
         <Transition name="slide-up" mode="out-in">
           <!-- Pre-play screen -->
           <PlayerPrePlay
             v-if="!hasStarted"
-            :session="playerStore.currentSession"
+            :session="viewSession || playerStore.currentSession"
             key="pre"
             @play="startPlay"
-            @favorite="progressStore.toggleFavorite(playerStore.currentSession?.id)"
+            @favorite="progressStore.toggleFavorite((viewSession || playerStore.currentSession)?.id)"
           />
           <!-- Full audio player -->
           <PlayerAudio
@@ -64,25 +64,30 @@ const productsStore  = useProductsStore()
 const { load, play } = useAudioPlayer()
 
 const hasStarted = ref(false)
+const viewSession = ref(null)
 
 onMounted(async () => {
+  playerStore.showPostSession = false
   const id = route.params.id
-  if (!playerStore.currentSession || String(playerStore.currentSession.id) !== String(id)) {
-    let session = productsStore.getById(id)
-    if (!session) {
-      try { session = await productsStore.fetchProductById(id) } catch {}
-    }
-    if (session) load(session)
+  let session = productsStore.getById(id)
+  if (!session) {
+    try { session = await productsStore.fetchProductById(id) } catch {}
+  }
+  if (!session) return
+  viewSession.value = session
+  if (playerStore.currentSession?.id === session.id && playerStore.isPlaying) {
+    hasStarted.value = true
   }
 })
 
 function startPlay() {
+  if (!viewSession.value) return
+  load(viewSession.value)
   hasStarted.value = true
   play()
 }
 
 function goBack() {
-  playerStore.pause?.()
   router.back()
 }
 </script>

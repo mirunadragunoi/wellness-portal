@@ -7,14 +7,14 @@
         key="post"
       />
 
-      <div v-else-if="playerStore.isVisible" key="player" class="session-view__player">
+      <div v-else-if="viewSession || playerStore.isVisible" key="player" class="session-view__player">
         <Transition name="slide-up" mode="out-in">
           <PlayerPrePlay
             v-if="!hasStarted"
-            :session="playerStore.currentSession"
+            :session="viewSession || playerStore.currentSession"
             key="pre"
             @play="startPlay"
-            @favorite="progressStore.toggleFavorite(playerStore.currentSession?.id)"
+            @favorite="progressStore.toggleFavorite((viewSession || playerStore.currentSession)?.id)"
           />
           <PlayerAudio
             v-else
@@ -58,30 +58,35 @@ const productsStore  = useProductsStore()
 const { load, play } = useAudioPlayer()
 
 const hasStarted = ref(false)
+const viewSession = ref(null)
 
 onMounted(async () => {
+  playerStore.showPostSession = false
   const id = route.params.id
-  if (!playerStore.currentSession || String(playerStore.currentSession.id) !== String(id)) {
-    // Try from local cache first, then fetch from API
-    let session = productsStore.getById(id)
-    if (!session) {
-      try {
-        session = await productsStore.fetchProductById(id)
-      } catch (e) {
-        console.warn('Could not load product:', e.message)
-      }
+  let session = productsStore.getById(id)
+  if (!session) {
+    try {
+      session = await productsStore.fetchProductById(id)
+    } catch (e) {
+      console.warn('Could not load product:', e.message)
     }
-    if (session) load(session)
+  }
+  if (!session) return
+  viewSession.value = session
+  // If this exact session is already playing, skip pre-play and go straight to player
+  if (playerStore.currentSession?.id === session.id && playerStore.isPlaying) {
+    hasStarted.value = true
   }
 })
 
 function startPlay() {
+  if (!viewSession.value) return
+  load(viewSession.value)
   hasStarted.value = true
   play()
 }
 
 function goBack() {
-  playerStore.pause?.()
   router.back()
 }
 </script>

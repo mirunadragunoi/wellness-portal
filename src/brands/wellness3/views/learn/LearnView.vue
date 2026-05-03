@@ -34,7 +34,7 @@
             @click="goArticle(article.slug)"
             @keydown.enter.prevent="goArticle(article.slug)"
           >
-            <div class="learn-card__thumb" :style="{ background: article.thumbnailGradient }">
+            <div class="learn-card__thumb" :style="thumbStyle(article)">
               <span>{{ article.readTime }} min read</span>
             </div>
             <div class="learn-card__body">
@@ -86,7 +86,7 @@ const allArticles = computed(() => {
   if (api.length) return api.map(p => ({
     id: p.id, slug: String(p.id), category: p.category,
     title: p.title, excerpt: p.descriptionShort || '',
-    readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
+    readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, banner: p.banner, thumbnailGradient: p.thumbnailGradient,
     content: p.descriptionLong || p.description
   }))
   return mockArticles
@@ -105,6 +105,18 @@ const filtered = computed(() => {
   }
   return pool
 })
+
+function thumbStyle(article) {
+  const src = article.thumbnail || article.banner
+  return src
+    ? {
+        backgroundImage: `url("${src}")`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }
+    : { background: article.thumbnailGradient }
+}
 
 function goArticle(slug) {
   router.push({ name: 'article', params: { slug } })
@@ -192,8 +204,9 @@ function goArticle(slug) {
   outline-offset: 2px;
 }
 .learn-card__thumb {
-  height: 120px;
+  height: 220px;
   position: relative;
+  background-color: rgba(255, 255, 255, 0.04);
 }
 .learn-card__thumb span {
   position: absolute;

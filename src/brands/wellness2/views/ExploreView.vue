@@ -35,7 +35,7 @@
             class="s-card"
             @click="playSession(s)"
           >
-            <div class="s-thumb" :style="{ background: s.thumbnailGradient }">
+            <div class="s-thumb" :style="thumbStyle(s)">
               <span class="s-badge">{{ s.type.replace('-', ' ') }}</span>
               <button
                 class="s-fav"
@@ -110,8 +110,14 @@ const filtered = computed(() => {
 })
 
 function playSession(session) {
-  playerStore.loadSession(session)
   router.push({ name: 'session', params: { id: session.id } })
+}
+
+function thumbStyle(s) {
+  const src = s.thumbnail || s.banner
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: s.thumbnailGradient }
 }
 </script>
 

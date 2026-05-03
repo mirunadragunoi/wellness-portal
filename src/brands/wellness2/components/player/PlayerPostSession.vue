@@ -19,11 +19,21 @@
     <div class="post-session__mood">
       <p class="post-session__mood-q">{{ t('player.post_mood_prompt') }}</p>
       <div class="mood-options">
-        <button v-for="m in moodOptions" :key="m.id" class="mood-btn" @click="checkMood(m.id)">
+        <button
+          v-for="m in moodOptions"
+          :key="m.id"
+          class="mood-btn"
+          :class="{ 'mood-btn--selected': selectedMood === m.id }"
+          @click="checkMood(m.id)"
+        >
           <Icon :icon="m.icon" class="app-icon app-icon--md app-icon--muted" />
           <span>{{ t(`home.mood_${m.id}`) }}</span>
         </button>
       </div>
+      <p v-if="selectedMood" class="post-session__mood-saved">
+        <Icon icon="lucide:check-circle-2" class="app-icon app-icon--sm" />
+        {{ t('home.mood_saved') }}
+      </p>
     </div>
 
     <!-- Suggestions -->
@@ -49,7 +59,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useProgressStore } from '@/stores/progress'
@@ -72,7 +82,10 @@ const suggestions = computed(() =>
     .slice(0, 3)
 )
 
+const selectedMood = ref(null)
+
 function checkMood(id) {
+  selectedMood.value = id
   moodStore.checkIn(id)
   uiStore.showToast(t('home.mood_saved'), 'success')
 }
@@ -102,9 +115,26 @@ function checkMood(id) {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
   padding: 12px 16px; border-radius: 14px;
   background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-  cursor: pointer; transition: all 200ms; font-size: 22px;
+  cursor: pointer; transition: all 200ms; font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-body); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
 }
+.mood-btn:hover { color: var(--text-primary); }
+.mood-btn--selected { color: var(--lime-400); }
 .mood-btn:hover { background: rgba(184,245,102,0.08); border-color: rgba(184,245,102,0.2); transform: translateY(-2px); }
+.mood-btn--selected {
+  background: rgba(184,245,102,0.15); border-color: rgba(184,245,102,0.5);
+  box-shadow: 0 0 20px rgba(184,245,102,0.2);
+}
+.mood-btn--selected .app-icon { color: var(--lime-400) !important; }
+.post-session__mood-saved {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+  font-size: 12px; font-weight: 700; color: var(--lime-400);
+  text-transform: uppercase; letter-spacing: 1px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 .post-session__streak {
   display: flex; align-items: center; gap: 12px;
   padding: 14px 24px; border: 1px solid rgba(184,245,102,0.15);

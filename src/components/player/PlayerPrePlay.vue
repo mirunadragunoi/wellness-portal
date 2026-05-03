@@ -44,7 +44,13 @@ const progressStore = useProgressStore()
 const isFavorite = computed(() => progressStore.isFavorite(props.session?.id))
 const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
 const coverStyle = computed(() => props.session?.thumbnail
-  ? { backgroundImage: `url("${props.session.thumbnail}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  ? {
+      backgroundImage: `url("${props.session.thumbnail}")`,
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundColor: 'var(--bg-muted)'
+    }
   : { background: props.session?.thumbnailGradient })
 const durationLabel = computed(() => {
   const m = Math.round((props.session?.duration || 0) / 60)

@@ -94,7 +94,6 @@ const filtered = computed(() => {
 })
 
 function playSession(session) {
-  playerStore.loadSession(session)
   router.push({ name: 'session', params: { id: session.id } })
 }
 </script>

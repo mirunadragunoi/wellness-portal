@@ -77,6 +77,7 @@ const allArticles = computed(() => {
       excerpt: p.descriptionShort || '',
       readTime: p.readTimeMinutes || 5,
       thumbnail: p.thumbnail,
+      banner: p.banner,
       thumbnailGradient: p.thumbnailGradient,
       content: p.descriptionLong || p.description,
       datePublished: null

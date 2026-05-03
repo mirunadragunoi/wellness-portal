@@ -6,19 +6,6 @@
         <p class="page-sub">{{ t('learn.subtitle') }}</p>
       </header>
 
-      <article v-if="featured" class="featured-article" @click="$router.push({ name: 'article', params: { slug: featured.slug } })">
-        <div class="feat-img-wrap" :style="{ background: featured.thumbnailGradient }"></div>
-        <div class="feat-body">
-          <div class="feat-tag-row">
-            <span class="feat-cat-badge">{{ featured.category }}</span>
-            <span class="feat-read-time">{{ featured.readTime }} min read</span>
-          </div>
-          <h2 class="feat-article-title">{{ featured.title }}</h2>
-          <p class="feat-excerpt">{{ featured.excerpt }}</p>
-          <span class="feat-read-btn">Read article</span>
-        </div>
-      </article>
-
       <div class="learn-controls">
         <div class="search-bar">
           <Icon icon="lucide:search" class="app-icon app-icon--sm search-icon" />
@@ -45,7 +32,7 @@
             class="article-card"
             @click="$router.push({ name: 'article', params: { slug: article.slug } })"
           >
-            <div class="article-img" :style="{ background: article.thumbnailGradient }" />
+            <div class="article-img" :style="thumbStyle(article)" />
             <div class="article-body">
               <div class="article-meta-row">
                 <span class="article-cat">{{ article.category }}</span>
@@ -101,13 +88,24 @@ const allArticles = computed(() => {
   if (api.length) return api.map(p => ({
     id: p.id, slug: String(p.id), category: p.category,
     title: p.title, excerpt: p.descriptionShort || '',
-    readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
+    readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, banner: p.banner, thumbnailGradient: p.thumbnailGradient,
     content: p.descriptionLong || p.description
   }))
   return mockArticles
 })
 
-const featured = computed(() => allArticles.value[0] || null)
+function thumbStyle(article) {
+  if (!article) return {}
+  const src = article.thumbnail || article.banner
+  return src
+    ? {
+        backgroundImage: `url("${src}")`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }
+    : { background: article.thumbnailGradient }
+}
 
 const filtered = computed(() => {
   let pool = activeCategory.value === 'all'
@@ -166,7 +164,7 @@ function toggleBookmark(id) {
 .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .article-card { background: var(--bg-glass); backdrop-filter: blur(16px); border: var(--border-glass); border-radius: 20px; overflow: hidden; cursor: pointer; transition: all 280ms var(--ease-out); }
 .article-card:hover { border-color: rgba(184,245,102,0.22); box-shadow: var(--glow-card-hover); transform: translateY(-3px); }
-.article-img { height: 180px; }
+.article-img { height: 260px; background-color: var(--forest-800); }
 .article-body { padding: 20px; }
 .article-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 .article-cat { padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: rgba(184,245,102,0.1); color: var(--lime-400); border: 1px solid rgba(184,245,102,0.2); }

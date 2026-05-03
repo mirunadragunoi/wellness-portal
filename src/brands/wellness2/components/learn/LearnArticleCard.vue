@@ -1,6 +1,6 @@
 <template>
   <RouterLink :to="{ name: 'article', params: { slug: article.slug } }" class="article-card">
-    <div class="article-card__img" :style="{ background: article.thumbnailGradient }">
+    <div class="article-card__img" :style="imgStyle">
       <span class="article-card__cat">{{ article.category }}</span>
     </div>
     <div class="article-card__body">
@@ -26,13 +26,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-defineProps({
+const props = defineProps({
   article:    { type: Object, required: true },
   bookmarked: { type: Boolean, default: false }
 })
 const emit = defineEmits(['bookmark'])
+
+const imgStyle = computed(() => {
+  const src = props.article.thumbnail || props.article.banner
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: props.article.thumbnailGradient }
+})
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <template>
   <div class="session-card" @click="emit('play', session)">
     <!-- Thumbnail -->
-    <div class="session-card__img" :style="{ background: session.thumbnailGradient }">
+    <div class="session-card__img" :style="imgStyle">
       <span class="session-card__badge" :style="badgeStyle">{{ session.category }}</span>
       <div class="session-card__play-overlay">
         <button type="button" class="play-btn" aria-label="Play" @click.stop="emit('play', session)">
@@ -50,6 +50,13 @@ const emit  = defineEmits(['play', 'favorite'])
 
 const progressStore = useProgressStore()
 const isFavorite = computed(() => progressStore.isFavorite(props.session.id))
+
+const imgStyle = computed(() => {
+  const src = props.session.thumbnail || props.session.banner
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: props.session.thumbnailGradient }
+})
 
 const categoryColors = {
   stress:      { bg: 'var(--sage-100)', color: '#1e40af' },

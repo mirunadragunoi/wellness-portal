@@ -16,6 +16,8 @@ function productToArticleVm(p) {
     category: p.category,
     readTime: p.readTimeMinutes || estimateReadMinutes(long),
     datePublished: dayjs(),
+    thumbnail: p.thumbnail,
+    banner: p.banner,
     thumbnailGradient: p.thumbnailGradient,
     content: formatArticleBody(long),
     _source: 'api'
@@ -77,6 +79,8 @@ export function useArticlePage() {
           readTime:
             p.readTimeMinutes ||
             estimateReadMinutes(p.descriptionLong || p.description || ''),
+          thumbnail: p.thumbnail,
+          banner: p.banner,
           thumbnailGradient: p.thumbnailGradient
         }))
     }

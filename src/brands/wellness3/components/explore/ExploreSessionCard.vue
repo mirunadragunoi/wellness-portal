@@ -11,10 +11,9 @@
       class="session-card__img"
       :style="{ background: session.thumbnailGradient || fallbackGradient }"
     >
-      <!-- Când adaugi imagini: setează session.imageUrl -->
       <img
-        v-if="session.imageUrl"
-        :src="session.imageUrl"
+        v-if="session.thumbnail"
+        :src="session.thumbnail"
         :alt="session.title"
         class="session-card__photo"
       />

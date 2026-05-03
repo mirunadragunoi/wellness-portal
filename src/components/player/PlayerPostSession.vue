@@ -19,11 +19,21 @@
     <div class="post-session__mood">
       <p class="post-session__mood-q">{{ t('player.post_mood_prompt') }}</p>
       <div class="mood-options">
-        <button v-for="m in moodOptions" :key="m.id" class="mood-btn" @click="checkMood(m.id)">
+        <button
+          v-for="m in moodOptions"
+          :key="m.id"
+          class="mood-btn"
+          :class="{ 'mood-btn--selected': selectedMood === m.id }"
+          @click="checkMood(m.id)"
+        >
           <Icon :icon="m.icon" class="app-icon app-icon--md app-icon--muted" />
           <span>{{ t(`home.mood_${m.id}`) }}</span>
         </button>
       </div>
+      <p v-if="selectedMood" class="post-session__mood-saved">
+        <Icon icon="lucide:check-circle-2" class="app-icon app-icon--sm" />
+        {{ t('home.mood_saved') }}
+      </p>
     </div>
 
     <!-- Suggestions -->
@@ -49,7 +59,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useProgressStore } from '@/stores/progress'
@@ -72,7 +82,10 @@ const suggestions = computed(() =>
     .slice(0, 3)
 )
 
+const selectedMood = ref(null)
+
 function checkMood(id) {
+  selectedMood.value = id
   moodStore.checkIn(id)
   uiStore.showToast(t('home.mood_saved'), 'success')
 }
@@ -114,6 +127,17 @@ function checkMood(id) {
 }
 .mood-btn > span:first-child { font-size: 24px; }
 .mood-btn:hover { border-color: var(--sky-300); background: var(--sky-50); transform: translateY(-2px); }
+.mood-btn--selected {
+  border-color: var(--sky-500); background: var(--sky-100); color: var(--sky-700);
+  box-shadow: 0 4px 14px rgba(14,165,233,0.18);
+}
+.mood-btn--selected .app-icon { color: var(--sky-600) !important; }
+.post-session__mood-saved {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+  font-size: 13px; font-weight: 500; color: #059669;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
 .post-session__suggestions-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; margin-bottom: 16px; }
 .suggestions-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }

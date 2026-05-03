@@ -70,7 +70,6 @@ function getBadgeStyle(cat) {
 }
 
 function goToSession(session) {
-  player.loadSession(session)
   router.push({ name: 'session', params: { id: session.id } })
 }
 </script>

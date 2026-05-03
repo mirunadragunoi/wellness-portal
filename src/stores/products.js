@@ -55,6 +55,7 @@ export function mapProduct(p) {
     duration: 0,
     level: 'all',
     thumbnail: p.icon_large || p.icon_small || null,
+    banner: p.banner_large || p.banner_medium || p.banner_small || p.icon_large || p.icon_small || null,
     thumbnailGradient: getGradient(p.id),
     audioUrl: p.url || null,
     rating: p.rating_points,

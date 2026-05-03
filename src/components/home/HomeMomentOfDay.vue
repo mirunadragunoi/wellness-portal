@@ -28,7 +28,6 @@ const { session, label } = useMomentOfDay()
 
 function goToSession() {
   if (!session.value) return
-  player.loadSession(session.value)
   router.push({ name: 'session', params: { id: session.value.id } })
 }
 </script>

@@ -6,6 +6,7 @@ import { useProgressStore } from '@/stores/progress'
 let howl = null
 let ticker = null
 let mode = 'idle'
+let loadedSessionId = null
 let watcherInstalled = false
 
 export function useAudioPlayer() {
@@ -20,8 +21,12 @@ export function useAudioPlayer() {
   }
 
   function load(session) {
+    if (loadedSessionId !== null && String(loadedSessionId) === String(session.id) && (howl || mode === 'sim')) {
+      return
+    }
     destroy()
     playerStore.loadSession(session)
+    loadedSessionId = session.id
 
     if (!session.audioUrl) {
       mode = 'sim'
@@ -147,6 +152,7 @@ export function useAudioPlayer() {
       howl = null
     }
     mode = 'idle'
+    loadedSessionId = null
   }
 
   return {

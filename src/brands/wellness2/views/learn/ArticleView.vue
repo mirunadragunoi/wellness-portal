@@ -14,7 +14,7 @@
         <!-- Article -->
         <article class="article-content">
           <!-- Cover -->
-          <div class="article-content__cover" :style="{ background: article.thumbnailGradient }">
+          <div class="article-content__cover" :style="coverStyle(article)">
             <span class="article-content__cat">{{ article.category }}</span>
           </div>
 
@@ -74,7 +74,7 @@
               :to="{ name: 'article', params: { slug: rel.slug } }"
               class="related-item"
             >
-              <div class="related-item__img" :style="{ background: rel.thumbnailGradient }" />
+              <div class="related-item__img" :style="relStyle(rel)" />
               <div class="related-item__info">
                 <p class="related-item__title">{{ rel.title }}</p>
                 <p class="related-item__time">{{ t('learn.read_time', { n: rel.readTime }) }}</p>
@@ -107,6 +107,25 @@ const { article, related, loading } = useArticlePage()
 const isBookmarked = ref(false)
 
 const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
+
+function coverStyle(a) {
+  const src = a.thumbnail || a.banner
+  return src
+    ? {
+        backgroundImage: `url("${src}")`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }
+    : { background: a.thumbnailGradient }
+}
+
+function relStyle(r) {
+  const src = r.thumbnail || r.banner
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
+    : { background: r.thumbnailGradient }
+}
 </script>
 
 <style scoped>
@@ -124,11 +143,12 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 
 .article-content { max-width: 720px; margin: 0 auto; padding: 0 var(--container-pad) 80px; }
 .article-content__cover {
-  height: 320px; border-radius: var(--radius-lg);
+  height: 420px; border-radius: var(--radius-lg);
   display: flex; align-items: flex-end;
   padding: 24px; margin-bottom: 36px;
   border: 2px solid var(--ink-200);
   box-shadow: 6px 6px 0 var(--ink-200);
+  background-color: var(--forest-800);
 }
 .article-content__tag {
   display: inline-block; padding: 5px 12px;
@@ -173,17 +193,38 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 .article-content__body strong { font-weight: 700; color: var(--ink-900); }
 .article-content__body em { font-style: italic; color: var(--sage-600); }
 
-.article-related { max-width: 720px; margin: 0 auto; padding: 0 var(--container-pad) 80px; }
-.article-related__title { font-family: var(--font-display); font-size: 26px; font-weight: 300; color: var(--ink-900); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--ink-200); }
-.article-related__grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 16px; }
-.related-item { text-decoration: none; display: flex; flex-direction: column; gap: 10px; cursor: pointer; }
-.related-item__img {
-  height: 120px; border-radius: var(--radius);
-  border: 2px solid var(--ink-100); transition: all var(--duration-normal);
+.article-sidebar { max-width: 720px; margin: 36px auto 0; padding: 0 var(--container-pad); display: flex; flex-direction: column; gap: 24px; }
+.article-sidebar__card {
+  background: rgba(13,31,18,0.6); backdrop-filter: blur(16px);
+  border: 1px solid rgba(184,245,102,0.18); border-radius: var(--radius-lg); padding: 24px;
 }
-.related-item:hover .related-item__img { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--ink-200); }
-.related-item__cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--sage-500); }
-.related-item__title { font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--ink-900); line-height: 1.4; }
+.article-sidebar__title { font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.5px; }
+.article-sidebar__body { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+.article-sidebar__btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 22px; border-radius: 999px;
+  background: var(--lime-500); color: var(--forest-900);
+  font-size: 13px; font-weight: 700; text-decoration: none;
+  transition: all 200ms;
+}
+.article-sidebar__btn:hover { background: var(--lime-400); box-shadow: 0 0 24px rgba(184,245,102,0.3); }
+
+.article-sidebar__related-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--lime-500); margin-bottom: 12px; }
+.related-item {
+  display: flex; flex-direction: row; align-items: center; gap: 12px;
+  padding: 10px; margin-bottom: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; text-decoration: none;
+  transition: all 200ms;
+}
+.related-item:hover { border-color: rgba(184,245,102,0.25); transform: translateX(3px); }
+.related-item__img {
+  width: 60px; height: 60px; border-radius: 8px; flex-shrink: 0;
+  background-color: var(--forest-800);
+}
+.related-item__info { flex: 1; min-width: 0; }
+.related-item__title { font-size: 13px; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin-bottom: 4px; font-family: var(--font-display); letter-spacing: -0.2px; }
+.related-item__time { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
 
 .article-404 { text-align: center; padding: 80px 20px; color: var(--text-secondary); }
 </style>
