@@ -100,9 +100,9 @@ const allArticles = computed(() => {
   const api = productsStore.articles
   if (api.length) return api.map(p => ({
     id: p.id, slug: String(p.id), category: p.category,
-    title: p.title, excerpt: p.descriptionShort || p.description,
-    readTime: 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
-    content: p.description
+    title: p.title, excerpt: p.descriptionShort || '',
+    readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
+    content: p.descriptionLong || p.description
   }))
   return mockArticles
 })

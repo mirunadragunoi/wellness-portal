@@ -45,7 +45,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProductsStore } from '@/stores/products'
-import { articles as mockArticles, getArticlesByCategory } from '@/data/articles'
+import { articles as mockArticles } from '@/data/articles'
 import ExploreSearch    from '@/components/explore/ExploreSearch.vue'
 import LearnArticleCard from '@/components/learn/LearnArticleCard.vue'
 
@@ -74,11 +74,11 @@ const allArticles = computed(() => {
       slug: String(p.id),
       category: p.category,
       title: p.title,
-      excerpt: p.descriptionShort || p.description,
-      readTime: 5,
+      excerpt: p.descriptionShort || '',
+      readTime: p.readTimeMinutes || 5,
       thumbnail: p.thumbnail,
       thumbnailGradient: p.thumbnailGradient,
-      content: p.description,
+      content: p.descriptionLong || p.description,
       datePublished: null
     }))
   }

@@ -6,7 +6,11 @@
         {{ t('learn.title') }}
       </RouterLink>
 
-      <div v-if="article" class="article-view__layout">
+      <div v-if="loading" class="article-view__loading" aria-busy="true">
+        <span class="article-view__loading-dot" />
+      </div>
+
+      <div v-else-if="article" class="article-view__layout">
         <!-- Article -->
         <article class="article-content">
           <!-- Cover -->
@@ -81,7 +85,7 @@
       </div>
 
       <!-- 404 -->
-      <div v-else class="article-view__not-found">
+      <div v-else-if="!loading" class="article-view__not-found">
         <p>Article not found.</p>
         <RouterLink to="/learn" class="article-view__back article-view__back--center">
           <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
@@ -93,22 +97,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getArticleBySlug, articles } from '@/data/articles'
+import { useArticlePage } from '@/composables/useArticlePage'
 import dayjs from 'dayjs'
 
-const { t }     = useI18n()
-const route     = useRoute()
-const article   = computed(() => getArticleBySlug(route.params.slug))
+const { t } = useI18n()
+const { article, related, loading } = useArticlePage()
 const isBookmarked = ref(false)
-
-const related = computed(() =>
-  articles
-    .filter(a => a.slug !== route.params.slug)
-    .slice(0, 3)
-)
 
 const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 </script>
@@ -183,6 +179,26 @@ const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 :deep(.prose p) {
   font-size: 17px; line-height: 1.8; color: var(--text-secondary);
   margin-bottom: 20px;
+}
+:deep(.prose ol.article-reflect) {
+  margin: 8px 0 28px;
+  padding-left: 1.35em;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+:deep(.prose ol.article-reflect li) { margin-bottom: 14px; }
+
+.article-view__loading {
+  display: flex; justify-content: center; padding: 120px 20px;
+}
+.article-view__loading-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--sky-400);
+  animation: article-pulse 0.9s ease-in-out infinite alternate;
+}
+@keyframes article-pulse {
+  to { opacity: 0.35; transform: scale(0.85); }
 }
 
 .article-content__footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border-subtle); }

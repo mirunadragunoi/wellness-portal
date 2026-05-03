@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
+import { estimateReadMinutes } from '@/utils/articleContent'
 
 const GRADIENTS = [
   'linear-gradient(135deg, #bae6fd, #93c5fd)',
@@ -18,15 +19,14 @@ function getGradient(id) {
   return GRADIENTS[n % GRADIENTS.length]
 }
 
-// Numeric backend product type → frontend string type
-// Adjust these values to match your backend's product type definitions
+// Numeric store.product.type → frontend string type (must match your DB)
 const TYPE_MAP = {
   1: 'meditation',
   2: 'sleep',
-  3: 'breathing',
-  4: 'article',
+  3: 'article', // DB: text articles (Learn)
+  4: 'breathing',
   5: 'focus',
-  6: 'energy'
+  6: 'meditation' // DB: MP3 / guided audio — same bucket as meditation in Explore + player
 }
 
 const CATEGORY_KEYWORDS = ['stress', 'sleep', 'focus', 'anxiety', 'mindfulness', 'energy', 'relax', 'calm']
@@ -36,14 +36,21 @@ export function mapProduct(p) {
   const codeLC = (p.code || '').toLowerCase()
   const titleLC = (p.title || '').toLowerCase()
   const category = CATEGORY_KEYWORDS.find(c => codeLC.includes(c) || titleLC.includes(c)) || type
+  const descriptionLong = p.description_long || ''
+  const descriptionShort = p.description_short || ''
 
   return {
     id: p.id,
     type,
     category,
     title: p.title,
-    description: p.description_long || p.description_short || '',
-    descriptionShort: p.description_short || '',
+    description: descriptionLong || descriptionShort || '',
+    descriptionShort,
+    descriptionLong,
+    readTimeMinutes:
+      type === 'article'
+        ? estimateReadMinutes(descriptionLong || descriptionShort)
+        : 0,
     instructions: p.instructions || '',
     duration: 0,
     level: 'all',

@@ -25,7 +25,15 @@
 
       <Transition name="fade" mode="out-in">
         <div v-if="filtered.length" class="learn-grid" :key="activeCategory + query">
-          <article v-for="article in filtered" :key="article.id" class="learn-card">
+          <article
+            v-for="article in filtered"
+            :key="article.id"
+            class="learn-card learn-card--clickable"
+            role="link"
+            tabindex="0"
+            @click="goArticle(article.slug)"
+            @keydown.enter.prevent="goArticle(article.slug)"
+          >
             <div class="learn-card__thumb" :style="{ background: article.thumbnailGradient }">
               <span>{{ article.readTime }} min read</span>
             </div>
@@ -47,12 +55,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { articles as mockArticles, getArticlesByCategory } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
 import ExploreSearch from '@/components/explore/ExploreSearch.vue'
 
 const { t }          = useI18n()
+const router         = useRouter()
 const productsStore  = useProductsStore()
 
 const query          = ref('')
@@ -75,9 +85,9 @@ const allArticles = computed(() => {
   const api = productsStore.articles
   if (api.length) return api.map(p => ({
     id: p.id, slug: String(p.id), category: p.category,
-    title: p.title, excerpt: p.descriptionShort || p.description,
-    readTime: 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
-    content: p.description
+    title: p.title, excerpt: p.descriptionShort || '',
+    readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, thumbnailGradient: p.thumbnailGradient,
+    content: p.descriptionLong || p.description
   }))
   return mockArticles
 })
@@ -95,6 +105,10 @@ const filtered = computed(() => {
   }
   return pool
 })
+
+function goArticle(slug) {
+  router.push({ name: 'article', params: { slug } })
+}
 
 </script>
 
@@ -164,6 +178,18 @@ const filtered = computed(() => {
   border-radius: var(--r-lg);
   overflow: hidden;
   backdrop-filter: blur(16px);
+}
+.learn-card--clickable {
+  cursor: pointer;
+  transition: border-color var(--duration-fast), transform var(--duration-fast);
+}
+.learn-card--clickable:hover {
+  border-color: rgba(167, 139, 250, 0.45);
+  transform: translateY(-2px);
+}
+.learn-card--clickable:focus-visible {
+  outline: 2px solid rgba(167, 139, 250, 0.8);
+  outline-offset: 2px;
 }
 .learn-card__thumb {
   height: 120px;
