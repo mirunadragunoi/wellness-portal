@@ -42,9 +42,22 @@
               <p class="article-excerpt">{{ article.excerpt }}</p>
               <div class="article-footer">
                 <span class="article-read-link">Read</span>
-                <button class="article-bookmark" @click.stop="toggleBookmark(article.id)">
-                  <Icon :icon="bookmarks.has(article.id) ? 'lucide:bookmark-check' : 'lucide:bookmark'" class="app-icon app-icon--sm" />
-                </button>
+                <div class="article-actions">
+                  <a
+                    v-if="article.downloadUrl"
+                    class="article-download-link"
+                    :href="article.downloadUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                    @click.stop
+                  >
+                    Download PDF
+                  </a>
+                  <button class="article-bookmark" @click.stop="toggleBookmark(article.id)">
+                    <Icon :icon="bookmarks.has(article.id) ? 'lucide:bookmark-check' : 'lucide:bookmark'" class="app-icon app-icon--sm" />
+                  </button>
+                </div>
               </div>
             </div>
           </article>
@@ -61,7 +74,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { articles as mockArticles, getArticlesByCategory } from '@/data/articles'
+import { articles as mockArticles } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
 
 const { t }          = useI18n()
@@ -89,7 +102,8 @@ const allArticles = computed(() => {
     id: p.id, slug: String(p.id), category: p.category,
     title: p.title, excerpt: p.descriptionShort || '',
     readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, banner: p.banner, thumbnailGradient: p.thumbnailGradient,
-    content: p.descriptionLong || p.description
+    content: p.descriptionLong || p.description,
+    downloadUrl: p.downloadUrl || null
   }))
   return mockArticles
 })
@@ -108,9 +122,18 @@ function thumbStyle(article) {
 }
 
 const filtered = computed(() => {
-  let pool = activeCategory.value === 'all'
-    ? allArticles.value
-    : allArticles.value.filter(a => a.category === activeCategory.value)
+  const tabKeywords = {
+    stress: ['stress'],
+    sleep: ['sleep'],
+    focus: ['focus'],
+    habits: ['habit', 'routine'],
+    mindfulness: ['mindfulness', 'mindful']
+  }
+  let pool = allArticles.value
+  if (activeCategory.value !== 'all') {
+    const keys = tabKeywords[activeCategory.value] || [activeCategory.value]
+    pool = pool.filter(a => keys.some(k => (a.title || '').toLowerCase().includes(k)))
+  }
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(a =>
@@ -172,7 +195,15 @@ function toggleBookmark(id) {
 .article-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.25; margin-bottom: 8px; }
 .article-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; }
 .article-footer { display: flex; align-items: center; justify-content: space-between; }
+.article-actions { display: flex; align-items: center; gap: 10px; }
 .article-read-link { font-size: 13px; font-weight: 700; color: var(--lime-500); }
+.article-download-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lime-400);
+  text-decoration: none;
+}
+.article-download-link:hover { text-decoration: underline; }
 .article-bookmark { border: none; background: transparent; color: var(--text-muted); cursor: pointer; }
 
 .learn-view__empty {

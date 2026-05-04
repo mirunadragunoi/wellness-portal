@@ -19,6 +19,7 @@ function productToArticleVm(p) {
     thumbnail: p.thumbnail,
     banner: p.banner,
     thumbnailGradient: p.thumbnailGradient,
+    downloadUrl: p.downloadUrl || null,
     content: formatArticleBody(long),
     _source: 'api'
   }
@@ -27,6 +28,7 @@ function productToArticleVm(p) {
 function mockToArticleVm(a) {
   return {
     ...a,
+    downloadUrl: a.downloadUrl || null,
     content: formatArticleBody(a.content),
     _source: 'mock'
   }

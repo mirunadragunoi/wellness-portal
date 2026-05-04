@@ -19,6 +19,16 @@
           </RouterLink>
         </li>
         <li>
+          <RouterLink to="/practice" class="nav-link" :class="{ active: route.name === 'practice' || route.name === 'practice-video' }">
+            {{ t('nav.practice') }}
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/listen" class="nav-link" :class="{ active: route.name === 'listen' }">
+            {{ t('nav.listen') }}
+          </RouterLink>
+        </li>
+        <li>
           <RouterLink to="/learn" class="nav-link" :class="{ active: route.name === 'learn' }">
             {{ t('nav.learn') }}
           </RouterLink>

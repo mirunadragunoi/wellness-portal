@@ -11,6 +11,8 @@
     "login": "Log in",
     "cta": "Start Your Journey",
     "home": "Home",
+    "practice": "Practice",
+    "listen": "Listen",
     "progress": "Progress",
     "profile": "Profile",
     "sos": "SOS"
@@ -260,6 +262,17 @@
     "browse_sessions": "Browse sessions",
     "back_to_learn": "Back to Learn",
     "no_results": "No articles found."
+  },
+  "practice": {
+    "title": "Practice",
+    "subtitle": "Yoga and movement sessions with integrated video playback.",
+    "empty": "No yoga videos are available yet for your portal.",
+    "no_description": "Choose a practice from the list to start your session."
+  },
+  "listen": {
+    "title": "Listen",
+    "subtitle": "Calm radio channels and ambient audio will be available here.",
+    "coming_soon": "Coming soon: curated Calm Radio streams."
   },
   "progress": {
     "title": "Your Progress",

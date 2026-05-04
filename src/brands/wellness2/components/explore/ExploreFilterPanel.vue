@@ -16,13 +16,6 @@
         <BaseChip v-for="o in durationOptions" :key="o.id" small :active="filters.duration === o.id" @click="set('duration', o.id)">{{ t(o.key) }}</BaseChip>
       </div>
     </div>
-    <!-- Sort -->
-    <div class="filter-group">
-      <span class="filter-group__label">{{ t('explore.filter_sort') }}</span>
-      <div class="filter-group__chips">
-        <BaseChip v-for="o in sortOptions" :key="o.id" small :active="filters.sort === o.id" @click="set('sort', o.id)">{{ t(o.key) }}</BaseChip>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -35,10 +28,7 @@ const emit  = defineEmits(['update:filters'])
 
 const typeOptions     = [
   { id: 'meditation',  key: 'explore.type_meditation' },
-  { id: 'breathing',   key: 'explore.type_breathing'  },
-  { id: 'sleep-story', key: 'explore.type_sleep'      },
-  { id: 'soundscape',  key: 'explore.type_soundscape' },
-  { id: 'motivational',key: 'explore.type_motivational'}
+  { id: 'soundscape',  key: 'explore.type_soundscape' }
 ]
 const durationOptions = [
   { id: '1-5',   key: 'explore.dur_1_5'   },
@@ -46,12 +36,6 @@ const durationOptions = [
   { id: '10-20', key: 'explore.dur_10_20' },
   { id: '20+',   key: 'explore.dur_20plus'}
 ]
-const sortOptions     = [
-  { id: 'popular',     key: 'explore.sort_popular'     },
-  { id: 'newest',      key: 'explore.sort_newest'      },
-  { id: 'recommended', key: 'explore.sort_recommended' }
-]
-
 function set(key, val) {
   emit('update:filters', { ...props.filters, [key]: val })
 }

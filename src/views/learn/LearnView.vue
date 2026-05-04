@@ -80,6 +80,7 @@ const allArticles = computed(() => {
       banner: p.banner,
       thumbnailGradient: p.thumbnailGradient,
       content: p.descriptionLong || p.description,
+      downloadUrl: p.downloadUrl || null,
       datePublished: null
     }))
   }
@@ -87,9 +88,18 @@ const allArticles = computed(() => {
 })
 
 const filtered = computed(() => {
-  let pool = activeCategory.value === 'all'
-    ? allArticles.value
-    : allArticles.value.filter(a => a.category === activeCategory.value)
+  const tabKeywords = {
+    stress: ['stress'],
+    sleep: ['sleep'],
+    focus: ['focus'],
+    habits: ['habit', 'routine'],
+    mindfulness: ['mindfulness', 'mindful']
+  }
+  let pool = allArticles.value
+  if (activeCategory.value !== 'all') {
+    const keys = tabKeywords[activeCategory.value] || [activeCategory.value]
+    pool = pool.filter(a => keys.some(k => (a.title || '').toLowerCase().includes(k)))
+  }
 
   if (query.value.trim()) {
     const q = query.value.toLowerCase()

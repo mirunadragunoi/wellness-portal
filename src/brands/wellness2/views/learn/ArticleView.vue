@@ -23,6 +23,16 @@
             <span class="article-content__time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
             <span class="article-content__dot">·</span>
             <span class="article-content__date">{{ formatDate(article.datePublished) }}</span>
+            <a
+              v-if="article.downloadUrl"
+              class="article-content__download"
+              :href="article.downloadUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              Download PDF
+            </a>
             <button
               type="button"
               class="article-content__bookmark"
@@ -164,6 +174,14 @@ function relStyle(r) {
 .article-content__meta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
 .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); font-weight: 500; }
 .meta-divider { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-200); }
+.article-content__download {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sage-700);
+  text-decoration: none;
+}
+.article-content__download:hover { text-decoration: underline; }
 .article-content__excerpt {
   font-family: var(--font-display); font-size: 18px; font-style: italic;
   color: var(--text-secondary); line-height: 1.7; margin-bottom: 36px;

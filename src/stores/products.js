@@ -25,7 +25,7 @@ const TYPE_MAP = {
   2: 'sleep',
   3: 'article', // DB: text articles (Learn)
   4: 'breathing',
-  5: 'focus',
+  5: 'practice', // DB: yoga / video practice
   6: 'meditation' // DB: MP3 / guided audio — same bucket as meditation in Explore + player
 }
 
@@ -41,6 +41,7 @@ export function mapProduct(p) {
 
   return {
     id: p.id,
+    rawType: p.type,
     type,
     category,
     title: p.title,
@@ -58,6 +59,8 @@ export function mapProduct(p) {
     banner: p.banner_large || p.banner_medium || p.banner_small || p.icon_large || p.icon_small || null,
     thumbnailGradient: getGradient(p.id),
     audioUrl: p.url || null,
+    videoPresentation: p.video_presentation || null,
+    downloadUrl: type === 'article' ? (p.pdf_url || p.url || null) : null,
     rating: p.rating_points,
     ratingCount: p.rating_count,
     code: p.code,

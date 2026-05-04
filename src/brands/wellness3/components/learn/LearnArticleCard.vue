@@ -8,18 +8,31 @@
       <p class="article-card__excerpt">{{ article.excerpt }}</p>
       <div class="article-card__meta">
         <span class="article-card__time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
-        <button
-          type="button"
-          class="article-card__bookmark"
-          :class="{ active: bookmarked }"
-          :aria-label="bookmarked ? t('learn.bookmarked') : t('learn.bookmark')"
-          @click.prevent="emit('bookmark', article.id)"
-        >
-          <Icon
-            :icon="bookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'"
-            class="app-icon app-icon--md"
-          />
-        </button>
+        <div class="article-card__actions">
+          <a
+            v-if="article.downloadUrl"
+            class="article-card__download"
+            :href="article.downloadUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            @click.stop
+          >
+            Download PDF
+          </a>
+          <button
+            type="button"
+            class="article-card__bookmark"
+            :class="{ active: bookmarked }"
+            :aria-label="bookmarked ? t('learn.bookmarked') : t('learn.bookmark')"
+            @click.prevent="emit('bookmark', article.id)"
+          >
+            <Icon
+              :icon="bookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'"
+              class="app-icon app-icon--md"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </RouterLink>
@@ -68,7 +81,15 @@ const imgStyle = computed(() => {
 }
 .article-card__excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
 .article-card__meta { display: flex; align-items: center; justify-content: space-between; }
+.article-card__actions { display: flex; align-items: center; gap: 10px; }
 .article-card__time { font-size: 13px; color: var(--text-muted); }
+.article-card__download {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sky-700);
+  text-decoration: none;
+}
+.article-card__download:hover { text-decoration: underline; }
 .article-card__bookmark {
   background: none; border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;

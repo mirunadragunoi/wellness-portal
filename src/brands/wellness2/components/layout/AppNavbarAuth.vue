@@ -16,6 +16,12 @@
           <RouterLink to="/explore"  class="nav-tab" active-class="nav-tab--active">{{ t('nav.explore') }}</RouterLink>
         </li>
         <li>
+          <RouterLink to="/practice" class="nav-tab" active-class="nav-tab--active">{{ t('nav.practice') }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/listen"   class="nav-tab" active-class="nav-tab--active">{{ t('nav.listen') }}</RouterLink>
+        </li>
+        <li>
           <RouterLink to="/learn"    class="nav-tab" active-class="nav-tab--active">{{ t('nav.learn') }}</RouterLink>
         </li>
         <li>
@@ -49,6 +55,8 @@
       <div v-if="open" class="navbar-auth__drawer">
         <RouterLink to="/home"     class="drawer__link" @click="open=false">{{ t('nav.home') }}</RouterLink>
         <RouterLink to="/explore"  class="drawer__link" @click="open=false">{{ t('nav.explore') }}</RouterLink>
+        <RouterLink to="/practice" class="drawer__link" @click="open=false">{{ t('nav.practice') }}</RouterLink>
+        <RouterLink to="/listen"   class="drawer__link" @click="open=false">{{ t('nav.listen') }}</RouterLink>
         <RouterLink to="/learn"    class="drawer__link" @click="open=false">{{ t('nav.learn') }}</RouterLink>
         <RouterLink to="/progress" class="drawer__link" @click="open=false">{{ t('nav.progress') }}</RouterLink>
         <hr class="drawer__rule" />
