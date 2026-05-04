@@ -15,7 +15,17 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           />
-          <video v-else class="practice-video-view__video" controls playsinline :src="videoUrl" />
+          <video
+            v-else
+            ref="nativeVideoRef"
+            class="practice-video-view__video"
+            controls
+            playsinline
+            :src="videoUrl"
+            @loadedmetadata="onNativeVideoMeta"
+            @play="onNativeVideoPlay"
+            @ended="onNativeVideoEnded"
+          />
         </div>
         <h1 class="practice-video-view__title">{{ item.title }}</h1>
         <p class="practice-video-view__description">{{ item.descriptionShort || t('practice.no_description') }}</p>
@@ -34,12 +44,16 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '@/stores/products'
+import { useNativePracticeVideoProgress } from '@/composables/useNativePracticeVideoProgress'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const productsStore = useProductsStore()
 const item = ref(null)
+const nativeVideoRef = ref(null)
+const { onLoadedMetadata: onNativeVideoMeta, onPlay: onNativeVideoPlay, onEnded: onNativeVideoEnded } =
+  useNativePracticeVideoProgress(item, nativeVideoRef)
 
 onMounted(async () => {
   if (!productsStore.loaded) await productsStore.fetchProducts()

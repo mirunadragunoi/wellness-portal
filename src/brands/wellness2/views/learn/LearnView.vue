@@ -76,6 +76,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { articles as mockArticles } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t }          = useI18n()
 const productsStore  = useProductsStore()
@@ -110,15 +111,11 @@ const allArticles = computed(() => {
 
 function thumbStyle(article) {
   if (!article) return {}
-  const src = article.thumbnail || article.banner
-  return src
-    ? {
-        backgroundImage: `url("${src}")`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    : { background: article.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(article.thumbnail || article.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--forest-700)'
+  })
+  return Object.keys(img).length ? img : { background: article.thumbnailGradient }
 }
 
 const filtered = computed(() => {

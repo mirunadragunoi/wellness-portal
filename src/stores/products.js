@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
 import { estimateReadMinutes } from '@/utils/articleContent'
+import { hydrateClientMediaDurations } from '@/utils/audioDuration'
+import { coalesceProductImageUrl, normalizeProductImageUrl } from '@/utils/productImageUrl'
 
 const GRADIENTS = [
   'linear-gradient(135deg, #bae6fd, #93c5fd)',
@@ -31,6 +33,19 @@ const TYPE_MAP = {
 
 const CATEGORY_KEYWORDS = ['stress', 'sleep', 'focus', 'anxiety', 'mindfulness', 'energy', 'relax', 'calm']
 
+/** Parse track length from API (seconds). Backend should expose e.g. duration_seconds on product JSON. */
+function productDurationSeconds(p) {
+  const raw =
+    p.duration_seconds ??
+    p.duration ??
+    p.audio_duration_seconds ??
+    p.length_seconds
+  if (raw == null || raw === '') return 0
+  const n = Number(raw)
+  if (!Number.isFinite(n) || n < 0) return 0
+  return Math.round(n)
+}
+
 export function mapProduct(p) {
   const type = TYPE_MAP[p.type] || 'meditation'
   const codeLC = (p.code || '').toLowerCase()
@@ -38,6 +53,20 @@ export function mapProduct(p) {
   const category = CATEGORY_KEYWORDS.find(c => codeLC.includes(c) || titleLC.includes(c)) || type
   const descriptionLong = p.description_long || ''
   const descriptionShort = p.description_short || ''
+
+  const durationSec = productDurationSeconds(p)
+
+  // Prefer icon_small when present (many catalogs only fill small assets); skip junk placeholders.
+  const thumbRaw = coalesceProductImageUrl(p, [
+    'icon_small', 'iconSmall', 'icon_large', 'iconLarge',
+    'banner_small', 'bannerSmall', 'banner_medium', 'bannerMedium',
+    'banner_large', 'bannerLarge'
+  ])
+  const bannerRaw = coalesceProductImageUrl(p, [
+    'banner_large', 'bannerLarge', 'banner_medium', 'bannerMedium',
+    'banner_small', 'bannerSmall',
+    'icon_large', 'iconLarge', 'icon_small', 'iconSmall'
+  ])
 
   return {
     id: p.id,
@@ -53,10 +82,10 @@ export function mapProduct(p) {
         ? estimateReadMinutes(descriptionLong || descriptionShort)
         : 0,
     instructions: p.instructions || '',
-    duration: 0,
+    duration: durationSec,
     level: 'all',
-    thumbnail: p.icon_large || p.icon_small || null,
-    banner: p.banner_large || p.banner_medium || p.banner_small || p.icon_large || p.icon_small || null,
+    thumbnail: normalizeProductImageUrl(thumbRaw),
+    banner: normalizeProductImageUrl(bannerRaw),
     thumbnailGradient: getGradient(p.id),
     audioUrl: p.url || null,
     videoPresentation: p.video_presentation || null,
@@ -92,6 +121,7 @@ export const useProductsStore = defineStore('products', {
         const data = await api.getProducts(auth.accessCode, language)
         this.items = (data.data || []).map(mapProduct)
         this.loaded = true
+        void hydrateClientMediaDurations(this.items)
       } finally {
         this.loading = false
       }
@@ -104,6 +134,7 @@ export const useProductsStore = defineStore('products', {
       const idx = this.items.findIndex(p => String(p.id) === String(mapped.id))
       if (idx >= 0) this.items[idx] = mapped
       else this.items.push(mapped)
+      void hydrateClientMediaDurations([mapped])
       return mapped
     }
   }

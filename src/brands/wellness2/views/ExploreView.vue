@@ -82,6 +82,7 @@ import { useRouter } from 'vue-router'
 import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -139,10 +140,8 @@ function playSession(session) {
 }
 
 function thumbStyle(s) {
-  const src = s.thumbnail || s.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: s.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
+  return Object.keys(img).length ? img : { background: s.thumbnailGradient }
 }
 </script>
 

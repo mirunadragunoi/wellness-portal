@@ -71,6 +71,7 @@ import { useI18n } from 'vue-i18n'
 import { articles as mockArticles } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
 import ExploreSearch from '@/components/explore/ExploreSearch.vue'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -128,15 +129,11 @@ const filtered = computed(() => {
 })
 
 function thumbStyle(article) {
-  const src = article.thumbnail || article.banner
-  return src
-    ? {
-        backgroundImage: `url("${src}")`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    : { background: article.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(article.thumbnail || article.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--bg-muted)'
+  })
+  return Object.keys(img).length ? img : { background: article.thumbnailGradient }
 }
 
 function goArticle(slug) {

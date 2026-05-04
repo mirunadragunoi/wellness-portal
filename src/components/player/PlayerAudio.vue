@@ -7,7 +7,7 @@
     <div class="audio-player__inner">
       <!-- Cover art -->
       <div class="audio-player__cover" :style="coverStyle">
-        <Icon v-if="!session?.thumbnail" :icon="coverIcon" class="audio-player__cover-icon app-icon app-icon--3xl" />
+        <Icon v-if="!hasCoverImage" :icon="coverIcon" class="audio-player__cover-icon app-icon app-icon--3xl" />
       </div>
 
       <!-- Track info -->
@@ -60,6 +60,7 @@ import { ref, computed } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import { sessionTypeIcon } from '@/constants/appIcons'
+import { cssBackgroundFromImageUrl, sessionHasCoverImage } from '@/utils/productImageUrl'
 
 const props = defineProps({ session: Object })
 const playerStore  = usePlayerStore()
@@ -67,14 +68,18 @@ const { toggle, seek, skipBack, skipForward, setVolume } = useAudioPlayer()
 const progressRef  = ref(null)
 
 const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
-const coverStyle = computed(() => props.session?.thumbnail
-  ? { backgroundImage: `url("${props.session.thumbnail}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-  : { background: props.session?.thumbnailGradient })
+const hasCoverImage = computed(() => sessionHasCoverImage(props.session))
+const coverStyle = computed(() => {
+  const s = props.session
+  if (!s) return {}
+  const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
+  return Object.keys(img).length ? img : { background: s.thumbnailGradient }
+})
 const bgStyle = computed(() => {
-  const src = props.session?.banner || props.session?.thumbnail
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: props.session?.thumbnailGradient }
+  const s = props.session
+  if (!s) return {}
+  const img = cssBackgroundFromImageUrl(s.banner || s.thumbnail, { size: 'cover' })
+  return Object.keys(img).length ? img : { background: s.thumbnailGradient }
 })
 
 const volumeIcon = computed(() => {

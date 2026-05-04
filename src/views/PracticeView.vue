@@ -15,6 +15,7 @@
         >
           <div class="practice-card__thumb" :style="thumbStyle(item)">
             <span class="practice-card__badge">{{ item.category }}</span>
+            <span class="practice-card__dur">{{ durationLabel(item) }}</span>
           </div>
           <h2 class="practice-card__title">{{ item.title }}</h2>
           <p class="practice-card__desc">{{ item.descriptionShort || t('practice.no_description') }}</p>
@@ -55,6 +56,11 @@ function openPractice(id) {
   router.push({ name: 'practice-video', params: { id } })
 }
 
+function durationLabel(item) {
+  const m = Math.round((item.duration || 0) / 60)
+  return `${m} ${t('explore.min')}`
+}
+
 function thumbStyle(item) {
   const src = item.thumbnail || item.banner
   return src
@@ -71,8 +77,13 @@ function thumbStyle(item) {
 .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 20px; }
 .practice-card { border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--bg-surface); overflow: hidden; cursor: pointer; transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
 .practice-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-.practice-card__thumb { height: 180px; display: flex; align-items: flex-end; padding: 12px; background: var(--bg-muted); }
+.practice-card__thumb { height: 180px; display: flex; align-items: flex-end; padding: 12px; background: var(--bg-muted); position: relative; }
 .practice-card__badge { background: rgba(255,255,255,0.9); font-size: 11px; text-transform: capitalize; color: var(--text-primary); padding: 4px 10px; border-radius: 99px; }
+.practice-card__dur {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 11px; font-weight: 600; color: #fff;
+  background: rgba(0, 0, 0, 0.62); padding: 4px 9px; border-radius: 8px;
+}
 .practice-card__title { font-size: 20px; margin: 14px 14px 8px; }
 .practice-card__desc { margin: 0 14px 14px; color: var(--text-secondary); font-size: 14px; line-height: 1.55; }
 .practice-view__empty { text-align: center; padding: 100px 20px; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; gap: 14px; }

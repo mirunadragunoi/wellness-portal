@@ -55,16 +55,26 @@ export const useProgressStore = defineStore('progress', {
   },
 
   actions: {
-    async recordSession(session) {
+    /**
+     * @param {object} session - mapped product / session
+     * @param {object} [playback] - optional: started_at, ended_at (ISO), duration_seconds, completed
+     */
+    async recordSession(session, playback = {}) {
       const today = dayjs().format('YYYY-MM-DD')
+      const endedAt = playback.ended_at || new Date().toISOString()
+      const startedAt = playback.started_at || endedAt
+      const durationSeconds =
+        playback.duration_seconds != null
+          ? Math.max(0, Math.floor(Number(playback.duration_seconds)))
+          : Math.max(0, Math.floor(Number(session.duration || 0)))
 
       this.completedSessions.push({
         id:          session.id,
         title:       session.title,
         type:        session.type,
         category:    session.category,
-        duration:    session.duration,
-        completedAt: new Date().toISOString()
+        duration:    durationSeconds,
+        completedAt: endedAt
       })
 
       const last = this.lastSessionDate
@@ -80,12 +90,15 @@ export const useProgressStore = defineStore('progress', {
 
       try {
         const auth = useAuthStore()
-        await api.completeSession(auth.accessCode, {
+        const body = {
           product_id:           session.id,
-          duration_seconds:     session.duration || 0,
-          completed:            true,
-          completed_local_date: today
-        })
+          duration_seconds:     durationSeconds,
+          completed:            playback.completed !== false,
+          completed_local_date: today,
+          started_at:           startedAt,
+          ended_at:             endedAt
+        }
+        await api.completeSession(auth.accessCode, body)
         // Refresh stats after recording
         await this.fetchStats()
       } catch (e) {

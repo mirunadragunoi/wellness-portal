@@ -41,7 +41,11 @@ export function useAudioPlayer() {
       volume: playerStore.volume,
       onload: () => {
         const realDuration = howl?.duration() || 0
-        if (realDuration) playerStore.duration = realDuration
+        if (realDuration) {
+          playerStore.duration = realDuration
+          const s = playerStore.currentSession
+          if (s) s.duration = Math.round(realDuration)
+        }
       },
       onplay: () => {
         playerStore.play()
@@ -108,7 +112,18 @@ export function useAudioPlayer() {
   function onComplete() {
     playerStore.complete()
     if (playerStore.currentSession) {
-      progressStore.recordSession(playerStore.currentSession)
+      const endedAt = new Date().toISOString()
+      const startedAt = playerStore.playbackStartedAt || endedAt
+      const listened = Math.max(
+        0,
+        Math.round(playerStore.currentTime || playerStore.duration || 0)
+      )
+      progressStore.recordSession(playerStore.currentSession, {
+        started_at: startedAt,
+        ended_at: endedAt,
+        duration_seconds: listened,
+        completed: true
+      })
     }
   }
 

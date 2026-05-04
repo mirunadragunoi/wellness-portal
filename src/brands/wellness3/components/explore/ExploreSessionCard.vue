@@ -12,8 +12,8 @@
       :style="{ background: session.thumbnailGradient || fallbackGradient }"
     >
       <img
-        v-if="session.thumbnail"
-        :src="session.thumbnail"
+        v-if="photoSrc"
+        :src="photoSrc"
         :alt="session.title"
         class="session-card__photo"
       />
@@ -62,6 +62,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useProgressStore } from '@/stores/progress'
+import { normalizeProductImageUrl } from '@/utils/productImageUrl'
 
 const props = defineProps({
   session: { type: Object, required: true },
@@ -70,6 +71,10 @@ const emit = defineEmits(['play', 'favorite'])
 
 const progressStore = useProgressStore()
 const isFavorite = computed(() => progressStore.isFavorite(props.session.id))
+
+const photoSrc = computed(() =>
+  normalizeProductImageUrl(props.session.thumbnail || props.session.banner)
+)
 
 // Gradient fallback pentru fiecare tip de sesiune
 const TYPE_GRADIENTS = {

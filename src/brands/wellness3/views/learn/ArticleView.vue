@@ -110,6 +110,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useArticlePage } from '@/composables/useArticlePage'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
@@ -119,22 +120,19 @@ const isBookmarked = ref(false)
 const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 
 function coverStyle(a) {
-  const src = a.thumbnail || a.banner
-  return src
-    ? {
-        backgroundImage: `url("${src}")`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    : { background: a.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(a.thumbnail || a.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--bg-muted)'
+  })
+  return Object.keys(img).length ? img : { background: a.thumbnailGradient }
 }
 
 function relStyle(r) {
-  const src = r.thumbnail || r.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: r.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(r.thumbnail || r.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--bg-muted)'
+  })
+  return Object.keys(img).length ? img : { background: r.thumbnailGradient }
 }
 </script>
 

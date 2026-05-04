@@ -15,6 +15,7 @@
         >
           <div class="practice-card__thumb" :style="thumbStyle(item)">
             <span class="practice-card__badge">{{ item.category }}</span>
+            <span class="practice-card__dur">{{ durationLabel(item) }}</span>
           </div>
           <h2 class="practice-card__title">{{ item.title }}</h2>
           <p class="practice-card__desc">{{ item.descriptionShort || t('practice.no_description') }}</p>
@@ -54,6 +55,11 @@ function openPractice(id) {
   router.push({ name: 'practice-video', params: { id } })
 }
 
+function durationLabel(item) {
+  const m = Math.round((item.duration || 0) / 60)
+  return `${m} ${t('explore.min')}`
+}
+
 function thumbStyle(item) {
   const src = item.thumbnail || item.banner
   return src
@@ -70,8 +76,13 @@ function thumbStyle(item) {
 .practice-grid { margin-top: 22px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 14px; }
 .practice-card { background: var(--bg-glass); border: var(--border-glass); border-radius: 18px; overflow: hidden; cursor: pointer; transition: all 260ms var(--ease-out); }
 .practice-card:hover { border-color: rgba(184,245,102,0.28); box-shadow: var(--glow-card-hover); transform: translateY(-3px); }
-.practice-card__thumb { height: 170px; display: flex; align-items: flex-end; padding: 12px; }
+.practice-card__thumb { height: 170px; display: flex; align-items: flex-end; padding: 12px; position: relative; }
 .practice-card__badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(7,15,10,0.7); color: var(--lime-400); border: 1px solid rgba(184,245,102,0.22); border-radius: 999px; padding: 3px 9px; }
+.practice-card__dur {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 11px; font-weight: 700; color: #fff;
+  background: rgba(0, 0, 0, 0.65); padding: 4px 9px; border-radius: 8px;
+}
 .practice-card__title { margin: 12px 14px 8px; font-family: var(--font-display); font-size: 20px; }
 .practice-card__desc { margin: 0 14px 14px; color: var(--text-secondary); font-size: 14px; line-height: 1.55; }
 .empty { margin-top: 34px; text-align: center; color: var(--text-secondary); }

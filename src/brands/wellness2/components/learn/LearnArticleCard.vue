@@ -41,6 +41,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+
 const { t } = useI18n()
 const props = defineProps({
   article:    { type: Object, required: true },
@@ -49,10 +51,12 @@ const props = defineProps({
 const emit = defineEmits(['bookmark'])
 
 const imgStyle = computed(() => {
-  const src = props.article.thumbnail || props.article.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: props.article.thumbnailGradient }
+  const a = props.article
+  const img = cssBackgroundFromImageUrl(a.thumbnail || a.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--forest-700)'
+  })
+  return Object.keys(img).length ? img : { background: a.thumbnailGradient }
 })
 </script>
 
