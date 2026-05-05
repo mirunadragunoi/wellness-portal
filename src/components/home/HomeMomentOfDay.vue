@@ -1,6 +1,6 @@
 <template>
   <div class="moment-card" @click="goToSession">
-    <div class="moment-card__img" :style="{ background: session?.thumbnailGradient }">
+    <div class="moment-card__img" :style="imgStyle">
       <span class="moment-card__time-label">{{ label }}</span>
       <button type="button" class="moment-card__play">
         <Icon icon="lucide:play" class="app-icon app-icon--sm" aria-hidden="true" />
@@ -16,15 +16,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useMomentOfDay } from '@/composables/useGreeting'
-import { usePlayerStore } from '@/stores/player'
 
 const { t }   = useI18n()
 const router  = useRouter()
-const player  = usePlayerStore()
 const { session, label } = useMomentOfDay()
+
+const imgStyle = computed(() => {
+  const src = session.value?.thumbnail || session.value?.banner
+  return src
+    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: session.value?.thumbnailGradient }
+})
 
 function goToSession() {
   if (!session.value) return
