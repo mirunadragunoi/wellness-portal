@@ -2,15 +2,8 @@
   <Transition name="mini-player">
     <div v-if="playerStore.isVisible && !playerStore.isExpanded" class="mini-player" @click="goToPlayer">
       <!-- Thumbnail -->
-      <div
-        class="mini-player__thumb"
-        :style="{ background: playerStore.currentSession?.thumbnailGradient || 'var(--sage-200)' }"
-      >
-        <Icon
-          v-if="!playerStore.currentSession?.thumbnail"
-          :icon="thumbIcon"
-          class="app-icon app-icon--md"
-        />
+      <div class="mini-player__thumb" :style="miniThumbStyle">
+        <Icon v-if="!hasThumbUrl" :icon="thumbIcon" class="app-icon app-icon--md" />
       </div>
 
       <!-- Info -->
@@ -39,9 +32,21 @@ import { usePlayerStore } from '@/stores/player'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import BaseProgressBar from '@/components/base/BaseProgressBar.vue'
 import { sessionTypeIcon } from '@/constants/appIcons'
+import { cssBackgroundFromImageUrl, sessionHasCoverImage } from '@/utils/productImageUrl'
 
 const playerStore = usePlayerStore()
 const thumbIcon = computed(() => sessionTypeIcon(playerStore.currentSession?.type))
+
+const hasThumbUrl = computed(() => sessionHasCoverImage(playerStore.currentSession))
+
+const miniThumbStyle = computed(() => {
+  const s = playerStore.currentSession
+  if (!s) return { background: 'var(--sage-200)' }
+  const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
+  if (Object.keys(img).length) return img
+  return { background: s.thumbnailGradient || 'var(--sage-200)' }
+})
+
 const router      = useRouter()
 const { toggle, destroy }  = useAudioPlayer()
 

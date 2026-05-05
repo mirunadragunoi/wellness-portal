@@ -6,6 +6,8 @@ export const usePlayerStore = defineStore('player', {
     isPlaying: false,
     currentTime: 0,
     duration: 0,
+    /** ISO timestamp — set on first play() after loadSession (for progress API). */
+    playbackStartedAt: null,
     volume: 0.8,
     isVisible: false,
     isExpanded: false,
@@ -27,13 +29,19 @@ export const usePlayerStore = defineStore('player', {
       this.currentSession = session
       this.currentTime = 0
       this.duration = session.duration || 0
+      this.playbackStartedAt = null
       this.isPlaying = false
       this.isVisible = true
       this.isExpanded = false
       this.showPostSession = false
     },
 
-    play()  { this.isPlaying = true },
+    play() {
+      if (!this.playbackStartedAt) {
+        this.playbackStartedAt = new Date().toISOString()
+      }
+      this.isPlaying = true
+    },
     pause() { this.isPlaying = false },
 
     toggle() {
@@ -69,6 +77,7 @@ export const usePlayerStore = defineStore('player', {
       this.isVisible = false
       this.currentSession = null
       this.currentTime = 0
+      this.playbackStartedAt = null
     }
   }
 })

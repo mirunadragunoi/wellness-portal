@@ -1,7 +1,7 @@
 <template>
   <div class="pre-play">
     <div class="pre-play__cover" :style="coverStyle">
-      <Icon v-if="!session?.thumbnail" :icon="coverIcon" class="pre-play__type-icon app-icon app-icon--3xl" />
+      <Icon v-if="!hasCoverImage" :icon="coverIcon" class="pre-play__type-icon app-icon app-icon--3xl" />
     </div>
 
     <div class="pre-play__content">
@@ -35,6 +35,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
 import { sessionTypeIcon } from '@/constants/appIcons'
+import { sessionCoverStyle, sessionHasCoverImage } from '@/utils/productImageUrl'
 
 const { t } = useI18n()
 const props = defineProps({ session: Object })
@@ -43,15 +44,10 @@ const progressStore = useProgressStore()
 
 const isFavorite = computed(() => progressStore.isFavorite(props.session?.id))
 const coverIcon = computed(() => sessionTypeIcon(props.session?.type))
-const coverStyle = computed(() => props.session?.thumbnail
-  ? {
-      backgroundImage: `url("${props.session.thumbnail}")`,
-      backgroundSize: 'contain',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundColor: 'var(--bg-muted)'
-    }
-  : { background: props.session?.thumbnailGradient })
+const hasCoverImage = computed(() => sessionHasCoverImage(props.session))
+const coverStyle = computed(() =>
+  sessionCoverStyle(props.session, { size: 'cover', backgroundColor: 'var(--bg-muted)' })
+)
 const durationLabel = computed(() => {
   const m = Math.round((props.session?.duration || 0) / 60)
   return `${m} ${t('explore.min')}`

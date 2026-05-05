@@ -14,6 +14,9 @@ const brandViews = {
     explore: () => import('@/views/ExploreView.vue'),
     session: () => import('@/views/session/SessionView.vue'),
     breathing: () => import('@/views/breathing/BreathingView.vue'),
+    practice: () => import('@/views/PracticeView.vue'),
+    practiceVideo: () => import('@/views/PracticeVideoView.vue'),
+    listen: () => import('@/views/ListenView.vue'),
     learn: () => import('@/views/learn/LearnView.vue'),
     article: () => import('@/views/learn/ArticleView.vue'),
     progress: () => import('@/views/ProgressView.vue'),
@@ -28,6 +31,9 @@ const brandViews = {
     explore: () => import('@/brands/wellness2/views/ExploreView.vue'),
     session: () => import('@/brands/wellness2/views/session/SessionView.vue'),
     breathing: () => import('@/brands/wellness2/views/breathing/BreathingView.vue'),
+    practice: () => import('@/brands/wellness2/views/PracticeView.vue'),
+    practiceVideo: () => import('@/brands/wellness2/views/PracticeVideoView.vue'),
+    listen: () => import('@/brands/wellness2/views/ListenView.vue'),
     learn: () => import('@/brands/wellness2/views/learn/LearnView.vue'),
     article: () => import('@/brands/wellness2/views/learn/ArticleView.vue'),
     progress: () => import('@/brands/wellness2/views/ProgressView.vue'),
@@ -42,6 +48,9 @@ const brandViews = {
     explore: () => import('@/brands/wellness3/views/ExploreView.vue'),
     session: () => import('@/brands/wellness3/views/session/SessionView.vue'),
     breathing: () => import('@/brands/wellness3/views/breathing/BreathingView.vue'),
+    practice: () => import('@/brands/wellness3/views/PracticeView.vue'),
+    practiceVideo: () => import('@/brands/wellness3/views/PracticeVideoView.vue'),
+    listen: () => import('@/brands/wellness3/views/ListenView.vue'),
     learn: () => import('@/brands/wellness3/views/learn/LearnView.vue'),
     article: () => import('@/brands/wellness3/views/learn/ArticleView.vue'),
     progress: () => import('@/brands/wellness3/views/ProgressView.vue'),
@@ -101,6 +110,24 @@ const routes = [
     path: '/breathing/:type',
     name: 'breathing',
     component: views.breathing,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/practice',
+    name: 'practice',
+    component: views.practice,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/practice/:id',
+    name: 'practice-video',
+    component: views.practiceVideo,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/listen',
+    name: 'listen',
+    component: views.listen,
     meta: { requiresAuth: true }
   },
   {

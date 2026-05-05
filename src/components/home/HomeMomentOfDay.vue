@@ -1,6 +1,6 @@
 <template>
   <div class="moment-card" @click="goToSession">
-    <div class="moment-card__img" :style="imgStyle">
+    <div class="moment-card__img" :style="momentImgStyle">
       <span class="moment-card__time-label">{{ label }}</span>
       <button type="button" class="moment-card__play">
         <Icon icon="lucide:play" class="app-icon app-icon--sm" aria-hidden="true" />
@@ -25,11 +25,13 @@ const { t }   = useI18n()
 const router  = useRouter()
 const { session, label } = useMomentOfDay()
 
-const imgStyle = computed(() => {
-  const src = session.value?.thumbnail || session.value?.banner
+const momentImgStyle = computed(() => {
+  const s = session.value
+  if (!s) return {}
+  const src = s.thumbnail || s.banner
   return src
     ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: session.value?.thumbnailGradient }
+    : { background: s.thumbnailGradient }
 })
 
 function goToSession() {

@@ -13,11 +13,23 @@
 
       <div class="filters">
         <button
-          v-for="chip in categoryChips"
-          :key="chip.id"
+          v-for="chip in typeChips"
+          :key="'type-' + chip.id"
           class="chip"
-          :class="activeCategory === chip.id ? 'chip-active' : 'chip-default'"
-          @click="activeCategory = chip.id"
+          :class="filters.type === chip.id ? 'chip-active' : 'chip-default'"
+          @click="filters.type = chip.id"
+        >
+          {{ chip.label }}
+        </button>
+      </div>
+
+      <div class="filters filters--duration">
+        <button
+          v-for="chip in durationChips"
+          :key="'dur-' + chip.id"
+          class="chip"
+          :class="filters.duration === chip.id ? 'chip-active' : 'chip-default'"
+          @click="filters.duration = chip.id"
         >
           {{ chip.label }}
         </button>
@@ -28,7 +40,7 @@
       </div>
 
       <Transition name="fade" mode="out-in">
-        <div v-if="filtered.length" class="sessions-grid" :key="query + activeCategory">
+        <div v-if="filtered.length" class="sessions-grid" :key="query + filters.type + filters.duration">
           <article
             v-for="s in filtered"
             :key="s.id"
@@ -36,7 +48,7 @@
             @click="playSession(s)"
           >
             <div class="s-thumb" :style="thumbStyle(s)">
-              <span class="s-badge">{{ s.type.replace('-', ' ') }}</span>
+              <span class="s-badge">{{ s.category }}</span>
               <button
                 class="s-fav"
                 @click.stop="progressStore.toggleFavorite(s.id)"
@@ -70,6 +82,7 @@ import { useRouter } from 'vue-router'
 import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -78,15 +91,18 @@ const progressStore  = useProgressStore()
 const productsStore  = useProductsStore()
 
 const query          = ref('')
-const activeCategory = ref('all')
-const categoryChips = [
-  { id: 'all', label: 'All' },
-  { id: 'stress', label: 'Stress' },
-  { id: 'sleep', label: 'Sleep' },
-  { id: 'focus', label: 'Focus' },
-  { id: 'anxiety', label: 'Anxiety' },
-  { id: 'mindfulness', label: 'Mindfulness' },
-  { id: 'energy', label: 'Energy' }
+const filters        = ref({ type: 'all', duration: 'all' })
+const typeChips = [
+  { id: 'all', label: t('explore.all') },
+  { id: 'meditation', label: t('explore.type_meditation') },
+  { id: 'soundscape', label: t('explore.type_soundscape') }
+]
+const durationChips = [
+  { id: 'all', label: t('explore.all') },
+  { id: '1-5', label: t('explore.dur_1_5') },
+  { id: '5-10', label: t('explore.dur_5_10') },
+  { id: '10-20', label: t('explore.dur_10_20') },
+  { id: '20+', label: t('explore.dur_20plus') }
 ]
 
 onMounted(() => {
@@ -94,7 +110,8 @@ onMounted(() => {
 })
 
 const filtered = computed(() => {
-  let pool = [...productsStore.sessions]
+  let pool = productsStore.sessions.filter(s => Number(s.rawType) === 6)
+  const inferType = (s) => (/meditation/i.test(s.title || '') ? 'meditation' : 'soundscape')
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(s =>
@@ -103,10 +120,19 @@ const filtered = computed(() => {
       s.tags?.some(t => t.includes(q))
     )
   }
-  if (activeCategory.value !== 'all') {
-    pool = pool.filter(s => s.category === activeCategory.value)
+  pool = pool.map(s => ({
+    ...s,
+    category: inferType(s)
+  }))
+  if (filters.value.type !== 'all') {
+    pool = pool.filter(s => s.category === filters.value.type)
   }
-  return pool.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0))
+  const durMap = { '1-5': [0, 300], '5-10': [300, 600], '10-20': [600, 1200], '20+': [1200, Infinity] }
+  if (filters.value.duration !== 'all' && durMap[filters.value.duration]) {
+    const [min, max] = durMap[filters.value.duration]
+    pool = pool.filter(s => s.duration >= min && s.duration < max)
+  }
+  return pool
 })
 
 function playSession(session) {
@@ -114,10 +140,8 @@ function playSession(session) {
 }
 
 function thumbStyle(s) {
-  const src = s.thumbnail || s.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: s.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
+  return Object.keys(img).length ? img : { background: s.thumbnailGradient }
 }
 </script>
 
@@ -144,6 +168,7 @@ function thumbStyle(s) {
 .search-icon { color: var(--text-muted); }
 .search-input { flex: 1; background: none; border: none; outline: none; font-family: var(--font-body); font-size: 15px; color: var(--text-primary); }
 .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 28px; }
+.filters--duration { margin-top: -14px; margin-bottom: 24px; }
 .results-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .results-count { font-size: 14px; color: var(--text-muted); font-family: var(--font-mono); }
 

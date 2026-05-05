@@ -43,6 +43,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
 import { sessionTypeIcon } from '@/constants/appIcons'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t } = useI18n()
 const props = defineProps({ session: { type: Object, required: true } })
@@ -52,10 +53,9 @@ const progressStore = useProgressStore()
 const isFavorite = computed(() => progressStore.isFavorite(props.session.id))
 
 const imgStyle = computed(() => {
-  const src = props.session.thumbnail || props.session.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: props.session.thumbnailGradient }
+  const s = props.session
+  const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
+  return Object.keys(img).length ? img : { background: s.thumbnailGradient }
 })
 
 const categoryColors = {

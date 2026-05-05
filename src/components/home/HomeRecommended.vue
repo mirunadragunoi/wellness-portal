@@ -15,7 +15,7 @@
           class="session-card"
           @click="goToSession(session)"
         >
-          <div class="session-card__img" :style="getImgStyle(session)">
+          <div class="session-card__img" :style="sessionImgStyle(session)">
             <span class="session-card__badge" :style="getBadgeStyle(session.category)">
               {{ session.category }}
             </span>
@@ -69,7 +69,7 @@ function getBadgeStyle(cat) {
   return { color: categoryColors[cat] || '#334155' }
 }
 
-function getImgStyle(session) {
+function sessionImgStyle(session) {
   const src = session.thumbnail || session.banner
   return src
     ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }

@@ -45,7 +45,7 @@
           class="suggestion-card"
           @click="router.push({ name: 'session', params: { id: s.id } })"
         >
-          <div class="suggestion-card__img" :style="{ background: s.thumbnailGradient }" />
+          <div class="suggestion-card__img" :style="suggestionImgStyle(s)" />
           <div class="suggestion-card__info">
             <p class="suggestion-card__title">{{ s.title }}</p>
             <p class="suggestion-card__meta">{{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</p>
@@ -66,6 +66,7 @@ import { useProgressStore } from '@/stores/progress'
 import { useMoodStore, moodOptions } from '@/stores/mood'
 import { useUIStore } from '@/stores/ui'
 import { useProductsStore } from '@/stores/products'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -75,6 +76,11 @@ const uiStore        = useUIStore()
 const productsStore  = useProductsStore()
 
 const props = defineProps({ session: Object })
+
+function suggestionImgStyle(s) {
+  const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
+  return Object.keys(img).length ? img : { background: s.thumbnailGradient }
+}
 
 const suggestions = computed(() =>
   productsStore.sessions

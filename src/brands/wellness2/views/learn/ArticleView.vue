@@ -23,6 +23,16 @@
             <span class="article-content__time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
             <span class="article-content__dot">·</span>
             <span class="article-content__date">{{ formatDate(article.datePublished) }}</span>
+            <a
+              v-if="article.downloadUrl"
+              class="article-content__download"
+              :href="article.downloadUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              Download PDF
+            </a>
             <button
               type="button"
               class="article-content__bookmark"
@@ -100,6 +110,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useArticlePage } from '@/composables/useArticlePage'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
@@ -109,22 +120,19 @@ const isBookmarked = ref(false)
 const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 
 function coverStyle(a) {
-  const src = a.thumbnail || a.banner
-  return src
-    ? {
-        backgroundImage: `url("${src}")`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    : { background: a.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(a.thumbnail || a.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--parchment)'
+  })
+  return Object.keys(img).length ? img : { background: a.thumbnailGradient }
 }
 
 function relStyle(r) {
-  const src = r.thumbnail || r.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
-    : { background: r.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(r.thumbnail || r.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--parchment)'
+  })
+  return Object.keys(img).length ? img : { background: r.thumbnailGradient }
 }
 </script>
 
@@ -164,6 +172,14 @@ function relStyle(r) {
 .article-content__meta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
 .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); font-weight: 500; }
 .meta-divider { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-200); }
+.article-content__download {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sage-700);
+  text-decoration: none;
+}
+.article-content__download:hover { text-decoration: underline; }
 .article-content__excerpt {
   font-family: var(--font-display); font-size: 18px; font-style: italic;
   color: var(--text-secondary); line-height: 1.7; margin-bottom: 36px;

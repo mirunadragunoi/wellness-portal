@@ -41,6 +41,17 @@
               <p class="learn-card__cat">{{ article.category }}</p>
               <h3>{{ article.title }}</h3>
               <p>{{ article.excerpt }}</p>
+              <a
+                v-if="article.downloadUrl"
+                class="learn-card__download"
+                :href="article.downloadUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                @click.stop
+              >
+                Download PDF
+              </a>
             </div>
           </article>
         </div>
@@ -57,9 +68,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { articles as mockArticles, getArticlesByCategory } from '@/data/articles'
+import { articles as mockArticles } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
 import ExploreSearch from '@/components/explore/ExploreSearch.vue'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -87,15 +99,25 @@ const allArticles = computed(() => {
     id: p.id, slug: String(p.id), category: p.category,
     title: p.title, excerpt: p.descriptionShort || '',
     readTime: p.readTimeMinutes || 5, thumbnail: p.thumbnail, banner: p.banner, thumbnailGradient: p.thumbnailGradient,
-    content: p.descriptionLong || p.description
+    content: p.descriptionLong || p.description,
+    downloadUrl: p.downloadUrl || null
   }))
   return mockArticles
 })
 
 const filtered = computed(() => {
-  let pool = activeCategory.value === 'all'
-    ? allArticles.value
-    : allArticles.value.filter(a => a.category === activeCategory.value)
+  const tabKeywords = {
+    stress: ['stress'],
+    sleep: ['sleep'],
+    focus: ['focus'],
+    habits: ['habit', 'routine'],
+    mindfulness: ['mindfulness', 'mindful']
+  }
+  let pool = allArticles.value
+  if (activeCategory.value !== 'all') {
+    const keys = tabKeywords[activeCategory.value] || [activeCategory.value]
+    pool = pool.filter(a => keys.some(k => (a.title || '').toLowerCase().includes(k)))
+  }
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(a =>
@@ -107,15 +129,11 @@ const filtered = computed(() => {
 })
 
 function thumbStyle(article) {
-  const src = article.thumbnail || article.banner
-  return src
-    ? {
-        backgroundImage: `url("${src}")`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    : { background: article.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(article.thumbnail || article.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--bg-muted)'
+  })
+  return Object.keys(img).length ? img : { background: article.thumbnailGradient }
 }
 
 function goArticle(slug) {
@@ -239,6 +257,15 @@ function goArticle(slug) {
   line-height: 1.65;
   margin-top: 8px;
 }
+.learn-card__download {
+  margin-top: 10px;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #d9ccff;
+  text-decoration: none;
+}
+.learn-card__download:hover { text-decoration: underline; }
 .learn-view__empty {
   text-align: center;
   padding: 80px 20px;

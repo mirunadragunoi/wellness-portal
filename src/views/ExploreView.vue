@@ -6,8 +6,6 @@
         <ExploreSearch v-model="query" />
       </div>
 
-      <ExploreCategoryChips v-model="activeCategory" />
-
       <div class="explore-view__body">
         <aside class="explore-view__filters">
           <ExploreFilterPanel v-model:filters="filters" />
@@ -18,7 +16,7 @@
             <Icon icon="lucide:loader-2" class="app-icon app-icon--2xl app-icon--muted" style="animation:spin 1s linear infinite" />
           </div>
           <Transition v-else name="fade" mode="out-in">
-            <div v-if="filtered.length" class="sessions-grid" :key="filtered.length">
+        <div v-if="filtered.length" class="sessions-grid" :key="filtered.length + query + filters.type + filters.duration">
               <ExploreSessionCard
                 v-for="s in filtered" :key="s.id"
                 :session="s"
@@ -40,32 +38,30 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
 import ExploreSearch        from '@/components/explore/ExploreSearch.vue'
-import ExploreCategoryChips from '@/components/explore/ExploreCategoryChips.vue'
 import ExploreFilterPanel   from '@/components/explore/ExploreFilterPanel.vue'
 import ExploreSessionCard   from '@/components/explore/ExploreSessionCard.vue'
 
 const { t }          = useI18n()
-const route          = useRoute()
 const router         = useRouter()
 const playerStore    = usePlayerStore()
 const progressStore  = useProgressStore()
 const productsStore  = useProductsStore()
 
 const query          = ref('')
-const activeCategory = ref(route.query.category || 'all')
-const filters        = ref({ type: 'all', duration: 'all', sort: 'popular' })
+const filters        = ref({ type: 'all', duration: 'all' })
 
 onMounted(() => {
   if (!productsStore.loaded) productsStore.fetchProducts()
 })
 
 const filtered = computed(() => {
-  let pool = [...productsStore.sessions]
+  let pool = productsStore.sessions.filter(s => Number(s.rawType) === 6)
+  const inferType = (s) => (/meditation/i.test(s.title || '') ? 'meditation' : 'soundscape')
 
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
@@ -75,22 +71,18 @@ const filtered = computed(() => {
       s.tags?.some(t => t.includes(q))
     )
   }
-  if (activeCategory.value !== 'all') {
-    pool = pool.filter(s => s.category === activeCategory.value)
-  }
   if (filters.value.type !== 'all') {
-    pool = pool.filter(s => s.type === filters.value.type)
+    pool = pool.filter(s => inferType(s) === filters.value.type)
   }
   const durMap = { '1-5': [0, 300], '5-10': [300, 600], '10-20': [600, 1200], '20+': [1200, Infinity] }
   if (filters.value.duration !== 'all' && durMap[filters.value.duration]) {
     const [min, max] = durMap[filters.value.duration]
     pool = pool.filter(s => s.duration >= min && s.duration < max)
   }
-  if (filters.value.sort === 'popular') {
-    pool.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0))
-  }
-
-  return pool
+  return pool.map(s => ({
+    ...s,
+    category: inferType(s)
+  }))
 })
 
 function playSession(session) {

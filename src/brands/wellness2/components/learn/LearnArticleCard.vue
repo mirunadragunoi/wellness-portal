@@ -8,18 +8,31 @@
       <p class="article-card__excerpt">{{ article.excerpt }}</p>
       <div class="article-card__meta">
         <span class="article-card__time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
-        <button
-          type="button"
-          class="article-card__bookmark"
-          :class="{ active: bookmarked }"
-          :aria-label="bookmarked ? t('learn.bookmarked') : t('learn.bookmark')"
-          @click.prevent="emit('bookmark', article.id)"
-        >
-          <Icon
-            :icon="bookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'"
-            class="app-icon app-icon--md"
-          />
-        </button>
+        <div class="article-card__actions">
+          <a
+            v-if="article.downloadUrl"
+            class="article-card__download"
+            :href="article.downloadUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            @click.stop
+          >
+            Download PDF
+          </a>
+          <button
+            type="button"
+            class="article-card__bookmark"
+            :class="{ active: bookmarked }"
+            :aria-label="bookmarked ? t('learn.bookmarked') : t('learn.bookmark')"
+            @click.prevent="emit('bookmark', article.id)"
+          >
+            <Icon
+              :icon="bookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'"
+              class="app-icon app-icon--md"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </RouterLink>
@@ -28,6 +41,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+
 const { t } = useI18n()
 const props = defineProps({
   article:    { type: Object, required: true },
@@ -36,10 +51,12 @@ const props = defineProps({
 const emit = defineEmits(['bookmark'])
 
 const imgStyle = computed(() => {
-  const src = props.article.thumbnail || props.article.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: props.article.thumbnailGradient }
+  const a = props.article
+  const img = cssBackgroundFromImageUrl(a.thumbnail || a.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--forest-700)'
+  })
+  return Object.keys(img).length ? img : { background: a.thumbnailGradient }
 })
 </script>
 
@@ -88,7 +105,15 @@ const imgStyle = computed(() => {
 }
 .article-card__excerpt { font-size: 13px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
 .article-card__meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.article-card__actions { display: flex; align-items: center; gap: 10px; }
 .article-card__time {
   font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
 }
+.article-card__download {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--lime-400);
+  text-decoration: none;
+}
+.article-card__download:hover { text-decoration: underline; }
 </style>

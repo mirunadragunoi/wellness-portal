@@ -23,6 +23,16 @@
             <span class="article-content__time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
             <span class="article-content__dot">·</span>
             <span class="article-content__date">{{ formatDate(article.datePublished) }}</span>
+            <a
+              v-if="article.downloadUrl"
+              class="article-content__download"
+              :href="article.downloadUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              Download PDF
+            </a>
             <button
               type="button"
               class="article-content__bookmark"
@@ -100,6 +110,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useArticlePage } from '@/composables/useArticlePage'
+import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
@@ -109,22 +120,19 @@ const isBookmarked = ref(false)
 const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
 
 function coverStyle(a) {
-  const src = a.thumbnail || a.banner
-  return src
-    ? {
-        backgroundImage: `url("${src}")`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    : { background: a.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(a.thumbnail || a.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--bg-muted)'
+  })
+  return Object.keys(img).length ? img : { background: a.thumbnailGradient }
 }
 
 function relStyle(r) {
-  const src = r.thumbnail || r.banner
-  return src
-    ? { backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { background: r.thumbnailGradient }
+  const img = cssBackgroundFromImageUrl(r.thumbnail || r.banner, {
+    size: 'contain',
+    backgroundColor: 'var(--bg-muted)'
+  })
+  return Object.keys(img).length ? img : { background: r.thumbnailGradient }
 }
 </script>
 
@@ -166,8 +174,16 @@ function relStyle(r) {
   margin-bottom: 20px; flex-wrap: wrap;
 }
 .article-content__dot { color: var(--border-default); }
+.article-content__download {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sky-700);
+  text-decoration: none;
+}
+.article-content__download:hover { text-decoration: underline; }
 .article-content__bookmark {
-  margin-left: auto; background: var(--bg-muted); border: none; cursor: pointer;
+  background: var(--bg-muted); border: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 14px; border-radius: 100px;
   font-size: 13px; font-weight: 500; color: var(--text-secondary);
