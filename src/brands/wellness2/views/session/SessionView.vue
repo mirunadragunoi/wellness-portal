@@ -75,6 +75,11 @@ onMounted(async () => {
   }
   if (!session) return
   viewSession.value = session
+  const shouldAutoplay = ['1', 'true', 'yes'].includes(String(route.query.autoplay || '').toLowerCase())
+  if (shouldAutoplay) {
+    startPlay()
+    return
+  }
   if (playerStore.currentSession?.id === session.id && playerStore.isPlaying) {
     hasStarted.value = true
   }

@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router'
 import { useProductsStore } from '@/stores/products'
 import { getArticleBySlug, articles } from '@/data/articles'
 import { formatArticleBody, estimateReadMinutes } from '@/utils/articleContent'
+import { isMotivationalSpeechProduct } from '@/utils/productKinds'
 import dayjs from 'dayjs'
 
 function productToArticleVm(p) {
@@ -20,6 +21,8 @@ function productToArticleVm(p) {
     banner: p.banner,
     thumbnailGradient: p.thumbnailGradient,
     downloadUrl: p.downloadUrl || null,
+    audioUrl: p.audioUrl || null,
+    isAudioArticle: isMotivationalSpeechProduct(p),
     content: formatArticleBody(long),
     _source: 'api'
   }
@@ -54,7 +57,7 @@ export function useArticlePage() {
           p = null
         }
       }
-      if (p && p.type === 'article') {
+      if (p && (p.type === 'article' || isMotivationalSpeechProduct(p))) {
         article.value = productToArticleVm(p)
         loading.value = false
         return

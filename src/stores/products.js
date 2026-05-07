@@ -93,6 +93,7 @@ export function mapProduct(p) {
     rating: p.rating_points,
     ratingCount: p.rating_count,
     code: p.code,
+    dbCategoryLabel: p.category_label || p.categoryLabel || null,
     popular: (p.rating_points || 0) >= 4,
     featured: (p.rating_points || 0) >= 4.5,
     tags: []

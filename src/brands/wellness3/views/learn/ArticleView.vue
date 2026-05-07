@@ -34,6 +34,15 @@
               Download PDF
             </a>
             <button
+              v-if="article.isAudioArticle && article.audioUrl"
+              type="button"
+              class="article-content__listen"
+              @click="listenAudio(article)"
+            >
+              <Icon icon="lucide:headphones" class="app-icon app-icon--sm" aria-hidden="true" />
+              Listen audio
+            </button>
+            <button
               type="button"
               class="article-content__bookmark"
               :class="{ active: isBookmarked }"
@@ -109,11 +118,13 @@
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useArticlePage } from '@/composables/useArticlePage'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
+const router = useRouter()
 const { article, related, loading } = useArticlePage()
 const isBookmarked = ref(false)
 
@@ -133,6 +144,10 @@ function relStyle(r) {
     backgroundColor: 'var(--bg-muted)'
   })
   return Object.keys(img).length ? img : { background: r.thumbnailGradient }
+}
+
+function listenAudio(a) {
+  router.push({ name: 'session', params: { id: a.id }, query: { autoplay: '1' } })
 }
 </script>
 
@@ -182,6 +197,12 @@ function relStyle(r) {
   text-decoration: none;
 }
 .article-content__download:hover { text-decoration: underline; }
+.article-content__listen {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--sky-100); border: none; cursor: pointer;
+  color: var(--sky-700); border-radius: 100px; padding: 6px 14px;
+  font-size: 13px; font-weight: 600;
+}
 .article-content__bookmark {
   background: var(--bg-muted); border: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: 6px;

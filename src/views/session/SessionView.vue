@@ -73,6 +73,11 @@ onMounted(async () => {
   }
   if (!session) return
   viewSession.value = session
+  const shouldAutoplay = ['1', 'true', 'yes'].includes(String(route.query.autoplay || '').toLowerCase())
+  if (shouldAutoplay) {
+    startPlay()
+    return
+  }
   // If this exact session is already playing, skip pre-play and go straight to player
   if (playerStore.currentSession?.id === session.id && playerStore.isPlaying) {
     hasStarted.value = true

@@ -83,6 +83,7 @@ import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { inferExploreAudioType } from '@/utils/productKinds'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -95,7 +96,8 @@ const filters        = ref({ type: 'all', duration: 'all' })
 const typeChips = [
   { id: 'all', label: t('explore.all') },
   { id: 'meditation', label: t('explore.type_meditation') },
-  { id: 'soundscape', label: t('explore.type_soundscape') }
+  { id: 'soundscape', label: t('explore.type_soundscape') },
+  { id: 'motivational_speeches', label: t('explore.type_motivational_speeches') }
 ]
 const durationChips = [
   { id: 'all', label: t('explore.all') },
@@ -111,7 +113,6 @@ onMounted(() => {
 
 const filtered = computed(() => {
   let pool = productsStore.sessions.filter(s => Number(s.rawType) === 6)
-  const inferType = (s) => (/meditation/i.test(s.title || '') ? 'meditation' : 'soundscape')
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
     pool = pool.filter(s =>
@@ -120,12 +121,16 @@ const filtered = computed(() => {
       s.tags?.some(t => t.includes(q))
     )
   }
-  pool = pool.map(s => ({
-    ...s,
-    category: inferType(s)
-  }))
+  pool = pool.map(s => {
+    const exploreType = inferExploreAudioType(s)
+    return {
+      ...s,
+      category: exploreType === 'motivational_speeches' ? 'Motivational Speeches' : exploreType,
+      exploreType
+    }
+  })
   if (filters.value.type !== 'all') {
-    pool = pool.filter(s => s.category === filters.value.type)
+    pool = pool.filter(s => s.exploreType === filters.value.type)
   }
   const durMap = { '1-5': [0, 300], '5-10': [300, 600], '10-20': [600, 1200], '20+': [1200, Infinity] }
   if (filters.value.duration !== 'all' && durMap[filters.value.duration]) {
@@ -136,6 +141,10 @@ const filtered = computed(() => {
 })
 
 function playSession(session) {
+  if (session.exploreType === 'motivational_speeches') {
+    router.push({ name: 'article', params: { slug: String(session.id) } })
+    return
+  }
   router.push({ name: 'session', params: { id: session.id } })
 }
 
@@ -143,6 +152,7 @@ function thumbStyle(s) {
   const img = cssBackgroundFromImageUrl(s.thumbnail || s.banner, { size: 'cover' })
   return Object.keys(img).length ? img : { background: s.thumbnailGradient }
 }
+
 </script>
 
 <style scoped>

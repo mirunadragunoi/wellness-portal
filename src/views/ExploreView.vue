@@ -45,6 +45,7 @@ import { useProductsStore } from '@/stores/products'
 import ExploreSearch        from '@/components/explore/ExploreSearch.vue'
 import ExploreFilterPanel   from '@/components/explore/ExploreFilterPanel.vue'
 import ExploreSessionCard   from '@/components/explore/ExploreSessionCard.vue'
+import { inferExploreAudioType } from '@/utils/productKinds'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -61,7 +62,6 @@ onMounted(() => {
 
 const filtered = computed(() => {
   let pool = productsStore.sessions.filter(s => Number(s.rawType) === 6)
-  const inferType = (s) => (/meditation/i.test(s.title || '') ? 'meditation' : 'soundscape')
 
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
@@ -72,20 +72,28 @@ const filtered = computed(() => {
     )
   }
   if (filters.value.type !== 'all') {
-    pool = pool.filter(s => inferType(s) === filters.value.type)
+    pool = pool.filter(s => inferExploreAudioType(s) === filters.value.type)
   }
   const durMap = { '1-5': [0, 300], '5-10': [300, 600], '10-20': [600, 1200], '20+': [1200, Infinity] }
   if (filters.value.duration !== 'all' && durMap[filters.value.duration]) {
     const [min, max] = durMap[filters.value.duration]
     pool = pool.filter(s => s.duration >= min && s.duration < max)
   }
-  return pool.map(s => ({
-    ...s,
-    category: inferType(s)
-  }))
+  return pool.map(s => {
+    const exploreType = inferExploreAudioType(s)
+    return {
+      ...s,
+      category: exploreType === 'motivational_speeches' ? 'Motivational Speeches' : exploreType,
+      exploreType
+    }
+  })
 })
 
 function playSession(session) {
+  if (session.exploreType === 'motivational_speeches') {
+    router.push({ name: 'article', params: { slug: String(session.id) } })
+    return
+  }
   router.push({ name: 'session', params: { id: session.id } })
 }
 </script>
