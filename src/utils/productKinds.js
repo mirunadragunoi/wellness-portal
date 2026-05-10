@@ -27,3 +27,23 @@ export function inferExploreAudioType(product) {
   if (isMotivationalSpeechProduct(product)) return 'motivational_speeches'
   return /meditation/i.test(product?.title || '') ? 'meditation' : 'soundscape'
 }
+
+/**
+ * Resolve the correct route for a product based on its type.
+ * - type 'article' or motivational speech → text/article view
+ * - type 'practice' (rawType=5, yoga/video) → video player
+ * - everything else (meditation, sleep, breathing, focus, MP3) → audio session
+ */
+export function routeForProduct(product) {
+  if (!product) return null
+  if (product.type === 'article') {
+    return { name: 'article', params: { slug: String(product.slug || product.id) } }
+  }
+  if (isMotivationalSpeechProduct(product)) {
+    return { name: 'article', params: { slug: String(product.id) } }
+  }
+  if (product.type === 'practice') {
+    return { name: 'practice-video', params: { id: product.id } }
+  }
+  return { name: 'session', params: { id: product.id } }
+}

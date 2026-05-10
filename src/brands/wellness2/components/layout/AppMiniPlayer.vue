@@ -33,6 +33,7 @@ import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import BaseProgressBar from '@/components/base/BaseProgressBar.vue'
 import { sessionTypeIcon } from '@/constants/appIcons'
 import { cssBackgroundFromImageUrl, sessionHasCoverImage } from '@/utils/productImageUrl'
+import { routeForProduct } from '@/utils/productKinds'
 
 const playerStore = usePlayerStore()
 const thumbIcon = computed(() => sessionTypeIcon(playerStore.currentSession?.type))
@@ -51,9 +52,9 @@ const router      = useRouter()
 const { toggle, destroy }  = useAudioPlayer()
 
 function goToPlayer() {
-  if (playerStore.currentSession) {
-    router.push({ name: 'session', params: { id: playerStore.currentSession.id } })
-  }
+  if (!playerStore.currentSession) return
+  const route = routeForProduct(playerStore.currentSession)
+  if (route) router.push(route)
 }
 
 function closePlayer() {

@@ -21,6 +21,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useMomentOfDay } from '@/composables/useGreeting'
 import { usePlayerStore } from '@/stores/player'
+import { routeForProduct } from '@/utils/productKinds'
 
 const { t }   = useI18n()
 const router  = useRouter()
@@ -38,7 +39,8 @@ const momentImgStyle = computed(() => {
 
 function goToSession() {
   if (!session.value) return
-  router.push({ name: 'session', params: { id: session.value.id } })
+  const route = routeForProduct(session.value)
+  if (route) router.push(route)
 }
 </script>
 

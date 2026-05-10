@@ -46,6 +46,7 @@ import { useRouter } from 'vue-router'
 import { useRecommendations } from '@/composables/useGreeting'
 import { usePlayerStore } from '@/stores/player'
 import { sessionTypeIcon } from '@/constants/appIcons'
+import { routeForProduct } from '@/utils/productKinds'
 
 const { t }    = useI18n()
 const router   = useRouter()
@@ -77,7 +78,8 @@ function sessionImgStyle(session) {
 }
 
 function goToSession(session) {
-  router.push({ name: 'session', params: { id: session.id } })
+  const route = routeForProduct(session)
+  if (route) router.push(route)
 }
 </script>
 

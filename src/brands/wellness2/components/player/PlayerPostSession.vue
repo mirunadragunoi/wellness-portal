@@ -43,7 +43,7 @@
         <div
           v-for="s in suggestions" :key="s.id"
           class="suggestion-card"
-          @click="router.push({ name: 'session', params: { id: s.id } })"
+          @click="openSuggestion(s)"
         >
           <div class="suggestion-card__img" :style="suggestionImgStyle(s)" />
           <div class="suggestion-card__info">
@@ -67,6 +67,7 @@ import { useMoodStore, moodOptions } from '@/stores/mood'
 import { useUIStore } from '@/stores/ui'
 import { useProductsStore } from '@/stores/products'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { routeForProduct } from '@/utils/productKinds'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -87,6 +88,11 @@ const suggestions = computed(() =>
     .filter(s => String(s.id) !== String(props.session?.id) && s.category === props.session?.category)
     .slice(0, 3)
 )
+
+function openSuggestion(s) {
+  const route = routeForProduct(s)
+  if (route) router.push(route)
+}
 
 const selectedMood = ref(null)
 

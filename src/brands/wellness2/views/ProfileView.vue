@@ -88,7 +88,7 @@
               <div
                 v-for="s in favoriteSessions" :key="s.id"
                 class="fav-item"
-                @click="router.push({ name: 'session', params: { id: s.id } })"
+                @click="openFavorite(s)"
               >
                 <div class="fav-item__img" :style="{ background: s.thumbnailGradient }">
                   <Icon :icon="sessionTypeIcon(s.type)" class="app-icon app-icon--md" style="color: rgba(255,255,255,0.95)" />
@@ -147,6 +147,7 @@ import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { AVATAR_ICONS, ONBOARDING_OBJECTIVE_ICONS, sessionTypeIcon } from '@/constants/appIcons'
+import { routeForProduct } from '@/utils/productKinds'
 import dayjs from 'dayjs'
 
 const avatarKeys = Object.keys(AVATAR_ICONS)
@@ -184,6 +185,11 @@ function cancelEdit() { editing.value = false }
 
 function confirmLogout()  { showLogout.value = true }
 function logout()         { authStore.logout(); router.push({ name: 'landing' }) }
+
+function openFavorite(s) {
+  const route = routeForProduct(s)
+  if (route) router.push(route)
+}
 
 </script>
 

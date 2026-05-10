@@ -70,6 +70,7 @@ import { useUserStore } from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
 import { useProductsStore } from '@/stores/products'
 import ExploreSessionCard from '@/components/explore/ExploreSessionCard.vue'
+import { routeForProduct } from '@/utils/productKinds'
 
 const moodStore = useMoodStore()
 const progressStore = useProgressStore()
@@ -108,7 +109,8 @@ function setMood(id) {
 }
 
 function playSession(session) {
-  router.push({ name: 'session', params: { id: session.id } })
+  const route = routeForProduct(session)
+  if (route) router.push(route)
 }
 </script>
 

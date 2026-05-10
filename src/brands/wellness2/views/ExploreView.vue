@@ -83,7 +83,7 @@ import { usePlayerStore }   from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
-import { inferExploreAudioType } from '@/utils/productKinds'
+import { inferExploreAudioType, routeForProduct } from '@/utils/productKinds'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -141,11 +141,8 @@ const filtered = computed(() => {
 })
 
 function playSession(session) {
-  if (session.exploreType === 'motivational_speeches') {
-    router.push({ name: 'article', params: { slug: String(session.id) } })
-    return
-  }
-  router.push({ name: 'session', params: { id: session.id } })
+  const route = routeForProduct(session)
+  if (route) router.push(route)
 }
 
 function thumbStyle(s) {

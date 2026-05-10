@@ -126,6 +126,7 @@ import { useProgressStore } from '@/stores/progress'
 import { usePlayerStore } from '@/stores/player'
 import { useProductsStore } from '@/stores/products'
 import { CATEGORY_ICONS } from '@/constants/appIcons'
+import { routeForProduct } from '@/utils/productKinds'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -174,7 +175,8 @@ function setMood(id) {
 }
 
 function playSession(session) {
-  router.push({ name: 'session', params: { id: session.id } })
+  const route = routeForProduct(session)
+  if (route) router.push(route)
 }
 </script>
 

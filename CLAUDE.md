@@ -1,7 +1,12 @@
 # Wellness Portal — Context pentru Claude
 
 ## Despre proiect
-Platformă de **meditație și wellness**: sesiuni audio ghidate, exerciții de respirație, povești pentru somn, mood tracking, statistici de progres.
+Platformă de **meditație și wellness** multi-brand: sesiuni audio ghidate, exerciții de respirație, povești pentru somn, mood tracking, statistici de progres, articole educative, video practice.
+
+**Branduri active** (cu base/views/styling/i18n separate per brand):
+- **wellness** (Harmonoria) — brand default, în `src/`
+- **wellness2** (Innerawake) — în `src/brands/wellness2/`
+- **wellness3** (Calmasoul) — în `src/brands/wellness3/`
 
 ---
 
@@ -10,12 +15,12 @@ Platformă de **meditație și wellness**: sesiuni audio ghidate, exerciții de 
 - **State:** Pinia (cu persistență localStorage)
 - **Routing:** Vue Router 4
 - **i18n:** Vue i18n
-- **Audio:** Howler.js
+- **Audio:** Howler.js (singleton la nivel de modul în `useAudioPlayer.js`)
 - **Grafice:** Chart.js + vue-chartjs
 - **Date:** Dayjs
 - **Icoane:** Iconify
 - **UI:** Componente custom (fără UI library externă)
-- **Backend:** Niciun backend real — mock data + localStorage
+- **Backend:** API real per brand (vezi `src/services/api.js` + `src/config/brands/*.js`)
 
 ---
 
@@ -23,75 +28,118 @@ Platformă de **meditație și wellness**: sesiuni audio ghidate, exerciții de 
 
 ```
 src/
-├── views/                    # Pagini principale
-│   ├── LandingView.vue         # / — landing public
-│   ├── auth/
-│   │   ├── LoginView.vue       # /login
-│   │   └── SignupView.vue      # /signup
-│   ├── OnboardingView.vue      # /onboarding — 8 pași
-│   ├── HomeView.vue            # /home — dashboard
-│   ├── ExploreView.vue         # /explore — catalog sesiuni
-│   ├── session/
-│   │   └── SessionView.vue     # /session/:id — player
-│   ├── breathing/
-│   │   └── BreathingView.vue   # /breathing/:type — exercițiu respirație
-│   ├── learn/
-│   │   ├── LearnView.vue       # /learn — articole
-│   │   └── ArticleView.vue     # /learn/:id — articol individual
-│   ├── ProgressView.vue        # /progress — statistici
-│   └── ProfileView.vue         # /profile
+├── views/                       # Pagini brand-ul default (wellness/Harmonoria)
+│   ├── LandingView.vue            # / — landing public
+│   ├── auth/{LoginView,SignupView}.vue
+│   ├── OnboardingView.vue         # /onboarding — 8 pași
+│   ├── HomeView.vue               # /home — dashboard
+│   ├── ExploreView.vue            # /explore — catalog sesiuni
+│   ├── ListenView.vue             # /listen — audio/MP3
+│   ├── PracticeView.vue           # /practice — exerciții ghidate
+│   ├── PracticeVideoView.vue      # /practice/:id — player video
+│   ├── session/SessionView.vue    # /session/:id — player audio
+│   ├── breathing/BreathingView.vue
+│   ├── learn/{LearnView,ArticleView}.vue
+│   ├── ProgressView.vue
+│   └── ProfileView.vue
 │
-├── components/
-│   ├── base/                   # BaseButton, BaseCard, BaseChip, BaseModal,
-│   │                           # BaseProgressBar, BaseSkeleton, BaseToast
-│   ├── landing/                # LandingHero, LandingFeatures, LandingHowItWorks,
-│   │                           # LandingMetrics, LandingPreview, LandingTestimonials, LandingFinalCTA
-│   ├── home/                   # HomeGreeting, HomeMoodCheckin, HomeRecommended,
-│   │                           # HomeCategoriesGrid, HomeStreakCard, HomePhraseOfDay, HomeMomentOfDay
-│   ├── explore/                # ExploreCategoryChips, ExploreFilterPanel,
-│   │                           # ExploreSearch, ExploreSessionCard
-│   ├── player/                 # PlayerPrePlay, PlayerAudio, PlayerPostSession
-│   ├── breathing/              # BreathingCircle, BreathingControls
-│   ├── learn/                  # LearnArticleCard
-│   ├── progress/               # ProgressStatsGrid, ProgressMoodChart, ProgressSessionHistory
-│   ├── onboarding/             # OnboardingProgressBar + steps/ (8 step-uri)
-│   └── layout/                 # AppNavbarPublic, AppNavbarAuth, AppBottomBar,
-│                               # AppFooter, AppMiniPlayer, AppSOSButton, AppSOSOverlay
+├── brands/
+│   ├── wellness2/                 # Innerawake — assets, components, constants, i18n, styles, views
+│   └── wellness3/                 # Calmasoul — assets, components, constants, i18n, styles, views
+│   # IMPORTANT: wellness2/wellness3 randează frecvent INLINE în view-uri
+│   # (LearnView, ExploreView), fără să folosească componentele partajate.
+│   # Vezi memoria "Brand override gotcha".
 │
-├── stores/                     # auth.js, mood.js, player.js, progress.js, ui.js, user.js
-├── composables/                # useAudioPlayer.js, useBreathing.js, useGreeting.js
-├── data/                       # sessions.js, articles.js, phrases.js (mock data)
-├── constants/                  # appIcons.js, landingImages.js
-├── i18n/                       # index.js + locales/en.json
-├── router/                     # index.js
-├── styles/                     # variables.css, base.css, typography.css,
-│                               # animations.css, utilities.css
+├── components/                  # Componente partajate (pot fi suprascrise în brands/*/components)
+│   ├── base/                      # BaseButton, BaseCard, BaseChip, BaseModal, BaseProgressBar, BaseSkeleton, BaseToast
+│   ├── landing/                   # LandingHero, LandingFeatures, LandingHowItWorks, LandingMetrics, LandingPreview, LandingTestimonials, LandingFinalCTA
+│   ├── home/                      # HomeGreeting, HomeMoodCheckin, HomeRecommended, HomeCategoriesGrid, HomeStreakCard, HomePhraseOfDay, HomeMomentOfDay
+│   ├── explore/                   # ExploreCategoryChips, ExploreFilterPanel, ExploreSearch, ExploreSessionCard
+│   ├── player/                    # PlayerPrePlay, PlayerAudio, PlayerPostSession
+│   ├── breathing/                 # BreathingCircle, BreathingControls
+│   ├── learn/                     # LearnArticleCard
+│   ├── progress/                  # ProgressStatsGrid, ProgressMoodChart, ProgressSessionHistory
+│   ├── onboarding/                # OnboardingProgressBar + steps/ (8 step-uri)
+│   └── layout/                    # AppNavbarPublic, AppNavbarAuth, AppBottomBar, AppFooter, AppMiniPlayer, AppSOSButton, AppSOSOverlay
+│
+├── config/
+│   ├── brand.js                   # Resolver brand activ (din env / hostname)
+│   └── brands/
+│       ├── wellness.js            # Harmonoria — base URL `https://api.rvdhub.com`, portalName "Harmonoria"
+│       ├── wellness2.js           # Innerawake — base URL `https://api.dnaperf.com`, portalName "Innerawake"
+│       └── wellness3.js           # Calmasoul — base URL `https://api.rvdhub.com`, portalName "Calmasoul"
+│
+├── services/
+│   └── api.js                     # `request()` — auto-injectează `portal_name` (query pt GET, body pt POST/PUT)
+│                                  # Override dev: VITE_API_BASE_URL
+│
+├── stores/                      # auth, mood, player, products, progress, ui, user (Pinia + persist)
+├── composables/                 # useAudioPlayer, useArticlePage, useBreathing, useGreeting, useNativePracticeVideoProgress
+├── utils/                       # articleContent, audioDuration, productImageUrl, productKinds
+├── data/                        # sessions.js, articles.js, phrases.js (mock — în uz parțial, deprecated treptat)
+├── constants/                   # appIcons.js, landingImages.js
+├── i18n/                        # index.js + locales/en.json (locale brand-specific în brands/*/i18n)
+├── router/                      # index.js
+├── styles/                      # variables.css, base.css, typography.css, animations.css, utilities.css
 └── main.js
 ```
+
+---
+
+## Backend & date
+
+**API endpoint principal:** `/wellness/products` (GET) — returnează catalog complet de produse.
+
+**Product response shape** (mapat în `stores/products.js → mapProduct`):
+- `type`: numeric (1=meditation, 2=sleep, 3=article, 4=breathing, 5=focus, 6=meditation/MP3)
+- `icon_small` / `icon_large`: thumbnail (icon unic per produs)
+- `banner_small` / `banner_medium` / `banner_large`: banner (poate fi partajat între produse)
+- `url`: audio MP3 / PDF (pentru articole)
+- `description_short` / `description_long`
+- `code`: identifier intern (folosit pentru detectare categorie via keyword matching)
+
+Categoria e derivată prin keyword matching pe `code`/`title` (`stress`, `sleep`, `focus`, etc.); fallback la `type` numeric.
+
+---
+
+## Audio player — arhitectură
+
+`useAudioPlayer.js` e **singleton la nivel de modul** — toate componentele (SessionView, PlayerAudio, AppMiniPlayer) împart același Howl.
+
+**View ≠ Play (decoupled):**
+- Click pe card → doar `router.push` (NU mai face `loadSession`)
+- SessionView mount → fetch în `viewSession` local (NU `load()`)
+- Pre-play afișează `viewSession`; mini-player + audio reflectă `playerStore.currentSession`
+- `startPlay()` → `load(viewSession)` + `play()` → distruge howl-ul anterior
+
+Comportament cerut explicit de user: audio-ul curent NU se oprește la navigare, doar la click pe Play. Nu modifica fără confirmare.
 
 ---
 
 ## Starea curentă a funcționalităților
 
 ### Implementat
-- Autentificare mock (coduri statice, fără backend)
+- 3 branduri (Harmonoria / Innerawake / Calmasoul) cu override-uri views/styling/i18n
+- Backend integration pentru catalog produse (`productsStore`)
+- Player audio Howler.js (fișiere MP3 reale de la API)
+- Player video pentru practice (`PracticeVideoView`)
 - Onboarding multi-pas (8 pași)
 - Catalog sesiuni cu filtrare pe categorii
 - Mood check-in zilnic
-- Player audio (Howler.js — fișierele audio sunt `null` în mock data)
 - Exerciții de respirație (animație vizuală)
 - Favorite sesiuni
 - Buton SOS (pentru crize de anxietate)
 - Statistici progres (streak, ore, grafice Chart.js)
-- Articole educative
+- Articole educative (cu PDF de la API)
 - Persistență date (localStorage via Pinia)
-- Internationalizare (i18n)
+- Internationalizare (i18n) — bază `en.json`, locale-uri brand-specific
+
+### În tranziție / parțial
+- **Migrare mock → API:** multe componente încă referă `thumbnailGradient` (placeholder) în loc de `thumbnail`/`banner` reale. Pattern recurent de bug-uri "imaginile nu apar pe X".
+- **Brand override inline rendering:** wellness2/wellness3 randează frecvent inline în loc să folosească componentele partajate — fix-urile trebuie aplicate și în `src/brands/*/views/`.
 
 ### Lipsește / De făcut
-- [ ] Backend real + bază de date
-- [ ] Autentificare reală (JWT / OAuth)
-- [ ] Fișiere audio reale
-- [ ] Imagini/thumbnailuri pentru sesiuni (acum sunt gradienți CSS)
+- [ ] Autentificare reală (JWT / OAuth) — momentan auth mock
 - [ ] Push notificări
 - [ ] Pagina de profil completată
 - [ ] Localizare completă (doar `en.json` momentan)
@@ -99,6 +147,4 @@ src/
 ---
 
 ## Task-uri în lucru
-<!-- Adaugă task-urile aici pe măsură ce apar -->
-
 - [ ] (niciun task activ momentan)
