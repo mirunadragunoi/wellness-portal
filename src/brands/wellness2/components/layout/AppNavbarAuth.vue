@@ -31,6 +31,7 @@
 
       <!-- Right actions -->
       <div class="navbar-auth__right">
+        <LanguageSelector />
         <button class="sos-btn" @click="uiStore.openSOS()">
           <Icon icon="lucide:alert-circle" class="app-icon app-icon--sm" />
           {{ t('nav.sos') }}
@@ -76,6 +77,7 @@ import { Icon } from '@iconify/vue'
 import { useUserStore } from '@/stores/user'
 import { useUIStore } from '@/stores/ui'
 import { AVATAR_ICONS } from '@/brands/wellness2/constants/appIcons'
+import LanguageSelector from '@/components/layout/LanguageSelector.vue'
 
 const { t } = useI18n()
 const open = ref(false)

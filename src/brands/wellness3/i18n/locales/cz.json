@@ -1,0 +1,49 @@
+{
+  "brand": {
+    "name": "Calmasoul",
+    "tagline": "Obnov svou duši",
+    "description": "Řízené meditace, dechové rituály a nástroje pro hluboké soustředění pro klidnější nervový systém."
+  },
+  "nav": {
+    "cta": "Začít"
+  },
+  "hero": {
+    "badge": "Tvá cesta k vnitřnímu míru",
+    "title_em": "ticho",
+    "title_line2": "uvnitř",
+    "subtitle": "Řízené meditace, dechové rituály a nástroje pro hluboké soustředění navržené pro klidnější nervový systém.",
+    "cta_primary": "Začít cestu",
+    "cta_secondary": "Přihlásit se"
+  },
+  "footer": {
+    "copy": "© 2026 Calmasoul. Všechna práva vyhrazena."
+  },
+  "auth": {
+    "signup_title": "Vytvořte si účet",
+    "signup_subtitle": "Zadejte své telefonní číslo a přístupový kód pro zahájení personalizované cesty.",
+    "login_subtitle": "Přihlaste se pomocí svého přístupového kódu.",
+    "phone_label": "Telefonní číslo",
+    "phone_placeholder": "+420 700 000 000",
+    "signup_btn": "Vytvořit účet",
+    "login_btn": "Přihlásit se",
+    "signup_link": "Registrace",
+    "no_code": "Ještě nemáte přístupový kód?",
+    "no_code_info": "Přístupové kódy jsou poskytovány s vaším wellness předplatným. Kontaktujte svého poskytovatele.",
+    "invalid_code": "Neplatný přístupový kód. Zkontrolujte a zkuste znovu."
+  },
+  "onboarding": {
+    "step4_body": "Calmasoul pomohl tisícům lidí snížit stres a lépe spát."
+  },
+  "home": {
+    "recommended_title": "Doporučená sezení"
+  },
+  "learn": {
+    "subtitle": "Vědecky podložené články pro klid, regeneraci a soustředění."
+  },
+  "progress": {
+    "title": "Váš pokrok"
+  },
+  "profile": {
+    "title": "Váš profil"
+  }
+}

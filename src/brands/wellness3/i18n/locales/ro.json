@@ -1,0 +1,49 @@
+{
+  "brand": {
+    "name": "Calmasoul",
+    "tagline": "Restaurează-ți sufletul",
+    "description": "Meditații ghidate, ritualuri de respirație și instrumente de concentrare profundă pentru un sistem nervos mai calm."
+  },
+  "nav": {
+    "cta": "Începe"
+  },
+  "hero": {
+    "badge": "Calea ta spre pacea interioară",
+    "title_em": "liniște",
+    "title_line2": "în interior",
+    "subtitle": "Meditații ghidate, ritualuri de respirație și instrumente de concentrare profundă concepute pentru un sistem nervos mai calm.",
+    "cta_primary": "Începe călătoria",
+    "cta_secondary": "Conectare"
+  },
+  "footer": {
+    "copy": "© 2026 Calmasoul. Toate drepturile rezervate."
+  },
+  "auth": {
+    "signup_title": "Creează-ți contul",
+    "signup_subtitle": "Introdu numărul de telefon și codul de acces pentru a-ți începe călătoria personalizată.",
+    "login_subtitle": "Conectează-te folosind codul tău de acces.",
+    "phone_label": "Număr de telefon",
+    "phone_placeholder": "+40 700 000 000",
+    "signup_btn": "Creează cont",
+    "login_btn": "Conectare",
+    "signup_link": "Înregistrare",
+    "no_code": "Nu ai încă un cod de acces?",
+    "no_code_info": "Codurile de acces sunt furnizate împreună cu abonamentul tău de wellness. Contactează furnizorul tău.",
+    "invalid_code": "Cod de acces invalid. Verifică și încearcă din nou."
+  },
+  "onboarding": {
+    "step4_body": "Calmasoul a ajutat mii de oameni să reducă stresul și să doarmă mai bine."
+  },
+  "home": {
+    "recommended_title": "Sesiuni recomandate"
+  },
+  "learn": {
+    "subtitle": "Articole susținute științific pentru calm, recuperare și concentrare."
+  },
+  "progress": {
+    "title": "Progresul tău"
+  },
+  "profile": {
+    "title": "Profilul tău"
+  }
+}

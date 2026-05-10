@@ -4,7 +4,7 @@
     <div class="session-card__img" :style="imgStyle">
       <span class="session-card__badge" :style="badgeStyle">{{ session.category }}</span>
       <div class="session-card__play-overlay">
-        <button type="button" class="play-btn" aria-label="Play" @click.stop="emit('play', session)">
+        <button type="button" class="play-btn" :aria-label="$t('player.play')" @click.stop="emit('play', session)">
           <Icon icon="lucide:play" class="app-icon app-icon--lg" />
         </button>
       </div>

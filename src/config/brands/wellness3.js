@@ -3,7 +3,7 @@ export default {
   name: 'Wellness3',
   portalName: 'Calmasoul',
   apiBaseUrl: 'https://api.rvdhub.com',
-  launchCountries: ['RO'],
+  countries: ['UK', 'CZ'],
   storagePrefix: 'wellness3',
   featureFlags: {
     brandedOverrides: true

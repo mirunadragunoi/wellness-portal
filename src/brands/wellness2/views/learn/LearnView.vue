@@ -36,12 +36,12 @@
             <div class="article-body">
               <div class="article-meta-row">
                 <span class="article-cat">{{ article.category }}</span>
-                <span class="article-read-time">{{ article.readTime }} min read</span>
+                <span class="article-read-time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
               </div>
               <h3 class="article-title">{{ article.title }}</h3>
               <p class="article-excerpt">{{ article.excerpt }}</p>
               <div class="article-footer">
-                <span class="article-read-link">Read</span>
+                <span class="article-read-link">{{ t('learn.read') }}</span>
                 <div class="article-actions">
                   <a
                     v-if="article.downloadUrl"
@@ -52,7 +52,7 @@
                     download
                     @click.stop
                   >
-                    Download PDF
+                    {{ t('learn.download_pdf') }}
                   </a>
                   <button class="article-bookmark" @click.stop="toggleBookmark(article.id)">
                     <Icon :icon="bookmarks.has(article.id) ? 'lucide:bookmark-check' : 'lucide:bookmark'" class="app-icon app-icon--sm" />

@@ -17,7 +17,7 @@
         <button type="button" class="mini-player__btn" @click="toggle" :aria-label="playerStore.isPlaying ? 'Pause' : 'Play'">
           <Icon :icon="playerStore.isPlaying ? 'lucide:pause' : 'lucide:play'" class="app-icon app-icon--sm" />
         </button>
-        <button type="button" class="mini-player__btn mini-player__btn--close" @click="closePlayer" aria-label="Close">
+        <button type="button" class="mini-player__btn mini-player__btn--close" @click="closePlayer" :aria-label="$t('common.close')">
           <Icon icon="lucide:x" class="app-icon app-icon--xs" />
         </button>
       </div>

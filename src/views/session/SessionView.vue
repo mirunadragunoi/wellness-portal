@@ -30,8 +30,8 @@
       </div>
 
       <div v-else key="empty" class="session-view__empty">
-        <p>No session selected.</p>
-        <RouterLink to="/explore" class="session-view__explore-btn">Browse sessions</RouterLink>
+        <p>{{ t('player.no_session') }}</p>
+        <RouterLink to="/explore" class="session-view__explore-btn">{{ t('learn.browse_sessions') }}</RouterLink>
       </div>
     </Transition>
   </div>

@@ -1,0 +1,29 @@
+{
+  "brand": {
+    "name": "Innerawake",
+    "tagline": "Trezește-ți liniștea interioară",
+    "description": "Trezește-ți liniștea cu meditații ghidate, exerciții de respirație și povești pentru somn."
+  },
+  "metrics": {
+    "subtitle": "Practici zilnice simple pot crea schimbări măsurabile în modul în care te simți, dormi și te concentrezi."
+  },
+  "footer": {
+    "copy": "© 2026 Innerawake. Toate drepturile rezervate."
+  },
+  "auth": {
+    "signup_title": "Creează-ți contul",
+    "signup_subtitle": "Introdu numărul de telefon și codul de acces primit.",
+    "login_subtitle": "Conectează-te folosind codul tău de acces.",
+    "phone_label": "Număr de telefon",
+    "phone_placeholder": "+40 700 000 000",
+    "signup_btn": "Creează cont",
+    "login_btn": "Conectare",
+    "signup_link": "Înregistrare",
+    "no_code": "Nu ai încă un cod de acces?",
+    "no_code_info": "Codurile de acces sunt furnizate împreună cu abonamentul tău de wellness. Contactează furnizorul tău.",
+    "invalid_code": "Cod de acces invalid. Verifică și încearcă din nou."
+  },
+  "onboarding": {
+    "step4_body": "Innerawake a ajutat mii de oameni să reducă stresul și să doarmă mai bine."
+  }
+}

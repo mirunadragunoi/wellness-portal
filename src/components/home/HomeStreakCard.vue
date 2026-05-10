@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="streak-longest">
-        <span class="streak-longest__label">Best</span>
+        <span class="streak-longest__label">{{ t('progress.best') }}</span>
         <span class="streak-longest__value">{{ progressStore.longestStreak }} {{ t('common.days') }}</span>
       </div>
     </div>

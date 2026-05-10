@@ -2,13 +2,13 @@
   <div class="home-view">
     <div class="home-wrap">
       <section class="greeting">
-        <span class="greeting-eyebrow">Good {{ dayPart }}</span>
-        <h1 class="greeting-title">Welcome back, {{ displayName }}.</h1>
-        <p class="greeting-sub">Take a moment for yourself today. Even 5 minutes can change your day.</p>
+        <span class="greeting-eyebrow">{{ t(`home.eyebrow_${dayPart}`) }}</span>
+        <h1 class="greeting-title">{{ t('home.welcome_back_name', { name: displayName }) }}</h1>
+        <p class="greeting-sub">{{ t('home.greeting_sub_combined') }}</p>
       </section>
 
       <section class="mood-section">
-        <p class="mood-label">How are you feeling right now?</p>
+        <p class="mood-label">{{ t('home.mood_prompt') }}</p>
         <div class="mood-row">
           <button
             v-for="m in moodOptions"
@@ -24,8 +24,8 @@
       </section>
 
       <section class="section-head">
-        <h2 class="section-head-title">Recommended for you</h2>
-        <RouterLink to="/explore" class="see-all">See all</RouterLink>
+        <h2 class="section-head-title">{{ t('home.recommended_title') }}</h2>
+        <RouterLink to="/explore" class="see-all">{{ t('home.see_all') }}</RouterLink>
       </section>
       <section class="rec-scroll">
         <article
@@ -42,14 +42,14 @@
             <h3 class="rec-title">{{ s.title }}</h3>
             <div class="rec-meta">
               <span class="rec-cat">{{ s.category }}</span>
-              <span class="rec-dur">{{ Math.round(s.duration / 60) }} min</span>
+              <span class="rec-dur">{{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</span>
             </div>
           </div>
         </article>
       </section>
 
       <section class="section-head">
-        <h2 class="section-head-title">Your Categories</h2>
+        <h2 class="section-head-title">{{ t('home.categories_title') }}</h2>
       </section>
       <section class="cat-grid">
         <RouterLink
@@ -59,28 +59,28 @@
           class="cat-tile"
         >
           <Icon :icon="c.icon" class="app-icon app-icon--lg cat-icon" />
-          <span class="cat-name">{{ c.label }}</span>
+          <span class="cat-name">{{ t(`explore.cat_${c.id}`) }}</span>
         </RouterLink>
       </section>
 
       <section class="moment-card">
-        <p class="moment-title">Moment of the Day</p>
-        <h3 class="moment-label">Evening Wind-Down</h3>
+        <p class="moment-title">{{ t('home.moment_title') }}</p>
+        <h3 class="moment-label">{{ t('home.evening_wind_down') }}</h3>
         <div class="moment-sessions">
-          <RouterLink class="chip chip-active" :to="{ name: 'breathing', params: { type: '4-7-8' } }">4-7-8 breathing</RouterLink>
-          <RouterLink class="chip chip-default" :to="{ name: 'session', params: { id: 'med-008' } }">Body scan</RouterLink>
-          <RouterLink class="chip chip-default" :to="{ name: 'session', params: { id: 'sleep-001' } }">Sleep story</RouterLink>
+          <RouterLink class="chip chip-active" :to="{ name: 'breathing', params: { type: '4-7-8' } }">{{ t('breathing.478_title') }}</RouterLink>
+          <RouterLink class="chip chip-default" :to="{ name: 'session', params: { id: 'med-008' } }">{{ t('home.body_scan') }}</RouterLink>
+          <RouterLink class="chip chip-default" :to="{ name: 'session', params: { id: 'sleep-001' } }">{{ t('home.sleep_story') }}</RouterLink>
         </div>
       </section>
 
       <aside class="sidebar">
         <section class="streak-card">
           <div class="streak-top">
-            <span class="streak-label">Day streak</span>
+            <span class="streak-label">{{ t('progress.day_streak') }}</span>
             <Icon icon="lucide:flame" class="app-icon app-icon--lg" />
           </div>
           <div class="streak-val">{{ progressStore.streakDays }}</div>
-          <p class="streak-unit">days in a row</p>
+          <p class="streak-unit">{{ t('home.days_in_a_row') }}</p>
           <div class="streak-dots">
             <span
               v-for="d in progressStore.weeklyDays"
@@ -92,25 +92,25 @@
         </section>
 
         <section class="phrase-card">
-          <p class="phrase-label">Phrase of the day</p>
-          <p class="phrase-text">"Even 5 minutes can change your day. Your calm is closer than you think."</p>
+          <p class="phrase-label">{{ t('home.phrase_title') }}</p>
+          <p class="phrase-text">"{{ t('home.phrase_quote_mock') }}"</p>
         </section>
 
         <section class="prog-mini">
-          <p class="prog-mini-title">This week</p>
+          <p class="prog-mini-title">{{ t('progress.this_week') }}</p>
           <div class="prog-stat-row">
-            <span class="prog-stat-label">Sessions</span>
-            <span class="prog-stat-val">{{ progressStore.totalSessions }} <span class="unit">sessions</span></span>
+            <span class="prog-stat-label">{{ t('progress.sessions') }}</span>
+            <span class="prog-stat-val">{{ progressStore.totalSessions }} <span class="unit">{{ t('progress.sessions').toLowerCase() }}</span></span>
           </div>
           <div class="prog-stat-row">
-            <span class="prog-stat-label">Time</span>
+            <span class="prog-stat-label">{{ t('progress.time') }}</span>
             <span class="prog-stat-val">{{ progressStore.totalTimeFormatted }}</span>
           </div>
           <div class="prog-stat-row">
-            <span class="prog-stat-label">Avg mood</span>
+            <span class="prog-stat-label">{{ t('progress.avg_mood') }}</span>
             <span class="prog-stat-val mood-val">{{ avgMoodLabel }}</span>
           </div>
-          <RouterLink to="/progress" class="see-all see-all--block">View full progress</RouterLink>
+          <RouterLink to="/progress" class="see-all see-all--block">{{ t('progress.view_full') }}</RouterLink>
         </section>
       </aside>
     </div>
@@ -119,6 +119,7 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useMoodStore, moodOptions } from '@/stores/mood'
@@ -128,6 +129,7 @@ import { useProductsStore } from '@/stores/products'
 import { CATEGORY_ICONS } from '@/constants/appIcons'
 import { routeForProduct } from '@/utils/productKinds'
 
+const { t } = useI18n()
 const router = useRouter()
 const userStore = useUserStore()
 const moodStore = useMoodStore()
@@ -161,13 +163,13 @@ const categories = [
 
 const avgMoodLabel = computed(() => {
   const recent = moodStore.last7Days.filter((d) => d.value !== null)
-  if (!recent.length) return 'No check-in'
+  if (!recent.length) return t('home.no_check_in')
   const avg = recent.reduce((acc, d) => acc + d.value, 0) / recent.length
-  if (avg < 2) return 'Low'
-  if (avg < 3) return 'Foggy'
-  if (avg < 4) return 'Okay'
-  if (avg < 4.5) return 'Bright'
-  return 'Glowing'
+  if (avg < 2) return t('home.mood_low')
+  if (avg < 3) return t('home.mood_foggy')
+  if (avg < 4) return t('home.mood_okay')
+  if (avg < 4.5) return t('home.mood_bright')
+  return t('home.mood_glowing')
 })
 
 function setMood(id) {

@@ -42,7 +42,8 @@
 
       <!-- Right: Avatar + streak -->
       <div class="navbar-auth__right">
-        <div class="streak-pill" title="Current streak">
+        <LanguageSelector />
+        <div class="streak-pill" :title="t('progress.current_streak')">
           <Icon icon="lucide:flame" class="app-icon app-icon--sm" aria-hidden="true" />
           {{ progressStore.streakDays }}
         </div>
@@ -64,6 +65,7 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useProgressStore } from '@/stores/progress'
 import { AVATAR_ICONS } from '@/constants/appIcons'
+import LanguageSelector from '@/components/layout/LanguageSelector.vue'
 
 const { t } = useI18n()
 const route = useRoute()

@@ -63,22 +63,23 @@ src/
 │   └── layout/                    # AppNavbarPublic, AppNavbarAuth, AppBottomBar, AppFooter, AppMiniPlayer, AppSOSButton, AppSOSOverlay
 │
 ├── config/
-│   ├── brand.js                   # Resolver brand activ (din env / hostname)
+│   ├── brand.js                   # Resolver brand + country (din env / hostname / ?country=)
+│   ├── countries.js               # COUNTRIES (UK/CZ/SK), subdomainToCountry, getCountryConfig
 │   └── brands/
-│       ├── wellness.js            # Harmonoria — base URL `https://api.rvdhub.com`, portalName "Harmonoria"
-│       ├── wellness2.js           # Innerawake — base URL `https://api.dnaperf.com`, portalName "Innerawake"
-│       └── wellness3.js           # Calmasoul — base URL `https://api.rvdhub.com`, portalName "Calmasoul"
+│       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", countries: UK+SK
+│       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", countries: UK
+│       └── wellness3.js           # Calmasoul — apiBase rvdhub, portalName "Calmasoul", countries: UK+CZ
 │
 ├── services/
-│   └── api.js                     # `request()` — auto-injectează `portal_name` (query pt GET, body pt POST/PUT)
-│                                  # Override dev: VITE_API_BASE_URL
+│   └── api.js                     # `request()` — auto-injectează `portal_name` + `country` (UPPER) + `language` (lower)
+│                                  # pe toate apelurile. Override dev: VITE_API_BASE_URL
 │
 ├── stores/                      # auth, mood, player, products, progress, ui, user (Pinia + persist)
 ├── composables/                 # useAudioPlayer, useArticlePage, useBreathing, useGreeting, useNativePracticeVideoProgress
-├── utils/                       # articleContent, audioDuration, productImageUrl, productKinds
+├── utils/                       # articleContent, audioDuration, cookies, productImageUrl, productKinds
 ├── data/                        # sessions.js, articles.js, phrases.js (mock — în uz parțial, deprecated treptat)
 ├── constants/                   # appIcons.js, landingImages.js
-├── i18n/                        # index.js + locales/en.json (locale brand-specific în brands/*/i18n)
+├── i18n/                        # index.js + locales/{en,ro,cz,sk}.json (brand overrides în brands/*/i18n/locales/)
 ├── router/                      # index.js
 ├── styles/                      # variables.css, base.css, typography.css, animations.css, utilities.css
 └── main.js
@@ -99,6 +100,52 @@ src/
 - `code`: identifier intern (folosit pentru detectare categorie via keyword matching)
 
 Categoria e derivată prin keyword matching pe `code`/`title` (`stress`, `sleep`, `focus`, etc.); fallback la `type` numeric.
+
+**Auto-inject pe toate apelurile** (din `services/api.js`):
+- `portal_name` = brand identifier (`Harmonoria` / `Innerawake` / `Calmasoul`)
+- `country` = cod țară 2 litere UPPERCASE (`UK` / `CZ` / `SK`) — `UK` e legacy, nu ISO (`GB`)
+- `language` = cod limbă 2 litere lowercase (`en` / `ro` / `cz` / `sk`) — `cz` e legacy, nu ISO (`cs`)
+
+Pentru GET: ca query params. Pentru POST/PUT: în body.
+
+---
+
+## Country & limbă — arhitectură
+
+**Detectare country** (în `src/config/brand.js → getCountryKey()`), priorități:
+1. `?country=XX` URL param (dev/test override, normalizat upper)
+2. Subdomain: `cz.` → CZ, `sk.` → SK, `www.` sau apex → UK
+3. Fallback: prima țară din allow-list-ul brand-ului
+
+**Matrice brand × country × limbi disponibile** (`src/config/brands/*.js` → `countries[]` + `src/config/countries.js` → `COUNTRIES`):
+
+| Brand        | Domain principal      | Subdomenii  | Country | Limbi disponibile  | Default |
+|--------------|-----------------------|-------------|---------|---------------------|---------|
+| Harmonoria   | harmonoria.com        | `www`/apex  | UK      | en, ro              | en      |
+| Harmonoria   | harmonoria.com        | `sk.`       | SK      | sk                  | sk      |
+| Innerawake   | innerawake.com        | `www`/apex  | UK      | en, ro              | en      |
+| Calmasoul    | calmasoul.com         | `www`/apex  | UK      | en, ro              | en      |
+| Calmasoul    | calmasoul.com         | `cz.`       | CZ      | cz                  | cz      |
+
+**Selectorul de limbă** (`components/layout/LanguageSelector.vue`):
+- Afișat în navbar (Auth + Public) **doar dacă country are 2+ limbi** (deci doar pe UK momentan).
+- La schimbare: persist în **cookie** (`{brand-storagePrefix}-locale-{country}`, ex: `calmasoul-locale-UK`), `SameSite=Lax`, max-age 1 an.
+- După select, refresh `productsStore` pentru ca traducerile catalogului să vină de la backend cu noua limbă.
+
+**Fișiere locale** (cheie = limbă, NU țară):
+- `src/i18n/locales/{en,ro,cz,sk}.json` — base **NEUTRU** (fără referințe la branduri); `brand.name = "Wellness Portal"`, `footer.copy = "© 2026 All rights reserved."`, `onboarding.step4_body` fără numele brand-ului
+- `src/brands/wellness/i18n/locales/{en,ro,cz,sk}.json` — Harmonoria overrides (brand.{name,tagline,description}, footer.copy, onboarding.step4_body)
+- `src/brands/wellness2/i18n/locales/{en,ro}.json` — Innerawake overrides
+- `src/brands/wellness3/i18n/locales/{en,ro,cz}.json` — Calmasoul overrides
+- **Toate brandurile au override-uri simetrice.** În override pui doar cheile care diferă de base (deep-merge cu `mergeMessages()`).
+
+**Dev override pentru test fără DNS:**
+```
+http://localhost:5173/?country=cz   # forțează CZ pe brand-ul curent (dacă e în allow-list)
+http://localhost:5173/?country=sk   # SK
+http://localhost:5173/?country=UK   # UK (sau orice case)
+```
+Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cade pe default.
 
 ---
 
@@ -132,17 +179,20 @@ Comportament cerut explicit de user: audio-ul curent NU se oprește la navigare,
 - Statistici progres (streak, ore, grafice Chart.js)
 - Articole educative (cu PDF de la API)
 - Persistență date (localStorage via Pinia)
-- Internationalizare (i18n) — bază `en.json`, locale-uri brand-specific
+- Multi-country routing (subdomain → country, `?country=` dev override)
+- Multi-language i18n (en, ro, cz, sk) cu selector în navbar, persist în cookie
 
 ### În tranziție / parțial
 - **Migrare mock → API:** multe componente încă referă `thumbnailGradient` (placeholder) în loc de `thumbnail`/`banner` reale. Pattern recurent de bug-uri "imaginile nu apar pe X".
 - **Brand override inline rendering:** wellness2/wellness3 randează frecvent inline în loc să folosească componentele partajate — fix-urile trebuie aplicate și în `src/brands/*/views/`.
+- **Traduceri ro/cz/sk:** fișierele locale există ca stub-uri `{}`. Sursa de adevăr = `src/i18n/locales/en.json` (~180 chei) + brand overrides. Audit hardcoded EN finalizat — toate textele vizibile (titluri, butoane, labels, placeholder, tooltips, aria-labels) trec prin `t()`. User-ul va completa traducerile cu altă sesiune Claude.
 
 ### Lipsește / De făcut
 - [ ] Autentificare reală (JWT / OAuth) — momentan auth mock
 - [ ] Push notificări
 - [ ] Pagina de profil completată
-- [ ] Localizare completă (doar `en.json` momentan)
+- [ ] Traduceri complete în ro/cz/sk
+- [ ] Symmetrie completă brand wellness pentru views/components (Harmonoria în `src/brands/wellness/views/` + `components/`) — i18n e deja simetric, dar views/components rămân în `src/views/` + `src/components/`
 
 ---
 

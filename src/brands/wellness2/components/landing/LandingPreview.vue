@@ -19,17 +19,17 @@
         <div class="featured-card" @click="router.push('/explore')">
           <div class="feat-thumb" :style="{ backgroundImage: `url(${LANDING_IMAGES.preview1})` }">
             <div class="feat-thumb-overlay" />
-            <div class="feat-type">Meditation</div>
-            <button class="feat-play-btn" aria-label="Play">
+            <div class="feat-type">{{ t('preview.feat_type') }}</div>
+            <button class="feat-play-btn" :aria-label="t('player.play')">
               <Icon icon="lucide:play" class="app-icon app-icon--md" />
             </button>
           </div>
           <div class="feat-body">
-            <div class="feat-body-title">Morning Clarity</div>
-            <div class="feat-body-desc">Start your day grounded and focused with this gentle wake-up meditation designed for busy mornings.</div>
+            <div class="feat-body-title">{{ t('preview.feat_title') }}</div>
+            <div class="feat-body-desc">{{ t('preview.feat_desc') }}</div>
             <div class="feat-body-meta">
-              <span class="chip chip-active">Focus</span>
-              <span class="chip chip-default">10 min</span>
+              <span class="chip chip-active">{{ t('preview.feat_chip') }}</span>
+              <span class="chip chip-default">10 {{ t('explore.min') }}</span>
             </div>
           </div>
         </div>

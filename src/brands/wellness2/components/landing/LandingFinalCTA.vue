@@ -16,11 +16,11 @@
       </div>
 
       <div class="cta-card reveal reveal-2">
-        <div class="cta-card-title">✦ Create your account</div>
-        <div class="cta-card-sub">Enter your phone and access code to begin your personalized journey.</div>
+        <div class="cta-card-title">✦ {{ t('auth.create_account') }}</div>
+        <div class="cta-card-sub">{{ t('finalCta.body_alt') }}</div>
         <input class="cta-input" type="text" placeholder="+40 700 000 000" />
-        <input class="cta-input" type="text" placeholder="Access code" />
-        <RouterLink to="/signup" class="cta-submit">Start Your Journey →</RouterLink>
+        <input class="cta-input" type="text" :placeholder="t('auth.code_placeholder')" />
+        <RouterLink to="/signup" class="cta-submit">{{ t('finalCta.btn_arrow') }}</RouterLink>
       </div>
     </div>
   </section>

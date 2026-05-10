@@ -114,12 +114,12 @@ export const useProductsStore = defineStore('products', {
   },
 
   actions: {
-    async fetchProducts(language = 'en') {
+    async fetchProducts() {
       if (this.loading) return
       this.loading = true
       try {
         const auth = useAuthStore()
-        const data = await api.getProducts(auth.accessCode, language)
+        const data = await api.getProducts(auth.accessCode)
         this.items = (data.data || []).map(mapProduct)
         this.loaded = true
         void hydrateClientMediaDurations(this.items)
@@ -128,9 +128,9 @@ export const useProductsStore = defineStore('products', {
       }
     },
 
-    async fetchProductById(id, language = 'en') {
+    async fetchProductById(id) {
       const auth = useAuthStore()
-      const data = await api.getProduct(auth.accessCode, id, language)
+      const data = await api.getProduct(auth.accessCode, id)
       const mapped = mapProduct(data.data)
       const idx = this.items.findIndex(p => String(p.id) === String(mapped.id))
       if (idx >= 0) this.items[idx] = mapped

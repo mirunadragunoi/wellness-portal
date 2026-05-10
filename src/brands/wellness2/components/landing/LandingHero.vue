@@ -76,7 +76,7 @@
     <!-- Scroll indicator -->
     <div class="hero__scroll-hint">
       <div class="hero__scroll-line" />
-      <span class="hero__scroll-label">Scroll</span>
+      <span class="hero__scroll-label">{{ t('hero.scroll') }}</span>
     </div>
   </section>
 </template>

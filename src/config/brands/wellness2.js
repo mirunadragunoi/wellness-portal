@@ -3,7 +3,7 @@ export default {
   name: 'Wellness2',
   portalName: 'Innerawake',
   apiBaseUrl: 'https://api.dnaperf.com',
-  launchCountries: ['RO'],
+  countries: ['UK'],
   storagePrefix: 'wellness2',
   featureFlags: {
     brandedOverrides: true

@@ -2,24 +2,24 @@
   <div class="home-view">
     <div class="home-header">
       <div class="container">
-        <p class="home-header__eyebrow">Midnight Bloom</p>
-        <h1 class="home-header__title">Good {{ greetingPart }}, {{ displayName }}</h1>
-        <p class="home-header__subtitle">Consistency over intensity. Keep your nervous system steady.</p>
+        <p class="home-header__eyebrow">{{ t('home.eyebrow_evening_label') }}</p>
+        <h1 class="home-header__title">{{ t(`home.greeting_${greetingPart}`, { name: displayName }) }}</h1>
+        <p class="home-header__subtitle">{{ t('home.subtitle_w3') }}</p>
       </div>
     </div>
 
     <div class="container home-content">
       <section class="home-top-grid">
         <article class="card card--streak">
-          <p class="card__label">Current streak</p>
-          <div class="card__big">{{ progressStore.streakDays }} <span>days</span></div>
+          <p class="card__label">{{ t('progress.current_streak') }}</p>
+          <div class="card__big">{{ progressStore.streakDays }} <span>{{ t('progress.days') }}</span></div>
           <div class="streak-row">
             <span v-for="d in progressStore.weeklyDays" :key="d.date" class="streak-dot" :class="{ 'streak-dot--on': d.completed }">{{ d.label }}</span>
           </div>
         </article>
 
         <article class="card card--mood">
-          <p class="card__label">How are you now?</p>
+          <p class="card__label">{{ t('home.mood_prompt_short') }}</p>
           <div class="mood-row">
             <button v-for="m in moodOptions" :key="m.id" class="mood-btn" :class="{ 'mood-btn--active': moodStore.todayMood === m.id }" @click="setMood(m.id)">
               <Icon :icon="m.icon" class="app-icon app-icon--md" />
@@ -31,8 +31,8 @@
 
       <section class="home-section">
         <div class="section-head">
-          <h2>Recommended sessions</h2>
-          <RouterLink to="/explore">See all</RouterLink>
+          <h2>{{ t('home.recommended_title') }}</h2>
+          <RouterLink to="/explore">{{ t('home.see_all') }}</RouterLink>
         </div>
         <div class="session-grid">
           <ExploreSessionCard
@@ -47,7 +47,7 @@
 
       <section class="home-section">
         <div class="section-head">
-          <h2>Quick breathing</h2>
+          <h2>{{ t('breathing.quick_breathing') }}</h2>
         </div>
         <div class="breathing-grid">
           <RouterLink v-for="b in breathingShortcuts" :key="b.id" :to="{ name: 'breathing', params: { type: b.id } }" class="breathing-chip">
@@ -62,6 +62,7 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import { useMoodStore, moodOptions } from '@/stores/mood'
@@ -72,6 +73,7 @@ import { useProductsStore } from '@/stores/products'
 import ExploreSessionCard from '@/components/explore/ExploreSessionCard.vue'
 import { routeForProduct } from '@/utils/productKinds'
 
+const { t } = useI18n()
 const moodStore = useMoodStore()
 const progressStore = useProgressStore()
 const userStore = useUserStore()

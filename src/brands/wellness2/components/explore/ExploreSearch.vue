@@ -9,7 +9,7 @@
       type="search"
       autocomplete="off"
     />
-    <button v-if="modelValue" type="button" class="search-bar__clear" aria-label="Clear" @click="emit('update:modelValue', '')">
+    <button v-if="modelValue" type="button" class="search-bar__clear" :aria-label="t('common.clear')" @click="emit('update:modelValue', '')">
       <Icon icon="lucide:x" class="app-icon app-icon--xs" />
     </button>
   </div>

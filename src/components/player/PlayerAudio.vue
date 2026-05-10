@@ -30,13 +30,13 @@
 
       <!-- Controls -->
       <div class="audio-player__controls">
-        <button class="ctrl-btn ctrl-btn--sm" @click="skipBack()" title="Back 15s">
+        <button class="ctrl-btn ctrl-btn--sm" @click="skipBack()" :title="t('player.skip_back')">
           ⟨15
         </button>
-        <button type="button" class="ctrl-btn ctrl-btn--play" @click="toggle" :aria-label="playerStore.isPlaying ? 'Pause' : 'Play'">
+        <button type="button" class="ctrl-btn ctrl-btn--play" @click="toggle" :aria-label="playerStore.isPlaying ? t('player.pause') : t('player.play')">
           <Icon :icon="playerStore.isPlaying ? 'lucide:pause' : 'lucide:play'" class="app-icon app-icon--xl" />
         </button>
-        <button class="ctrl-btn ctrl-btn--sm" @click="skipForward()" title="Forward 15s">
+        <button class="ctrl-btn ctrl-btn--sm" @click="skipForward()" :title="t('player.skip_forward')">
           15⟩
         </button>
       </div>
@@ -57,11 +57,13 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { usePlayerStore } from '@/stores/player'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import { sessionTypeIcon } from '@/constants/appIcons'
 import { cssBackgroundFromImageUrl, sessionHasCoverImage } from '@/utils/productImageUrl'
 
+const { t } = useI18n()
 const props = defineProps({ session: Object })
 const playerStore  = usePlayerStore()
 const { toggle, seek, skipBack, skipForward, setVolume } = useAudioPlayer()

@@ -22,7 +22,7 @@
 
           <!-- Quick breathing shortcuts -->
           <div class="quick-breathing">
-            <h3 class="quick-breathing__title">Quick Breathing</h3>
+            <h3 class="quick-breathing__title">{{ t('breathing.quick_breathing') }}</h3>
             <div class="quick-breathing__grid">
               <RouterLink
                 v-for="b in breathingShortcuts" :key="b.id"
@@ -44,6 +44,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useMoodStore }     from '@/stores/mood'
 import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
@@ -55,6 +56,7 @@ import HomeMomentOfDay    from '@/components/home/HomeMomentOfDay.vue'
 import HomePhraseOfDay    from '@/components/home/HomePhraseOfDay.vue'
 import HomeCategoriesGrid from '@/components/home/HomeCategoriesGrid.vue'
 
+const { t } = useI18n()
 const moodStore     = useMoodStore()
 const progressStore = useProgressStore()
 const productsStore = useProductsStore()

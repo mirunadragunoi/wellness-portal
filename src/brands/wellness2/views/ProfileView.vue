@@ -18,7 +18,7 @@
               </div>
               <div>
                 <p v-if="!editing" class="profile-name">{{ userStore.firstName || 'Your name' }}</p>
-                <input v-else v-model="editName" class="profile-name-input" placeholder="Your name" />
+                <input v-else v-model="editName" class="profile-name-input" :placeholder="t('profile.name_placeholder')" />
                 <p class="profile-member-since">{{ t('profile.member_since', { date: memberSince }) }}</p>
               </div>
             </div>

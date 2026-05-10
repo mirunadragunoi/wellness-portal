@@ -11,7 +11,7 @@
             :style="{ backgroundImage: `url(${photo})` }"
           />
         </div>
-        <span class="section-label" style="color: var(--violet)">Begin Today</span>
+        <span class="section-label" style="color: var(--violet)">{{ t('finalCta.label') }}</span>
         <h2 class="cta-card__title">
           {{ t('finalCta.title_1') }}<br />
           <span class="grad-text">{{ t('finalCta.title_em') }}</span>

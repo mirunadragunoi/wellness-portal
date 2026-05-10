@@ -15,6 +15,7 @@
 
       <!-- Actions -->
       <div class="navbar__actions">
+        <LanguageSelector />
         <RouterLink to="/login"  class="btn btn-ghost">{{ t('nav.login') }}</RouterLink>
         <RouterLink to="/signup" class="btn btn-primary">{{ t('nav.cta') }}</RouterLink>
       </div>
@@ -43,6 +44,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import LanguageSelector from '@/components/layout/LanguageSelector.vue'
 
 const { t } = useI18n()
 const scrolled    = ref(false)

@@ -9,7 +9,7 @@
         <div v-for="card in previewCards" :key="card.id" class="preview-card">
           <div class="preview-card__img" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.35)), url(${card.image})` }">
             <span class="preview-card__badge" :class="`badge--${card.category}`">{{ card.categoryLabel }}</span>
-            <button type="button" class="preview-card__play" aria-label="Play" @click="$router.push('/signup')">
+            <button type="button" class="preview-card__play" :aria-label="$t('player.play')" @click="$router.push('/signup')">
               <Icon icon="lucide:play" class="app-icon app-icon--md" />
             </button>
           </div>

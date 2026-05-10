@@ -3,7 +3,7 @@ export default {
   name: 'Wellness',
   portalName: 'Harmonoria',
   apiBaseUrl: 'https://api.rvdhub.com',
-  launchCountries: ['RO'],
+  countries: ['UK', 'SK'],
   storagePrefix: 'wellness',
   featureFlags: {
     brandedOverrides: false

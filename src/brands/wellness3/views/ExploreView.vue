@@ -2,7 +2,7 @@
   <div class="explore-view">
     <div class="container">
       <div class="explore-view__header">
-        <h1 class="explore-view__title"><span>Explore</span> {{ t('explore.title').toLowerCase() }}</h1>
+        <h1 class="explore-view__title">{{ t('explore.title') }}</h1>
         <ExploreSearch v-model="query" />
       </div>
 

@@ -76,8 +76,8 @@
         <!-- Sidebar -->
         <aside class="article-sidebar">
           <div class="article-sidebar__card">
-            <h3 class="article-sidebar__title">Ready to practice?</h3>
-            <p class="article-sidebar__body">Put what you've learned into action with a guided session.</p>
+            <h3 class="article-sidebar__title">{{ t('learn.ready_to_practice') }}</h3>
+            <p class="article-sidebar__body">{{ t('learn.ready_to_practice_body') }}</p>
             <RouterLink to="/explore" class="article-sidebar__btn">
               {{ t('learn.browse_sessions') }}
               <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
@@ -86,7 +86,7 @@
 
           <!-- Related articles -->
           <div class="article-sidebar__related">
-            <h4 class="article-sidebar__related-title">Related Articles</h4>
+            <h4 class="article-sidebar__related-title">{{ t('learn.related_articles') }}</h4>
             <RouterLink
               v-for="rel in related"
               :key="rel.id"
@@ -105,7 +105,7 @@
 
       <!-- 404 -->
       <div v-else-if="!loading" class="article-view__not-found">
-        <p>Article not found.</p>
+        <p>{{ t('learn.not_found') }}</p>
         <RouterLink to="/learn" class="article-view__back article-view__back--center">
           <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" aria-hidden="true" />
           {{ t('learn.back_to_learn') }}

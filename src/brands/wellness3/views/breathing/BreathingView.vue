@@ -45,11 +45,11 @@
           <div class="breathing-complete__check">
             <Icon icon="lucide:check" class="app-icon app-icon--2xl" aria-hidden="true" />
           </div>
-          <h2>Session Complete</h2>
-          <p>Great work. You've completed {{ Math.round(totalDuration / 60) }} minutes of mindful breathing.</p>
+          <h2>{{ t('breathing.session_complete') }}</h2>
+          <p>{{ t('breathing.session_complete_body', { minutes: Math.round(totalDuration / 60) }) }}</p>
           <div class="breathing-complete__btns">
-            <button class="bc-btn bc-btn--primary" @click="reset">Practice Again</button>
-            <RouterLink to="/home" class="bc-btn bc-btn--ghost">Back to Home</RouterLink>
+            <button class="bc-btn bc-btn--primary" @click="reset">{{ t('breathing.practice_again') }}</button>
+            <RouterLink to="/home" class="bc-btn bc-btn--ghost">{{ t('player.back_home') }}</RouterLink>
           </div>
         </div>
       </Transition>

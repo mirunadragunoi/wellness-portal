@@ -19,7 +19,7 @@
             <div class="preview-card__overlay" />
             <span class="preview-card__badge">{{ card.categoryLabel }}</span>
             <div class="preview-card__play-wrap">
-              <button type="button" class="preview-card__play" aria-label="Play">
+              <button type="button" class="preview-card__play" :aria-label="t('player.play')">
                 <Icon icon="lucide:play" class="app-icon app-icon--sm" />
               </button>
             </div>

@@ -5,7 +5,7 @@
         <RouterLink to="/" class="footer__logo">
           {{ t('brand.name') }}
         </RouterLink>
-        <p class="footer__tagline">Your daily companion for mindful living.</p>
+        <p class="footer__tagline">{{ t('footer.tagline') }}</p>
       </div>
       <ul class="footer__links">
         <li><a href="#" class="footer__link">{{ t('footer.about') }}</a></li>

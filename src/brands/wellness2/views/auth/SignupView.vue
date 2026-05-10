@@ -3,13 +3,13 @@
     <div class="auth-visual">
       <RouterLink to="/" class="auth-logo"><span class="auth-logo-dot" />{{ t('brand.name') }}</RouterLink>
       <div>
-        <h2 class="auth-quote">Start your <span>inner</span> journey today</h2>
-        <p class="auth-visual-sub">Join thousands of people finding calm, focus, and better sleep with Innerawake.</p>
+        <h2 class="auth-quote" v-html="signupQuoteHtml" />
+        <p class="auth-visual-sub">{{ t('auth.signup_visual_sub', { brand: t('brand.name') }) }}</p>
       </div>
     </div>
     <div class="auth-form-side">
       <div class="auth-card">
-        <span class="auth-kicker">Create account</span>
+        <span class="auth-kicker">{{ t('auth.create_account') }}</span>
         <h1 class="auth-card__title">{{ t('auth.signup_title') }}</h1>
         <p class="auth-card__sub">{{ t('auth.signup_subtitle') }}</p>
 
@@ -33,8 +33,11 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+
+const signupQuoteHtml = computed(() => t('auth.signup_visual_html'))
 </script>
 
 <style scoped>

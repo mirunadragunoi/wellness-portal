@@ -48,7 +48,7 @@
               <img :src="avatar" alt="" />
             </span>
           </div>
-          <span class="hero__proof-text">Joined by <strong>12,000+</strong> people finding their calm</span>
+          <span class="hero__proof-text" v-html="proofHtml" />
         </div>
       </div>
 
@@ -61,8 +61,8 @@
           <div class="hero__orb-ring hero__orb-ring--1" />
           <div class="hero__orb-ring hero__orb-ring--2" />
           <div class="hero__orb" :style="{ backgroundImage: `linear-gradient(120deg, rgba(186,230,253,0.45), rgba(14,165,233,0.2)), url(${heroOrbBg})` }">
-            <span class="hero__orb-text">Breathe...</span>
-            <span class="hero__orb-hint">Inhale · Hold · Exhale</span>
+            <span class="hero__orb-text">{{ t('hero.orb_text') }}</span>
+            <span class="hero__orb-hint">{{ t('hero.orb_hint') }}</span>
           </div>
         </div>
 
@@ -70,17 +70,17 @@
         <div class="hero__card hero__card--streak">
           <div class="hero__card-thumb" :style="{ backgroundImage: `url(${heroProof1})` }" />
           <Icon icon="lucide:flame" class="hero__card-icon app-icon app-icon--sm" />
-          <strong>21 day streak</strong>
+          <strong>{{ t('hero.card_streak') }}</strong>
         </div>
         <div class="hero__card hero__card--mood">
           <div class="hero__card-thumb" :style="{ backgroundImage: `url(${heroProof2})` }" />
           <Icon icon="lucide:smile" class="hero__card-icon app-icon app-icon--sm" />
-          <span>Feeling <strong>Bright</strong></span>
+          <span v-html="feelingHtml" />
         </div>
         <div class="hero__card hero__card--session">
           <div class="hero__card-thumb" :style="{ backgroundImage: `url(${heroMain})` }" />
           <Icon icon="lucide:play" class="hero__card-icon app-icon app-icon--sm" />
-          5 min Calm Session
+          {{ t('hero.card_session') }}
         </div>
       </div>
     </div>
@@ -88,6 +88,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { LANDING_IMAGES } from '@/constants/landingImages'
@@ -97,6 +98,13 @@ const authStore = useAuthStore()
 const { heroMain, heroOrbBg, heroProof1, heroProof2 } = LANDING_IMAGES
 
 const proofAvatars = [heroProof1, heroProof2, heroMain, heroProof1, heroProof2]
+
+const proofHtml = computed(() =>
+  t('hero.proof', { count: `<strong>${t('hero.proof_count')}</strong>` })
+)
+const feelingHtml = computed(() =>
+  `${t('hero.feeling_label')} <strong>${t('hero.feeling_value')}</strong>`
+)
 </script>
 
 <style scoped>

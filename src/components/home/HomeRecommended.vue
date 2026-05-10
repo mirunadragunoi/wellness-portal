@@ -19,7 +19,7 @@
             <span class="session-card__badge" :style="getBadgeStyle(session.category)">
               {{ session.category }}
             </span>
-            <button type="button" class="session-card__play" aria-label="Play">
+            <button type="button" class="session-card__play" :aria-label="$t('player.play')">
               <Icon icon="lucide:play" class="app-icon app-icon--sm" />
             </button>
             <span class="session-card__type-icon">

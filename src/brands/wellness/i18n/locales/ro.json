@@ -1,0 +1,13 @@
+{
+  "brand": {
+    "name": "Harmonoria",
+    "tagline": "Găsește-ți liniștea",
+    "description": "Meditații ghidate, exerciții de respirație și instrumente personalizate de wellness — totul într-un singur loc."
+  },
+  "footer": {
+    "copy": "© 2026 Harmonoria. Toate drepturile rezervate."
+  },
+  "onboarding": {
+    "step4_body": "Harmonoria a ajutat mii de oameni să reducă stresul și să doarmă mai bine."
+  }
+}

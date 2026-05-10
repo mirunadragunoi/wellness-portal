@@ -1,8 +1,24 @@
 import { createI18n } from 'vue-i18n'
-import en from '@/i18n/locales/en.json'
+
+import baseEn from '@/i18n/locales/en.json'
+import baseRo from '@/i18n/locales/ro.json'
+import baseCz from '@/i18n/locales/cz.json'
+import baseSk from '@/i18n/locales/sk.json'
+
+import wellnessEn from '@/brands/wellness/i18n/locales/en.json'
+import wellnessRo from '@/brands/wellness/i18n/locales/ro.json'
+import wellnessCz from '@/brands/wellness/i18n/locales/cz.json'
+import wellnessSk from '@/brands/wellness/i18n/locales/sk.json'
+
 import wellness2En from '@/brands/wellness2/i18n/locales/en.json'
+import wellness2Ro from '@/brands/wellness2/i18n/locales/ro.json'
+
 import wellness3En from '@/brands/wellness3/i18n/locales/en.json'
-import { getBrandConfig, getBrandKey } from '@/config/brand'
+import wellness3Ro from '@/brands/wellness3/i18n/locales/ro.json'
+import wellness3Cz from '@/brands/wellness3/i18n/locales/cz.json'
+
+import { getBrandConfig, getBrandKey, getCountry, getCountryKey } from '@/config/brand'
+import { getCookie, setCookie } from '@/utils/cookies'
 
 function mergeMessages(base, override) {
   const out = { ...base }
@@ -17,32 +33,71 @@ function mergeMessages(base, override) {
   return out
 }
 
+const BRAND_LOCALES = {
+  wellness: { en: wellnessEn, ro: wellnessRo, cz: wellnessCz, sk: wellnessSk },
+  wellness2: { en: wellness2En, ro: wellness2Ro },
+  wellness3: { en: wellness3En, ro: wellness3Ro, cz: wellness3Cz }
+}
+
+const BASE_LOCALES = { en: baseEn, ro: baseRo, cz: baseCz, sk: baseSk }
+
 const brand = getBrandConfig()
 const brandKey = getBrandKey()
-const brandLocales = {
-  wellness2: wellness2En,
-  wellness3: wellness3En
+const country = getCountry()
+const countryKey = getCountryKey()
+const brandOverrides = BRAND_LOCALES[brandKey] || {}
+
+function buildMessages() {
+  const out = {}
+  for (const [lang, base] of Object.entries(BASE_LOCALES)) {
+    out[lang] = mergeMessages(base, brandOverrides[lang] || {})
+  }
+  return out
 }
-const brandOverride = brandLocales[brandKey] || {}
-const enMessages = mergeMessages(en, brandOverride)
-const localeStorageKey = `${brand.storagePrefix}-locale`
-const savedLocale = localStorage.getItem(localeStorageKey) || 'en'
+
+const cookieName = `${brand.storagePrefix}-locale-${countryKey}`
+
+function readSavedLocale() {
+  const saved = getCookie(cookieName)
+  if (saved && country.languages.includes(saved)) return saved
+  return country.defaultLanguage
+}
+
+const initialLocale = readSavedLocale()
 
 export const i18n = createI18n({
   legacy: false,
-  locale: savedLocale,
+  locale: initialLocale,
   fallbackLocale: 'en',
-  messages: { en: enMessages },
+  messages: buildMessages(),
   globalInjection: true
 })
 
-export function setLocale(locale) {
-  i18n.global.locale.value = locale
-  localStorage.setItem(localeStorageKey, locale)
-  document.documentElement.setAttribute('lang', locale)
+if (typeof document !== 'undefined') {
+  document.documentElement.setAttribute('lang', initialLocale)
 }
 
-export const availableLocales = [
-  { code: 'en', label: 'English' },
-  { code: 'ro', label: 'Română' }
-]
+export function setLocale(locale) {
+  if (!country.languages.includes(locale)) return
+  i18n.global.locale.value = locale
+  setCookie(cookieName, locale)
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('lang', locale)
+  }
+}
+
+export function getCurrentLocale() {
+  return i18n.global.locale.value
+}
+
+export const LOCALE_LABELS = {
+  en: 'English',
+  ro: 'Română',
+  cz: 'Čeština',
+  sk: 'Slovenčina'
+}
+
+export const availableLocales = country.languages.map(code => ({
+  code,
+  label: LOCALE_LABELS[code] || code.toUpperCase()
+}))

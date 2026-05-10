@@ -10,12 +10,13 @@
       <!-- Links -->
       <ul class="navbar__links">
         <li><a href="#features" class="navbar__link">{{ t('nav.explore') }}</a></li>
-        <li><a href="#sessions" class="navbar__link">Sessions</a></li>
+        <li><a href="#sessions" class="navbar__link">{{ t('nav.sessions') }}</a></li>
         <li><a href="#how"      class="navbar__link">{{ t('nav.about') }}</a></li>
       </ul>
 
       <!-- CTA -->
       <div class="navbar__cta">
+        <LanguageSelector />
         <RouterLink to="/login"  class="navbar__ghost">{{ t('nav.login') }}</RouterLink>
         <RouterLink to="/signup" class="navbar__btn">{{ t('nav.cta') }}</RouterLink>
       </div>
@@ -33,9 +34,9 @@
     <!-- Mobile drawer -->
     <Transition name="drawer">
       <div v-if="open" class="navbar__drawer">
-        <a href="#features" class="drawer__link" @click="open=false">Features</a>
-        <a href="#sessions" class="drawer__link" @click="open=false">Sessions</a>
-        <a href="#how"      class="drawer__link" @click="open=false">How it works</a>
+        <a href="#features" class="drawer__link" @click="open=false">{{ t('nav.features') }}</a>
+        <a href="#sessions" class="drawer__link" @click="open=false">{{ t('nav.sessions') }}</a>
+        <a href="#how"      class="drawer__link" @click="open=false">{{ t('nav.how_it_works') }}</a>
         <hr class="drawer__rule" />
         <RouterLink to="/login"  class="drawer__link" @click="open=false">{{ t('nav.login') }}</RouterLink>
         <RouterLink to="/signup" class="navbar__btn drawer__btn" @click="open=false">{{ t('nav.cta') }}</RouterLink>
@@ -47,6 +48,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import LanguageSelector from '@/components/layout/LanguageSelector.vue'
 
 const { t } = useI18n()
 const scrolled = ref(false)

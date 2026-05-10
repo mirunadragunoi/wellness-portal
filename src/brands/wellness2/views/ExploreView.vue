@@ -3,12 +3,12 @@
     <div class="explore-wrap">
       <header class="page-header">
         <h1 class="page-title">{{ t('explore.title') }}</h1>
-        <p class="page-sub">Discover meditations, sleep stories, soundscapes, and more.</p>
+        <p class="page-sub">{{ t('explore.subtitle') }}</p>
       </header>
 
       <div class="search-bar">
         <Icon icon="lucide:search" class="app-icon app-icon--sm search-icon" />
-        <input v-model="query" class="search-input" type="text" placeholder="Search meditations, topics..." />
+        <input v-model="query" class="search-input" type="text" :placeholder="t('explore.search_placeholder')" />
       </div>
 
       <div class="filters">

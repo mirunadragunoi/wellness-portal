@@ -2,33 +2,33 @@
   <div class="progress-view">
     <header class="progress-header">
       <div class="container">
-        <h1 class="progress-header__title">Your progress</h1>
+        <h1 class="progress-header__title">{{ t('progress.title') }}</h1>
       </div>
     </header>
 
     <div class="container progress-content">
       <section class="stats-grid">
         <article class="stat-card">
-          <p>Total sessions</p>
+          <p>{{ t('progress.total_sessions') }}</p>
           <h2>{{ progressStore.totalSessions }}</h2>
         </article>
         <article class="stat-card">
-          <p>Total mindful time</p>
+          <p>{{ t('progress.total_mindful_time') }}</p>
           <h2>{{ progressStore.totalTimeFormatted }}</h2>
         </article>
         <article class="stat-card">
-          <p>Current streak</p>
+          <p>{{ t('progress.current_streak') }}</p>
           <h2>{{ progressStore.streakDays }}d</h2>
         </article>
         <article class="stat-card">
-          <p>Longest streak</p>
+          <p>{{ t('progress.longest_streak') }}</p>
           <h2>{{ progressStore.longestStreak }}d</h2>
         </article>
       </section>
 
       <section class="progress-panels">
         <article class="panel">
-          <h3>Mood history</h3>
+          <h3>{{ t('progress.mood_history') }}</h3>
           <div class="mood-bars">
             <div v-for="d in moodStore.last7Days" :key="d.date" class="mood-col">
               <div class="mood-col__bar" :style="{ height: `${((d.value || 1) / 5) * 72}px` }" />
@@ -38,13 +38,13 @@
         </article>
 
         <article class="panel">
-          <h3>Recent sessions</h3>
+          <h3>{{ t('progress.recent_sessions') }}</h3>
           <div class="recent-list">
             <div v-for="(s, idx) in recent" :key="`${s.id}-${idx}`" class="recent-item">
               <div class="recent-item__thumb" />
               <div class="recent-item__meta">
                 <p>{{ s.title }}</p>
-                <small>{{ formatDate(s.completedAt) }} · {{ Math.round((s.duration || 0) / 60) }} min</small>
+                <small>{{ formatDate(s.completedAt) }} · {{ Math.round((s.duration || 0) / 60) }} {{ t('explore.min') }}</small>
               </div>
             </div>
           </div>
@@ -56,17 +56,19 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import { useMoodStore } from '@/stores/mood'
 import { useProgressStore } from '@/stores/progress'
 
+const { t } = useI18n()
 const moodStore = useMoodStore()
 const progressStore = useProgressStore()
 
 const recent = computed(() => progressStore.recentSessions.slice(0, 6))
 
 function formatDate(date) {
-  if (!date) return 'Today'
+  if (!date) return t('common.today')
   return dayjs(date).format('ddd, HH:mm')
 }
 </script>

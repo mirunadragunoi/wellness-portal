@@ -3,29 +3,29 @@
     <div class="progress-wrap">
       <header class="page-header">
         <h1 class="page-title">{{ t('progress.title') }}</h1>
-        <p class="page-sub">Track your wellness journey - sessions, moods, and streaks.</p>
+        <p class="page-sub">{{ t('progress.subtitle') }}</p>
       </header>
 
       <section class="stats-grid">
         <article class="stat-card">
           <Icon icon="lucide:headphones" class="app-icon app-icon--lg stat-icon" />
           <div class="stat-val">{{ progressStore.totalSessions }}</div>
-          <div class="stat-label">Total Sessions</div>
+          <div class="stat-label">{{ t('progress.total_sessions') }}</div>
         </article>
         <article class="stat-card">
           <Icon icon="lucide:clock-3" class="app-icon app-icon--lg stat-icon" />
           <div class="stat-val">{{ progressStore.totalTimeFormatted }}</div>
-          <div class="stat-label">Total Time</div>
+          <div class="stat-label">{{ t('progress.total_time') }}</div>
         </article>
         <article class="stat-card">
           <Icon icon="lucide:flame" class="app-icon app-icon--lg stat-icon" />
           <div class="stat-val">{{ progressStore.streakDays }}</div>
-          <div class="stat-label">Current Streak</div>
+          <div class="stat-label">{{ t('progress.current_streak') }}</div>
         </article>
         <article class="stat-card">
           <Icon icon="lucide:trophy" class="app-icon app-icon--lg stat-icon" />
           <div class="stat-val">{{ progressStore.longestStreak }}</div>
-          <div class="stat-label">Longest Streak</div>
+          <div class="stat-label">{{ t('progress.longest_streak') }}</div>
         </article>
       </section>
 
@@ -33,8 +33,8 @@
         <div>
           <section class="chart-card">
             <div class="chart-header">
-              <span class="chart-title">Mood history</span>
-              <span class="chart-period">Last 7 days</span>
+              <span class="chart-title">{{ t('progress.mood_history') }}</span>
+              <span class="chart-period">{{ t('progress.last_7_days') }}</span>
             </div>
             <div class="bar-chart">
               <div v-for="d in moodStore.last7Days" :key="d.date" class="bar-col">
@@ -45,7 +45,7 @@
           </section>
 
           <section class="history-card">
-            <h2 class="history-title">Recent sessions</h2>
+            <h2 class="history-title">{{ t('progress.recent_sessions') }}</h2>
             <div
               v-for="s in recent"
               :key="`${s.id}-${s.completedAt}`"
@@ -56,16 +56,16 @@
                 <div class="history-title-text">{{ s.title }}</div>
                 <div class="history-date">{{ formatDate(s.completedAt) }} - {{ s.type }}</div>
               </div>
-              <div class="history-dur">{{ Math.round(s.duration / 60) }} min</div>
+              <div class="history-dur">{{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</div>
             </div>
           </section>
         </div>
 
         <aside class="sidebar-right">
           <section class="streak-big">
-            <span class="streak-big-label">Current streak</span>
+            <span class="streak-big-label">{{ t('progress.current_streak') }}</span>
             <div class="streak-big-val">{{ progressStore.streakDays }}</div>
-            <div class="streak-big-unit">days in a row</div>
+            <div class="streak-big-unit">{{ t('home.days_in_a_row') }}</div>
             <div class="streak-calendar">
               <span
                 v-for="d in progressStore.weeklyDays"

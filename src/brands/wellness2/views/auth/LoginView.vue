@@ -3,13 +3,13 @@
     <div class="auth-visual">
       <RouterLink to="/" class="auth-logo"><span class="auth-logo-dot" />{{ t('brand.name') }}</RouterLink>
       <div>
-        <h2 class="auth-quote">Welcome <span>back</span> to your practice</h2>
-        <p class="auth-visual-sub">Your sessions, streak, and progress are waiting. Pick up right where you left off.</p>
+        <h2 class="auth-quote" v-html="welcomeQuoteHtml" />
+        <p class="auth-visual-sub">{{ t('auth.login_visual_sub') }}</p>
       </div>
     </div>
     <div class="auth-form-side">
       <div class="auth-card">
-        <span class="auth-kicker">Welcome back</span>
+        <span class="auth-kicker">{{ t('auth.welcome_back') }}</span>
         <h1 class="auth-card__title">{{ t('auth.login_title') }}</h1>
         <p class="auth-card__sub">{{ t('auth.login_subtitle') }}</p>
         <form class="auth-form" @submit.prevent="submit">
@@ -23,12 +23,12 @@
               required
               style="text-transform:uppercase;letter-spacing:2px"
             />
-            <p class="field__hint">Use the wellness code provided by your subscription.</p>
+            <p class="field__hint">{{ t('auth.code_hint') }}</p>
           </div>
           <p v-if="error" class="auth-error">{{ error }}</p>
           <button type="submit" class="auth-btn" :disabled="loading">
             <span v-if="loading" class="spinner" />
-            {{ loading ? 'Logging in...' : t('auth.login_btn') }}
+            {{ loading ? t('auth.logging_in') : t('auth.login_btn') }}
           </button>
         </form>
         <p class="auth-card__switch">
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
@@ -54,6 +54,8 @@ const user    = useUserStore()
 const code    = ref('')
 const error   = ref('')
 const loading = ref(false)
+
+const welcomeQuoteHtml = computed(() => t('auth.welcome_back_visual_html'))
 
 async function submit() {
   error.value = ''; loading.value = true

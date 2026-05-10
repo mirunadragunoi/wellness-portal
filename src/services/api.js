@@ -1,16 +1,26 @@
-import { getBrandConfig } from '@/config/brand'
+import { getBrandConfig, getCountryKey } from '@/config/brand'
+import { i18n } from '@/i18n'
 
 const brand = getBrandConfig()
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || brand.apiBaseUrl).replace(/\/$/, '')
 const PORTAL_NAME = brand.portalName
 
+function currentContext() {
+  return {
+    portal_name: PORTAL_NAME,
+    country: getCountryKey(),
+    language: i18n.global.locale.value
+  }
+}
+
 async function request(method, path, { params = {}, body = null } = {}) {
   let url = `${BASE_URL}${path}`
+  const ctx = currentContext()
 
   if (method === 'GET') {
-    params = { ...params, portal_name: PORTAL_NAME }
+    params = { ...params, ...ctx }
   } else {
-    body = { ...(body || {}), portal_name: PORTAL_NAME }
+    body = { ...(body || {}), ...ctx }
   }
 
   const filteredParams = Object.fromEntries(
@@ -52,14 +62,14 @@ export const api = {
   updateProfile: (accessCode, data) =>
     request('PUT', '/wellness/user/profile', { body: { access_code: accessCode, ...data } }),
 
-  getProducts: (accessCode, language = 'en', productType = null) =>
+  getProducts: (accessCode, productType = null) =>
     request('GET', '/wellness/products', {
-      params: { access_code: accessCode, language, product_type: productType }
+      params: { access_code: accessCode, product_type: productType }
     }),
 
-  getProduct: (accessCode, id, language = 'en') =>
+  getProduct: (accessCode, id) =>
     request('GET', `/wellness/products/${id}`, {
-      params: { access_code: accessCode, language }
+      params: { access_code: accessCode }
     }),
 
   completeSession: (accessCode, data) =>

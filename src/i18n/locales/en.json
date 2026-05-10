@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Harmonoria",
+    "name": "Wellness Portal",
     "tagline": "Find Your Calm",
     "description": "Guided meditations, breathing exercises, and personalized wellness tools — all in one place."
   },
@@ -15,7 +15,11 @@
     "listen": "Listen",
     "progress": "Progress",
     "profile": "Profile",
-    "sos": "SOS"
+    "sos": "SOS",
+    "sessions": "Sessions",
+    "features": "Features",
+    "how_it_works": "How it works",
+    "language": "Language"
   },
   "hero": {
     "badge": "Your path to inner peace starts here",
@@ -24,7 +28,16 @@
     "title_line2": "in a busy world",
     "subtitle": "Guided meditations, breathing exercises, and personalized wellness tools — all in one place. Take a deep breath. You're in the right place.",
     "cta_primary": "Start Your Journey",
-    "cta_secondary": "Explore Free"
+    "cta_secondary": "Explore Free",
+    "proof": "Joined by {count} people finding their calm",
+    "proof_count": "12,000+",
+    "orb_text": "Breathe...",
+    "orb_hint": "Inhale · Hold · Exhale",
+    "feeling_label": "Feeling",
+    "feeling_value": "Bright",
+    "scroll": "Scroll",
+    "card_streak": "21 day streak",
+    "card_session": "5 min Calm Session"
   },
   "features": {
     "label": "What We Offer",
@@ -55,7 +68,11 @@
     "label": "Popular Sessions",
     "title_1": "Explore what awaits",
     "title_em": "you",
-    "subtitle": "A growing library of meditations, sleep stories, soundscapes, and more — crafted by wellness experts."
+    "subtitle": "A growing library of meditations, sleep stories, soundscapes, and more — crafted by wellness experts.",
+    "feat_type": "Meditation",
+    "feat_title": "Morning Clarity",
+    "feat_desc": "Start your day grounded and focused with this gentle wake-up meditation designed for busy mornings.",
+    "feat_chip": "Focus"
   },
   "metrics": {
     "title_1": "Real results,",
@@ -86,17 +103,31 @@
     "title_em": "most important",
     "body": "You don't need to change everything at once. Start with a single breath, a single moment of stillness. We'll guide you from there.",
     "btn": "Start Your Journey",
-    "note": "No credit card required. Access with your wellness code."
+    "note": "No credit card required. Access with your wellness code.",
+    "label": "Begin Today",
+    "body_alt": "Enter your phone and access code to begin your personalized journey.",
+    "btn_arrow": "Start Your Journey →"
   },
   "footer": {
     "about": "About",
     "contact": "Contact",
     "terms": "Terms",
     "privacy": "Privacy",
-    "copy": "© 2026 Harmonoria. All rights reserved."
+    "copy": "© 2026 All rights reserved.",
+    "tagline": "Your daily companion for mindful living."
   },
   "quizFloat": "Take the Wellness Quiz",
   "auth": {
+    "welcome_back": "Welcome back",
+    "welcome_back_quote": "Welcome back to your practice",
+    "login_visual_sub": "Your sessions, streak, and progress are waiting. Pick up right where you left off.",
+    "code_hint": "Use the wellness code provided by your subscription.",
+    "logging_in": "Logging in...",
+    "welcome_back_visual_html": "Welcome <span>back</span> to your practice",
+    "signup_visual_html": "Start your <span>inner</span> journey today",
+    "create_account": "Create account",
+    "signup_quote": "Start your inner journey today",
+    "signup_visual_sub": "Join thousands of people finding calm, focus, and better sleep with {brand}.",
     "signup_title": "Get started",
     "signup_subtitle": "Access to the platform is provided via a personal access code. Here's how it works:",
     "signup_step1": "Your subscription includes a personal access code sent to your phone.",
@@ -126,7 +157,7 @@
     "stress_sometimes": "Sometimes",
     "stress_rarely": "Rarely",
     "step4_title": "You're in good company",
-    "step4_body": "Harmonoria has helped thousands of people reduce stress and sleep better.",
+    "step4_body": "Thousands of people have reduced stress and slept better with us.",
     "step5_title": "Your experience with meditation?",
     "exp_new": "Brand new",
     "exp_tried": "I've tried it",
@@ -182,7 +213,22 @@
     "moment_title": "Moment of the Day",
     "phrase_title": "Phrase of the Day",
     "categories_title": "Your Categories",
-    "play": "Play"
+    "play": "Play",
+    "evening_wind_down": "Evening Wind-Down",
+    "body_scan": "Body scan",
+    "sleep_story": "Sleep story",
+    "mood_prompt_short": "How are you now?",
+    "subtitle_w3": "Consistency over intensity. Keep your nervous system steady.",
+    "eyebrow_evening_label": "Midnight Bloom",
+    "greeting_sub_combined": "Take a moment for yourself today. Even 5 minutes can change your day.",
+    "welcome_back_name": "Welcome back, {name}.",
+    "eyebrow_morning": "Good morning",
+    "eyebrow_afternoon": "Good afternoon",
+    "eyebrow_evening": "Good evening",
+    "eyebrow_night": "Good night",
+    "days_in_a_row": "days in a row",
+    "phrase_quote_mock": "Even 5 minutes can change your day. Your calm is closer than you think.",
+    "no_check_in": "No check-in"
   },
   "explore": {
     "title": "Explore",
@@ -212,7 +258,8 @@
     "sort_newest": "Newest",
     "sort_recommended": "Recommended",
     "no_results": "No sessions found. Try different filters.",
-    "min": "min"
+    "min": "min",
+    "subtitle": "Discover meditations, sleep stories, soundscapes, and more."
   },
   "player": {
     "play": "Play",
@@ -227,7 +274,8 @@
     "streak_updated": "Streak updated!",
     "post_mood_prompt": "How do you feel now?",
     "suggestions_title": "Continue your journey",
-    "back_home": "Back to Home"
+    "back_home": "Back to Home",
+    "no_session": "No session selected."
   },
   "breathing": {
     "inhale": "Inhale",
@@ -246,7 +294,12 @@
     "belly_title": "Deep Belly Breathing",
     "belly_desc": "Activate your natural relaxation response",
     "sos_title": "SOS Breathing",
-    "sos_desc": "Quick 1-minute relief for acute stress"
+    "sos_desc": "Quick 1-minute relief for acute stress",
+    "session_complete": "Session Complete",
+    "session_complete_body": "Great work. You've completed {minutes} minutes of mindful breathing.",
+    "practice_again": "Practice Again",
+    "type_badge": "Breathing exercise",
+    "quick_breathing": "Quick Breathing"
   },
   "learn": {
     "title": "Learn",
@@ -259,7 +312,14 @@
     "more_articles": "More articles",
     "browse_sessions": "Browse sessions",
     "back_to_learn": "Back to Learn",
-    "no_results": "No articles found."
+    "no_results": "No articles found.",
+    "related_articles": "Related Articles",
+    "read": "Read",
+    "ready_to_practice": "Ready to practice?",
+    "ready_to_practice_body": "Put what you've learned into action with a guided session.",
+    "not_found": "Article not found.",
+    "download_pdf": "Download PDF",
+    "cat_habits": "Habits"
   },
   "practice": {
     "title": "Practice",
@@ -284,7 +344,16 @@
     "days": "days",
     "hours": "h",
     "minutes": "min",
-    "no_sessions": "No sessions yet. Start your first meditation!"
+    "no_sessions": "No sessions yet. Start your first meditation!",
+    "this_week": "This week",
+    "sessions": "Sessions",
+    "time": "Time",
+    "avg_mood": "Avg mood",
+    "day_streak": "Day streak",
+    "best": "Best",
+    "subtitle": "Track your wellness journey — sessions, moods, and streaks.",
+    "view_full": "View full progress",
+    "total_mindful_time": "Total mindful time"
   },
   "profile": {
     "title": "Profile",
@@ -293,6 +362,7 @@
     "save": "Save",
     "avatar_label": "Choose avatar",
     "name_label": "Name",
+    "name_placeholder": "Your name",
     "phone_label": "Phone number",
     "objectives_label": "Your goals",
     "edit_goals": "Edit goals",
@@ -335,6 +405,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "min": "min",
-    "days": "days"
+    "days": "days",
+    "clear": "Clear",
+    "toggle_menu": "Toggle menu",
+    "today": "Today"
   }
 }

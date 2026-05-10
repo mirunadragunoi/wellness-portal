@@ -2,7 +2,7 @@
   <div class="learn-view">
     <header class="learn-header">
       <div class="container">
-        <h1 class="learn-header__title">Learn</h1>
+        <h1 class="learn-header__title">{{ t('learn.title') }}</h1>
         <p class="learn-header__subtitle">{{ t('learn.subtitle') }}</p>
         <div class="learn-header__search">
           <ExploreSearch v-model="query" :placeholder="t('learn.search_placeholder')" />
@@ -35,7 +35,7 @@
             @keydown.enter.prevent="goArticle(article.slug)"
           >
             <div class="learn-card__thumb" :style="thumbStyle(article)">
-              <span>{{ article.readTime }} min read</span>
+              <span>{{ t('learn.read_time', { n: article.readTime }) }}</span>
             </div>
             <div class="learn-card__body">
               <p class="learn-card__cat">{{ article.category }}</p>
@@ -50,7 +50,7 @@
                 download
                 @click.stop
               >
-                Download PDF
+                {{ t('learn.download_pdf') }}
               </a>
             </div>
           </article>
@@ -80,14 +80,14 @@ const productsStore  = useProductsStore()
 const query          = ref('')
 const activeCategory = ref('all')
 
-const tabs = [
+const tabs = computed(() => [
   { id: 'all',         label: t('learn.all_categories') },
-  { id: 'stress',      label: 'Stress'      },
-  { id: 'sleep',       label: 'Sleep'       },
-  { id: 'focus',       label: 'Focus'       },
-  { id: 'habits',      label: 'Habits'      },
-  { id: 'mindfulness', label: 'Mindfulness' }
-]
+  { id: 'stress',      label: t('explore.cat_stress')      },
+  { id: 'sleep',       label: t('explore.cat_sleep')       },
+  { id: 'focus',       label: t('explore.cat_focus')       },
+  { id: 'habits',      label: t('learn.cat_habits')      },
+  { id: 'mindfulness', label: t('explore.cat_mindfulness') }
+])
 
 onMounted(() => {
   if (!productsStore.loaded) productsStore.fetchProducts()
