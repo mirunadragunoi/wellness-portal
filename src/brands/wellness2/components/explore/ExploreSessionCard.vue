@@ -2,7 +2,7 @@
   <div class="session-card" @click="emit('play', session)">
     <!-- Thumbnail -->
     <div class="session-card__img" :style="imgStyle">
-      <span class="session-card__badge" :style="badgeStyle">{{ session.category }}</span>
+      <span class="session-card__badge" :style="badgeStyle">{{ translatedCategory }}</span>
       <div class="session-card__play-overlay">
         <button type="button" class="play-btn" :aria-label="$t('player.play')" @click.stop="emit('play', session)">
           <Icon icon="lucide:play" class="app-icon app-icon--lg" />
@@ -19,7 +19,7 @@
       <div class="session-card__meta">
         <span class="session-card__duration">{{ durationLabel }}</span>
         <span class="session-card__dot">·</span>
-        <span class="session-card__level">{{ session.level }}</span>
+        <span class="session-card__level">{{ translatedLevel }}</span>
       </div>
     </div>
 
@@ -44,6 +44,7 @@ import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
 import { sessionTypeIcon } from '@/constants/appIcons'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t } = useI18n()
 const props = defineProps({ session: { type: Object, required: true } })
@@ -70,6 +71,8 @@ const badgeStyle = computed(() => {
   const c = categoryColors[props.session.category] || { bg: '#f1f5f9', color: '#475569' }
   return { background: c.bg, color: c.color }
 })
+const translatedCategory = computed(() => translateTaxonomyLabel(t, props.session.category))
+const translatedLevel = computed(() => translateTaxonomyLabel(t, props.session.level))
 
 const durationLabel = computed(() => {
   const m = Math.round(props.session.duration / 60)

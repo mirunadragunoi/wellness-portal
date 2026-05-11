@@ -8,7 +8,7 @@
         @click="selected = opt.id"
       >
         <span class="dur-card__time">{{ t(opt.labelKey) }}</span>
-        <span class="dur-card__sub">{{ opt.sub }}</span>
+        <span class="dur-card__sub">{{ t(opt.subKey) }}</span>
       </button>
     </div>
     <button class="step-btn" :disabled="!selected" @click="emit('next', { dailyDuration: selected })">
@@ -24,10 +24,10 @@ const { t } = useI18n()
 const emit = defineEmits(['next'])
 const selected = ref('')
 const options = [
-  { id: '2-5',   labelKey: 'onboarding.duration_2_5',    sub: 'Quick daily reset' },
-  { id: '5-10',  labelKey: 'onboarding.duration_5_10',   sub: 'Steady practice'   },
-  { id: '10-20', labelKey: 'onboarding.duration_10_20',  sub: 'Deeper sessions'   },
-  { id: '20+',   labelKey: 'onboarding.duration_20plus', sub: 'Full immersion'    }
+  { id: '2-5',   labelKey: 'onboarding.duration_2_5',    subKey: 'onboarding.duration_2_5_sub' },
+  { id: '5-10',  labelKey: 'onboarding.duration_5_10',   subKey: 'onboarding.duration_5_10_sub' },
+  { id: '10-20', labelKey: 'onboarding.duration_10_20',  subKey: 'onboarding.duration_10_20_sub' },
+  { id: '20+',   labelKey: 'onboarding.duration_20plus', subKey: 'onboarding.duration_20plus_sub' }
 ]
 </script>
 

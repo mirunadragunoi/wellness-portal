@@ -46,9 +46,7 @@
             <img :src="av" alt="" />
           </span>
         </div>
-        <p class="hero__proof-text">
-          <strong>12,000+</strong> {{ t('hero.proof_label', 'people finding calm') }}
-        </p>
+        <p class="hero__proof-text" v-html="proofHtml" />
       </div>
     </div>
 
@@ -60,10 +58,10 @@
         class="hero__float-card"
         :style="{ animationDelay: `${i * 1.5}s` }"
       >
-        <div class="hfc-type">{{ card.type }}</div>
-        <div class="hfc-title">{{ card.title }}</div>
+        <div class="hfc-type">{{ t(card.typeKey) }}</div>
+        <div class="hfc-title">{{ t(card.titleKey) }}</div>
         <div class="hfc-meta">
-          <span>{{ card.category }}</span>
+          <span>{{ t(card.categoryKey) }}</span>
           <span>{{ card.duration }}</span>
         </div>
         <RouterLink to="/explore" class="hfc-play">
@@ -82,6 +80,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import heroBackgroundVideo from '@/brands/wellness2/assets/landing/hero-background.mp4'
@@ -93,11 +92,14 @@ import proof2 from '@/brands/wellness2/assets/landing/hero-proof-2.png'
 const { t } = useI18n()
 
 const proofAvatars = [proof1, proof2, proof1, proof2]
+const proofHtml = computed(() =>
+  t('hero.proof', { count: `<strong>${t('hero.proof_count')}</strong>` })
+)
 
 const floatCards = [
-  { type: 'Meditation', title: 'Morning Clarity',   category: 'Focus',  duration: '10 min' },
-  { type: 'Sleep Story', title: 'Forest at Night',  category: 'Sleep',  duration: '25 min' },
-  { type: 'Breathing',  title: 'Box 4-4-4-4',       category: 'Anxiety', duration: '5 min'  },
+  { typeKey: 'explore.type_meditation', titleKey: 'preview.feat_title', categoryKey: 'explore.cat_focus', duration: `10 ${t('explore.min')}` },
+  { typeKey: 'explore.type_sleep', titleKey: 'preview.row_forest_title', categoryKey: 'explore.cat_sleep', duration: `25 ${t('explore.min')}` },
+  { typeKey: 'explore.type_breathing', titleKey: 'preview.row_breathing_title', categoryKey: 'explore.cat_anxiety', duration: `5 ${t('explore.min')}` },
 ]
 </script>
 

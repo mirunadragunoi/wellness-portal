@@ -12,7 +12,7 @@
     >
       <span class="circle__phase">{{ phaseLabel }}</span>
       <span class="circle__count">{{ displayCount }}</span>
-      <span class="circle__unit">{{ phase === 'idle' ? '' : 'sec' }}</span>
+      <span class="circle__unit">{{ phase === 'idle' ? '' : t('breathing.seconds_short') }}</span>
     </div>
   </div>
 </template>

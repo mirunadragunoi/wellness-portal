@@ -9,7 +9,7 @@
         :style="{ background: cat.bg, color: cat.color }"
       >
         <Icon :icon="cat.icon" class="cat-btn__icon app-icon app-icon--sm" />
-        <span class="cat-btn__label">{{ cat.label }}</span>
+        <span class="cat-btn__label">{{ t(`explore.cat_${cat.id}`) }}</span>
       </RouterLink>
     </div>
   </div>

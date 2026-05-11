@@ -9,7 +9,7 @@
     <div class="orb" :class="orbClass" :style="orbStyle">
       <Transition name="phase" mode="out-in">
         <div :key="phase?.phase" class="orb__content">
-          <span class="orb__label">{{ phase?.label || 'Ready' }}</span>
+          <span class="orb__label">{{ phaseLabel }}</span>
           <span class="orb__count">{{ isRunning ? countdown : '' }}</span>
         </div>
       </Transition>
@@ -19,6 +19,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   phase:     { type: Object, default: null },
@@ -41,6 +44,10 @@ const orbStyle = computed(() => ({
 }))
 
 const ringStyle = computed(() => ({ '--ring-color': props.color }))
+const phaseLabel = computed(() => {
+  if (!props.phase?.phase) return t('breathing.ready')
+  return t(`breathing.${props.phase.phase}`)
+})
 </script>
 
 <style scoped>

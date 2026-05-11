@@ -18,7 +18,7 @@
             @click="setMood(m.id)"
           >
             <Icon :icon="m.icon" class="app-icon app-icon--lg" />
-            <span class="mood-name">{{ m.label }}</span>
+            <span class="mood-name">{{ t(`home.mood_${m.id}`) }}</span>
           </button>
         </div>
       </section>
@@ -41,7 +41,7 @@
           <div class="rec-info">
             <h3 class="rec-title">{{ s.title }}</h3>
             <div class="rec-meta">
-              <span class="rec-cat">{{ s.category }}</span>
+              <span class="rec-cat">{{ translateTaxonomyLabel(t, s.category) }}</span>
               <span class="rec-dur">{{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</span>
             </div>
           </div>
@@ -128,6 +128,7 @@ import { usePlayerStore } from '@/stores/player'
 import { useProductsStore } from '@/stores/products'
 import { CATEGORY_ICONS } from '@/constants/appIcons'
 import { routeForProduct } from '@/utils/productKinds'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t } = useI18n()
 const router = useRouter()

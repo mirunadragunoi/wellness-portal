@@ -17,7 +17,7 @@
         >
           <div class="session-card__img" :style="sessionImgStyle(session)">
             <span class="session-card__badge" :style="getBadgeStyle(session.category)">
-              {{ session.category }}
+              {{ translateTaxonomyLabel(t, session.category) }}
             </span>
             <button type="button" class="session-card__play" :aria-label="$t('player.play')">
               <Icon icon="lucide:play" class="app-icon app-icon--sm" />
@@ -31,7 +31,7 @@
             <div class="session-card__meta">
               <span>{{ Math.round(session.duration / 60) }} {{ t('explore.min') }}</span>
               <span>·</span>
-              <span>{{ session.level }}</span>
+              <span>{{ translateTaxonomyLabel(t, session.level) }}</span>
             </div>
           </div>
         </div>
@@ -47,6 +47,7 @@ import { useRecommendations } from '@/composables/useGreeting'
 import { usePlayerStore } from '@/stores/player'
 import { sessionTypeIcon } from '@/constants/appIcons'
 import { routeForProduct } from '@/utils/productKinds'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t }    = useI18n()
 const router   = useRouter()

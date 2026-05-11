@@ -19,7 +19,7 @@
             :class="activeCategory === cat.id ? 'chip-active' : 'chip-default'"
             @click="activeCategory = cat.id"
           >
-            {{ cat.label }}
+            {{ t(cat.labelKey) }}
           </button>
         </div>
       </div>
@@ -35,7 +35,7 @@
             <div class="article-img" :style="thumbStyle(article)" />
             <div class="article-body">
               <div class="article-meta-row">
-                <span class="article-cat">{{ article.category }}</span>
+                <span class="article-cat">{{ translateTaxonomyLabel(t, article.category) }}</span>
                 <span class="article-read-time">{{ t('learn.read_time', { n: article.readTime }) }}</span>
               </div>
               <h3 class="article-title">{{ article.title }}</h3>
@@ -77,6 +77,7 @@ import { useI18n } from 'vue-i18n'
 import { articles as mockArticles } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t }          = useI18n()
 const productsStore  = useProductsStore()
@@ -85,12 +86,12 @@ const activeCategory = ref('all')
 const bookmarks      = ref(new Set())
 
 const tabs = [
-  { id: 'all',         label: t('learn.all_categories') },
-  { id: 'stress',      label: 'Stress'      },
-  { id: 'sleep',       label: 'Sleep'       },
-  { id: 'focus',       label: 'Focus'       },
-  { id: 'habits',      label: 'Habits'      },
-  { id: 'mindfulness', label: 'Mindfulness' },
+  { id: 'all',         labelKey: 'learn.all_categories' },
+  { id: 'stress',      labelKey: 'explore.cat_stress' },
+  { id: 'sleep',       labelKey: 'explore.cat_sleep' },
+  { id: 'focus',       labelKey: 'explore.cat_focus' },
+  { id: 'habits',      labelKey: 'learn.cat_habits' },
+  { id: 'mindfulness', labelKey: 'explore.cat_mindfulness' },
 ]
 
 onMounted(() => {

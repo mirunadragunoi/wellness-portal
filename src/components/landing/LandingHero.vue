@@ -25,7 +25,7 @@
 
         <div class="hero__ctas anim-fade-up-3">
           <RouterLink v-if="authStore.isLoggedIn" to="/home" class="btn btn--primary btn--lg">
-            Go to Dashboard
+            {{ t('hero.cta_dashboard') }}
           </RouterLink>
           <template v-else>
             <RouterLink to="/signup" class="btn btn--primary btn--lg">

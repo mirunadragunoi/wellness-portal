@@ -8,15 +8,15 @@
       <div class="preview__grid">
         <div v-for="card in previewCards" :key="card.id" class="preview-card">
           <div class="preview-card__img" :style="{ backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.35)), url(${card.image})` }">
-            <span class="preview-card__badge" :class="`badge--${card.category}`">{{ card.categoryLabel }}</span>
+            <span class="preview-card__badge" :class="`badge--${card.category}`">{{ t(card.categoryKey) }}</span>
             <button type="button" class="preview-card__play" :aria-label="$t('player.play')" @click="$router.push('/signup')">
               <Icon icon="lucide:play" class="app-icon app-icon--md" />
             </button>
           </div>
           <div class="preview-card__body">
-            <h4 class="preview-card__title">{{ card.title }}</h4>
+            <h4 class="preview-card__title">{{ t(card.titleKey) }}</h4>
             <div class="preview-card__meta">
-              <span>{{ card.type }}</span>
+              <span>{{ t(card.typeKey) }}</span>
               <span>·</span>
               <span>{{ Math.round(card.duration / 60) }} {{ t('explore.min') }}</span>
             </div>
@@ -26,7 +26,7 @@
 
       <div class="preview__cta">
         <RouterLink to="/signup" class="btn">
-          See all sessions
+          {{ t('preview.see_all_sessions') }}
           <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
         </RouterLink>
       </div>
@@ -40,10 +40,10 @@ import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 
 const previewCards = [
-  { id: 1, title: '5 Minutes for Calm', type: 'Meditation', category: 'stress', categoryLabel: 'Stress', duration: 300, image: LANDING_IMAGES.preview1 },
-  { id: 2, title: 'Ocean Night Story', type: 'Sleep Story', category: 'sleep', categoryLabel: 'Sleep', duration: 1200, image: LANDING_IMAGES.preview2 },
-  { id: 3, title: 'Morning Gratitude', type: 'Meditation', category: 'mindfulness', categoryLabel: 'Mindfulness', duration: 600, image: LANDING_IMAGES.preview3 },
-  { id: 4, title: 'Deep Focus Flow', type: 'Meditation', category: 'focus', categoryLabel: 'Focus', duration: 900, image: LANDING_IMAGES.preview4 }
+  { id: 1, titleKey: 'preview.card1_title', typeKey: 'explore.type_meditation', category: 'stress', categoryKey: 'explore.cat_stress', duration: 300, image: LANDING_IMAGES.preview1 },
+  { id: 2, titleKey: 'preview.card2_title', typeKey: 'explore.type_sleep', category: 'sleep', categoryKey: 'explore.cat_sleep', duration: 1200, image: LANDING_IMAGES.preview2 },
+  { id: 3, titleKey: 'preview.card3_title', typeKey: 'explore.type_meditation', category: 'mindfulness', categoryKey: 'explore.cat_mindfulness', duration: 600, image: LANDING_IMAGES.preview3 },
+  { id: 4, titleKey: 'preview.card4_title', typeKey: 'explore.type_meditation', category: 'focus', categoryKey: 'explore.cat_focus', duration: 900, image: LANDING_IMAGES.preview4 }
 ]
 </script>
 

@@ -18,7 +18,7 @@
           :class="{ 'tab-btn--active': activeCategory === cat.id }"
           @click="activeCategory = cat.id"
         >
-          {{ cat.label }}
+          {{ t(cat.labelKey) }}
         </button>
       </div>
 
@@ -57,12 +57,12 @@ const activeCategory = ref('all')
 const bookmarks      = ref(new Set())
 
 const tabs = [
-  { id: 'all',         label: t('learn.all_categories') },
-  { id: 'stress',      label: 'Stress'      },
-  { id: 'sleep',       label: 'Sleep'       },
-  { id: 'focus',       label: 'Focus'       },
-  { id: 'habits',      label: 'Habits'      },
-  { id: 'mindfulness', label: 'Mindfulness' }
+  { id: 'all',         labelKey: 'learn.all_categories' },
+  { id: 'stress',      labelKey: 'explore.cat_stress' },
+  { id: 'sleep',       labelKey: 'explore.cat_sleep' },
+  { id: 'focus',       labelKey: 'explore.cat_focus' },
+  { id: 'habits',      labelKey: 'learn.cat_habits' },
+  { id: 'mindfulness', labelKey: 'explore.cat_mindfulness' }
 ]
 
 // Use API articles if available, fall back to mock data

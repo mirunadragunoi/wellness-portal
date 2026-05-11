@@ -29,6 +29,7 @@
     "subtitle": "Meditații ghidate, exerciții de respirație și instrumente personalizate de wellness — totul într-un singur loc. Respiră adânc. Ești în locul potrivit.",
     "cta_primary": "Începe călătoria",
     "cta_secondary": "Explorează gratuit",
+    "cta_dashboard": "Mergi la dashboard",
     "proof": "Alăturat de {count} persoane care își găsesc liniștea",
     "proof_count": "12.000+",
     "orb_text": "Respiră...",
@@ -51,7 +52,11 @@
     "card3_title": "Urmărire personală",
     "card3_desc": "Check-in-uri de stare, urmărire streak, jurnal de obiceiuri — vezi progresul și înțelege tiparele tale.",
     "card4_title": "Personalizat pentru tine",
-    "card4_desc": "Spune-ne obiectivele tale și vom crea un plan potrivit. Recomandări care se adaptează la starea și momentul tău."
+    "card4_desc": "Spune-ne obiectivele tale și vom crea un plan potrivit. Recomandări care se adaptează la starea și momentul tău.",
+    "feature_label": "Funcție",
+    "tag_sessions": "50+ sesiuni",
+    "tag_relief": "Ameliorare instantanee",
+    "tag_insights": "Perspective reale"
   },
   "howItWorks": {
     "label": "Cum funcționează",
@@ -72,7 +77,16 @@
     "feat_type": "Meditație",
     "feat_title": "Claritate matinală",
     "feat_desc": "Începe-ți ziua echilibrat și concentrat cu această meditație blândă de trezire, concepută pentru dimineți aglomerate.",
-    "feat_chip": "Concentrare"
+    "feat_chip": "Concentrare",
+    "see_all_sessions": "Vezi toate sesiunile",
+    "card1_title": "5 minute pentru calm",
+    "card2_title": "Poveste nocturnă oceanică",
+    "card3_title": "Recunoștință de dimineață",
+    "card4_title": "Flux de concentrare profundă",
+    "row_forest_title": "Pădurea noaptea",
+    "row_breathing_title": "Respirație în cutie 4-4-4",
+    "row_rain_title": "Ploaie pe frunze",
+    "row_strength_title": "Forța ta interioară"
   },
   "metrics": {
     "title_1": "Rezultate reale,",
@@ -172,9 +186,13 @@
     "pace_slow_desc": "Îmi iau timpul",
     "step7_title": "Câte timp poți dedica zilnic?",
     "duration_2_5": "2–5 min",
+    "duration_2_5_sub": "Resetare zilnică rapidă",
     "duration_5_10": "5–10 min",
+    "duration_5_10_sub": "Practică constantă",
     "duration_10_20": "10–20 min",
+    "duration_10_20_sub": "Sesiuni mai profunde",
     "duration_20plus": "20+ min",
+    "duration_20plus_sub": "Imersiune completă",
     "step8_loading_1": "Analizăm preferințele tale...",
     "step8_loading_2": "Creăm planul tău personalizat...",
     "step8_loading_3": "100% — Bine ai venit!",
@@ -202,7 +220,7 @@
     "mood_change": "Schimbă",
     "mood_today": "Astăzi te simți:",
     "mood_low": "Jos",
-    "mood_foggy": "Ceațos",
+    "mood_foggy": "Încețoșat",
     "mood_okay": "Ok",
     "mood_bright": "Luminos",
     "mood_glowing": "Strălucitor",
@@ -238,6 +256,7 @@
     "filter_duration": "Durată",
     "filter_sort": "Sortare",
     "all": "Toate",
+    "type_article": "Articol",
     "type_meditation": "Meditație",
     "type_breathing": "Respirație",
     "type_sleep": "Poveste pentru somn",
@@ -258,6 +277,7 @@
     "sort_newest": "Cele mai noi",
     "sort_recommended": "Recomandate",
     "no_results": "Nicio sesiune găsită. Încearcă alte filtre.",
+    "results_count": "{n} sesiuni găsite",
     "min": "min",
     "subtitle": "Descoperă meditații, povești pentru somn, peisaje sonore și altele."
   },
@@ -282,6 +302,10 @@
     "hold": "Ține",
     "exhale": "Expiră",
     "pause": "Pauză",
+    "ready": "Gata",
+    "ready_to_start": "Gata de început",
+    "round": "Runda {n}",
+    "seconds_short": "sec",
     "start": "Start",
     "pause_btn": "Pauză",
     "stop": "Stop",
@@ -299,7 +323,11 @@
     "session_complete_body": "Bravo. Ai completat {minutes} minute de respirație conștientă.",
     "practice_again": "Practică din nou",
     "type_badge": "Exercițiu de respirație",
-    "quick_breathing": "Respirație rapidă"
+    "quick_breathing": "Respirație rapidă",
+    "tab_box": "Cutie",
+    "tab_478": "4-7-8",
+    "tab_calm": "Calm",
+    "tab_sos": "SOS"
   },
   "learn": {
     "title": "Învață",
@@ -319,6 +347,7 @@
     "ready_to_practice_body": "Pune în practică ce ai învățat cu o sesiune ghidată.",
     "not_found": "Articolul nu a fost găsit.",
     "download_pdf": "Descarcă PDF",
+    "listen_audio": "Ascultă audio",
     "cat_habits": "Obiceiuri"
   },
   "practice": {

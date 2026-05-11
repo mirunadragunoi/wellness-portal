@@ -9,7 +9,7 @@
       />
       <div class="mood-done__text">
         <span class="mood-done__label">{{ t('home.mood_today') }}</span>
-        <strong class="mood-done__value">{{ currentMood?.label }}</strong>
+        <strong class="mood-done__value">{{ currentMood ? t(`home.mood_${currentMood.id}`) : '' }}</strong>
       </div>
       <button class="mood-done__change" @click="moodStore.moodCheckedToday = false">
         {{ t('home.mood_change') }}
@@ -23,7 +23,7 @@
         <button
           v-for="m in moodOptions" :key="m.id"
           class="mood-btn" :class="{ 'mood-btn--hover': hoveredMood === m.id }"
-          :title="m.label"
+          :title="t(`home.mood_${m.id}`)"
           @mouseenter="hoveredMood = m.id"
           @mouseleave="hoveredMood = null"
           @click="checkIn(m.id)"

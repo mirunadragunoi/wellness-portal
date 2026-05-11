@@ -10,14 +10,16 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { useGreeting } from '@/composables/useGreeting'
-import dayjs from 'dayjs'
+import { formatLocalizedDate } from '@/utils/i18nLabels'
 
+const { locale } = useI18n()
 const userStore = useUserStore()
 const firstName = computed(() => userStore.firstName)
 const { greeting, subtitle } = useGreeting(firstName)
-const formattedDate = dayjs().format('dddd, MMMM D')
+const formattedDate = computed(() => formatLocalizedDate(new Date(), locale.value))
 </script>
 
 <style scoped>

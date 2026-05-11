@@ -40,12 +40,14 @@ export const breathingTypes = {
   box: {
     id: 'box',
     title: 'Box Breathing',
+    titleKey: 'breathing.box_title',
     description: '4-4-4-4 pattern for focus and calm',
+    descriptionKey: 'breathing.box_desc',
     pattern: [
-      { phase: 'inhale', duration: 4, label: 'Inhale' },
-      { phase: 'hold',   duration: 4, label: 'Hold' },
-      { phase: 'exhale', duration: 4, label: 'Exhale' },
-      { phase: 'pause',  duration: 4, label: 'Pause' }
+      { phase: 'inhale', duration: 4 },
+      { phase: 'hold',   duration: 4 },
+      { phase: 'exhale', duration: 4 },
+      { phase: 'pause',  duration: 4 }
     ],
     availableDurations: [60, 120, 180, 300],
     color: '#0ea5e9',
@@ -54,11 +56,13 @@ export const breathingTypes = {
   '4-7-8': {
     id: '4-7-8',
     title: '4-7-8 Breathing',
+    titleKey: 'breathing.478_title',
     description: 'Powerful technique for sleep and anxiety',
+    descriptionKey: 'breathing.478_desc',
     pattern: [
-      { phase: 'inhale', duration: 4, label: 'Inhale' },
-      { phase: 'hold',   duration: 7, label: 'Hold' },
-      { phase: 'exhale', duration: 8, label: 'Exhale' }
+      { phase: 'inhale', duration: 4 },
+      { phase: 'hold',   duration: 7 },
+      { phase: 'exhale', duration: 8 }
     ],
     availableDurations: [60, 120, 180, 300],
     color: '#7c3aed',
@@ -67,11 +71,13 @@ export const breathingTypes = {
   belly: {
     id: 'belly',
     title: 'Deep Belly Breathing',
+    titleKey: 'breathing.belly_title',
     description: 'Activate your natural relaxation response',
+    descriptionKey: 'breathing.belly_desc',
     pattern: [
-      { phase: 'inhale', duration: 5, label: 'Inhale slowly' },
-      { phase: 'hold',   duration: 2, label: 'Feel your belly expand' },
-      { phase: 'exhale', duration: 6, label: 'Exhale fully' }
+      { phase: 'inhale', duration: 5 },
+      { phase: 'hold',   duration: 2 },
+      { phase: 'exhale', duration: 6 }
     ],
     availableDurations: [60, 120, 180, 300],
     color: '#16a34a',
@@ -80,11 +86,13 @@ export const breathingTypes = {
   sos: {
     id: 'sos',
     title: 'SOS Breathing',
+    titleKey: 'breathing.sos_title',
     description: 'Quick 1-minute relief for acute stress',
+    descriptionKey: 'breathing.sos_desc',
     pattern: [
-      { phase: 'inhale', duration: 4, label: 'Inhale' },
-      { phase: 'hold',   duration: 1, label: 'Hold' },
-      { phase: 'exhale', duration: 6, label: 'Exhale slowly' }
+      { phase: 'inhale', duration: 4 },
+      { phase: 'hold',   duration: 1 },
+      { phase: 'exhale', duration: 6 }
     ],
     availableDurations: [60],
     color: '#ef4444',

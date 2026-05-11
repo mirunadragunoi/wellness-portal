@@ -10,7 +10,7 @@
           <p class="history-item__title">{{ s.title }}</p>
           <p class="history-item__meta">{{ formatDate(s.completedAt) }} · {{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</p>
         </div>
-        <span class="history-item__cat" :style="catStyle(s.category)">{{ s.category }}</span>
+        <span class="history-item__cat" :style="catStyle(s.category)">{{ translateTaxonomyLabel(t, s.category) }}</span>
       </div>
     </div>
     <p v-else class="session-history__empty">{{ t('progress.no_sessions') }}</p>
@@ -21,6 +21,7 @@
 import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
 import { sessionTypeIcon } from '@/constants/appIcons'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 import dayjs from 'dayjs'
 
 const { t }         = useI18n()

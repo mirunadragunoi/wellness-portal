@@ -1,14 +1,14 @@
 <template>
   <div class="phrase-card">
     <div class="phrase-card__quote">"</div>
-    <p class="phrase-card__text">{{ phrase.text }}</p>
-    <p class="phrase-card__author">— {{ phrase.author }}</p>
+    <p class="phrase-card__text">{{ t('home.phrase_quote_mock') }}</p>
   </div>
 </template>
 
 <script setup>
-import { getPhraseOfDay } from '@/data/phrases'
-const phrase = getPhraseOfDay()
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped>

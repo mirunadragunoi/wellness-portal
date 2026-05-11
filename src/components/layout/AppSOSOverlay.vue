@@ -52,10 +52,10 @@
           <!-- Breathing Mode -->
           <div v-else-if="activeMode === 'breathing'" class="sos-breathing">
             <div class="breathing-orb" :class="phaseClass">
-              <span class="breathing-orb__phase">{{ currentPhase?.label }}</span>
+              <span class="breathing-orb__phase">{{ phaseLabel }}</span>
               <span class="breathing-orb__count">{{ phaseCountdown }}</span>
             </div>
-            <p class="breathing-status">{{ isRunning ? formattedRemaining : 'Ready' }}</p>
+            <p class="breathing-status">{{ isRunning ? formattedRemaining : t('breathing.ready') }}</p>
             <div class="breathing-btns">
               <button v-if="!isRunning" class="sos-btn-primary" @click="start">{{ t('breathing.start') }}</button>
               <template v-else>
@@ -135,6 +135,10 @@ const phaseClass = computed(() => ({
   'breathing-orb--hold':   currentPhase.value?.phase === 'hold',
   'breathing-orb--exhale': currentPhase.value?.phase === 'exhale'
 }))
+const phaseLabel = computed(() => {
+  const phase = currentPhase.value?.phase
+  return phase ? t(`breathing.${phase}`) : t('breathing.ready')
+})
 
 const groundingSteps = computed(() => [
   t('sos.grounding_5'),

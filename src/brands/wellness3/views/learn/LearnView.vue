@@ -38,7 +38,7 @@
               <span>{{ t('learn.read_time', { n: article.readTime }) }}</span>
             </div>
             <div class="learn-card__body">
-              <p class="learn-card__cat">{{ article.category }}</p>
+              <p class="learn-card__cat">{{ translateTaxonomyLabel(t, article.category) }}</p>
               <h3>{{ article.title }}</h3>
               <p>{{ article.excerpt }}</p>
               <a
@@ -72,6 +72,7 @@ import { articles as mockArticles } from '@/data/articles'
 import { useProductsStore } from '@/stores/products'
 import ExploreSearch from '@/components/explore/ExploreSearch.vue'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t }          = useI18n()
 const router         = useRouter()

@@ -17,7 +17,7 @@
                 />
               </div>
               <div>
-                <p v-if="!editing" class="profile-name">{{ userStore.firstName || 'Your name' }}</p>
+                <p v-if="!editing" class="profile-name">{{ userStore.firstName || t('profile.name_placeholder') }}</p>
                 <input v-else v-model="editName" class="profile-name-input" :placeholder="t('profile.name_placeholder')" />
                 <p class="profile-member-since">{{ t('profile.member_since', { date: memberSince }) }}</p>
               </div>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="fav-item__info">
                   <p class="fav-item__title">{{ s.title }}</p>
-                  <p class="fav-item__meta">{{ Math.round(s.duration / 60) }} min · {{ s.category }}</p>
+                  <p class="fav-item__meta">{{ Math.round(s.duration / 60) }} {{ t('explore.min') }} · {{ translateTaxonomyLabel(t, s.category) }}</p>
                 </div>
                 <button type="button" class="fav-item__remove" @click.stop="progressStore.toggleFavorite(s.id)" :title="t('common.close')">
                   <Icon icon="lucide:x" class="app-icon app-icon--sm" />
@@ -148,11 +148,11 @@ import { useProductsStore } from '@/stores/products'
 import BaseModal from '@/components/base/BaseModal.vue'
 import { AVATAR_ICONS, ONBOARDING_OBJECTIVE_ICONS, sessionTypeIcon } from '@/constants/appIcons'
 import { routeForProduct } from '@/utils/productKinds'
-import dayjs from 'dayjs'
+import { formatLocalizedDate, translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const avatarKeys = Object.keys(AVATAR_ICONS)
 
-const { t }          = useI18n()
+const { t, locale }  = useI18n()
 const router         = useRouter()
 const userStore      = useUserStore()
 const authStore      = useAuthStore()
@@ -164,13 +164,15 @@ const editName      = ref('')
 const showLogout    = ref(false)
 
 const memberSince = computed(() =>
-  userStore.memberSince ? dayjs(userStore.memberSince).format('MMMM YYYY') : '—'
+  userStore.memberSince
+    ? formatLocalizedDate(new Date(userStore.memberSince), locale.value, { weekday: undefined, day: undefined, month: 'long', year: 'numeric' })
+    : '—'
 )
 
 const miniStats = computed(() => [
-  { icon: 'lucide:headphones', value: progressStore.totalSessions, label: 'Sessions' },
-  { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted, label: 'Total time' },
-  { icon: 'lucide:flame',      value: progressStore.currentStreak + 'd', label: 'Streak' }
+  { icon: 'lucide:headphones', value: progressStore.totalSessions, label: t('progress.total_sessions') },
+  { icon: 'lucide:clock',      value: progressStore.totalTimeFormatted, label: t('progress.total_time') },
+  { icon: 'lucide:flame',      value: `${progressStore.currentStreak}${t('progress.days').charAt(0)}`, label: t('progress.current_streak') }
 ])
 
 const favoriteSessions = computed(() =>

@@ -7,12 +7,12 @@
       :class="{ 'feature-row--reverse': idx % 2 !== 0 }"
     >
       <div class="feature-text">
-        <span class="feat-num">0{{ idx + 1 }} / Feature</span>
+        <span class="feat-num">0{{ idx + 1 }} / {{ t('features.feature_label') }}</span>
         <div class="feat-title">{{ t(card.titleKey) }}</div>
         <div class="feat-desc">{{ t(card.descKey) }}</div>
         <span class="feat-tag">
           <Icon :icon="card.icon" class="app-icon app-icon--sm" />
-          {{ card.tagText }}
+          {{ t(card.tagKey) }}
         </span>
       </div>
       <div class="feature-visual">
@@ -28,9 +28,9 @@ import { FEATURE_CARD_ICONS } from '@/constants/appIcons'
 import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 const cards = [
-  { key: 'meditation', icon: FEATURE_CARD_ICONS.meditation, image: LANDING_IMAGES.featureMeditation, titleKey: 'features.card1_title', descKey: 'features.card1_desc', tagText: '50+ sessions' },
-  { key: 'breathing',  icon: FEATURE_CARD_ICONS.breathing,  image: LANDING_IMAGES.featureBreathing,  titleKey: 'features.card2_title', descKey: 'features.card2_desc', tagText: 'Instant relief' },
-  { key: 'tracking',   icon: FEATURE_CARD_ICONS.tracking,   image: LANDING_IMAGES.featureTracking,   titleKey: 'features.card3_title', descKey: 'features.card3_desc', tagText: 'Real insights' },
+  { key: 'meditation', icon: FEATURE_CARD_ICONS.meditation, image: LANDING_IMAGES.featureMeditation, titleKey: 'features.card1_title', descKey: 'features.card1_desc', tagKey: 'features.tag_sessions' },
+  { key: 'breathing',  icon: FEATURE_CARD_ICONS.breathing,  image: LANDING_IMAGES.featureBreathing,  titleKey: 'features.card2_title', descKey: 'features.card2_desc', tagKey: 'features.tag_relief' },
+  { key: 'tracking',   icon: FEATURE_CARD_ICONS.tracking,   image: LANDING_IMAGES.featureTracking,   titleKey: 'features.card3_title', descKey: 'features.card3_desc', tagKey: 'features.tag_insights' },
 ]
 </script>
 

@@ -20,7 +20,7 @@
 
       <div class="session-card__overlay" />
 
-      <span class="session-card__badge">{{ session.category }}</span>
+      <span class="session-card__badge">{{ translateTaxonomyLabel(t, session.category) }}</span>
 
       <div class="session-card__play-wrap">
         <button
@@ -34,7 +34,7 @@
       </div>
 
       <div class="session-card__meta-bottom">
-        {{ session.type }} · {{ durationLabel }}
+        {{ translateTaxonomyLabel(t, session.type) }} · {{ durationLabel }}
       </div>
     </div>
 
@@ -49,7 +49,7 @@
       class="session-card__fav"
       :class="{ 'session-card__fav--active': isFavorite }"
       @click.stop="emit('favorite', session.id)"
-      :aria-label="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+      :aria-label="isFavorite ? t('player.remove_favorite') : t('player.add_favorite')"
     >
       <Icon
         :icon="isFavorite ? 'mdi:heart' : 'lucide:heart'"
@@ -61,8 +61,12 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useProgressStore } from '@/stores/progress'
 import { normalizeProductImageUrl } from '@/utils/productImageUrl'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
+
+const { t } = useI18n()
 
 const props = defineProps({
   session: { type: Object, required: true },
@@ -92,7 +96,7 @@ const fallbackGradient = computed(() =>
 
 const durationLabel = computed(() => {
   const m = Math.round(props.session.duration / 60)
-  return `${m} min`
+  return `${m} ${t('explore.min')}`
 })
 </script>
 

@@ -8,8 +8,8 @@
           {{ t('common.back') }}
         </RouterLink>
         <div class="breathing-view__info">
-          <h1 class="breathing-view__title">{{ config.title }}</h1>
-          <p class="breathing-view__desc">{{ config.description }}</p>
+          <h1 class="breathing-view__title">{{ t(config.titleKey) }}</h1>
+          <p class="breathing-view__desc">{{ t(config.descriptionKey) }}</p>
         </div>
       </div>
 
@@ -24,8 +24,8 @@
       <!-- Progress / remaining -->
       <div class="breathing-view__stats">
         <BaseProgressBar :value="progress" :height="6" style="max-width:280px;width:100%" />
-        <p class="breathing-view__remaining">{{ isRunning ? formattedRemaining : 'Ready to start' }}</p>
-        <p v-if="isRunning" class="breathing-view__rounds">Round {{ rounds + 1 }}</p>
+        <p class="breathing-view__remaining">{{ isRunning ? formattedRemaining : t('breathing.ready_to_start') }}</p>
+        <p v-if="isRunning" class="breathing-view__rounds">{{ t('breathing.round', { n: rounds + 1 }) }}</p>
       </div>
 
       <!-- Controls -->

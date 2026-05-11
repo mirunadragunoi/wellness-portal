@@ -3,7 +3,7 @@
     <div class="type-bar">
       <RouterLink to="/home" class="back-btn">
         <Icon icon="lucide:arrow-left" class="app-icon app-icon--xs" />
-        Home
+        {{ t('nav.home') }}
       </RouterLink>
       <div class="type-tabs">
         <button
@@ -13,7 +13,7 @@
           :class="{ active: activeType === tab.id }"
           @click="changeType(tab.id)"
         >
-          {{ tab.label }}
+          {{ t(tab.labelKey) }}
         </button>
       </div>
       <div style="width: 80px"></div>
@@ -23,8 +23,8 @@
       <div class="bg-glow"></div>
       <div class="breath-info">
         <div class="breath-type-badge">{{ t('breathing.type_badge') }}</div>
-        <h1 class="breath-title">{{ config.title }}</h1>
-        <p class="breath-desc">{{ config.description }}</p>
+        <h1 class="breath-title">{{ t(config.titleKey) }}</h1>
+        <p class="breath-desc">{{ t(config.descriptionKey) }}</p>
       </div>
       <div class="breathing-view__inner">
         <BreathingCircle
@@ -34,8 +34,8 @@
         />
         <div class="breathing-view__stats">
           <BaseProgressBar :value="progress" :height="6" style="max-width:280px;width:100%" />
-          <p class="breathing-view__remaining">{{ isRunning ? formattedRemaining : 'Ready to start' }}</p>
-          <p v-if="isRunning" class="breathing-view__rounds">Round {{ rounds + 1 }}</p>
+          <p class="breathing-view__remaining">{{ isRunning ? formattedRemaining : t('breathing.ready_to_start') }}</p>
+          <p v-if="isRunning" class="breathing-view__rounds">{{ t('breathing.round', { n: rounds + 1 }) }}</p>
         </div>
         <BreathingControls
           v-model="totalDuration"
@@ -88,10 +88,10 @@ const {
 } = useBreathing(typeId)
 
 const tabs = [
-  { id: 'box', label: 'Box' },
-  { id: '4-7-8', label: '4-7-8' },
-  { id: 'calm', label: 'Calm' },
-  { id: 'sos', label: 'SOS' }
+  { id: 'box', labelKey: 'breathing.tab_box' },
+  { id: '4-7-8', labelKey: 'breathing.tab_478' },
+  { id: 'calm', labelKey: 'breathing.tab_calm' },
+  { id: 'sos', labelKey: 'breathing.tab_sos' }
 ]
 const activeType = computed(() => route.params.type || 'box')
 function changeType(id) {

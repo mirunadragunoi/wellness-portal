@@ -9,7 +9,7 @@
           </h2>
         </div>
         <RouterLink to="/explore" class="sessions-link-all reveal">
-          See all
+          {{ t('home.see_all') }}
           <Icon icon="lucide:arrow-right" class="app-icon app-icon--sm" />
         </RouterLink>
       </div>
@@ -43,10 +43,10 @@
           >
             <div class="sess-row-thumb" :style="s.image ? { backgroundImage: `url(${s.image})` } : { background: s.gradient }" />
             <div>
-              <div class="sess-row-title">{{ s.title }}</div>
-              <div class="sess-row-cat">{{ s.type }}</div>
+              <div class="sess-row-title">{{ t(s.titleKey) }}</div>
+              <div class="sess-row-cat">{{ t(s.typeKey) }}</div>
             </div>
-            <div class="sess-row-dur">{{ s.duration }}</div>
+            <div class="sess-row-dur">{{ s.durationLabel }}</div>
           </div>
         </div>
       </div>
@@ -61,10 +61,10 @@ import { LANDING_IMAGES } from '@/constants/landingImages'
 const { t } = useI18n()
 const router = useRouter()
 const sessionRows = [
-  { title: 'Forest at Night',     type: 'Sleep Story',   duration: '25 min', image: LANDING_IMAGES.preview2 },
-  { title: 'Box Breathing 4-4-4', type: 'Breathing',     duration: '5 min',  gradient: 'linear-gradient(135deg,var(--forest-600),var(--forest-400))' },
-  { title: 'Rain on Leaves',      type: 'Soundscape',    duration: '∞',      gradient: 'linear-gradient(135deg,var(--forest-700),var(--forest-300))' },
-  { title: 'Your Inner Strength', type: 'Motivational',  duration: '8 min',  gradient: 'linear-gradient(135deg,#1a3d21,#3d8b43)' },
+  { titleKey: 'preview.row_forest_title', typeKey: 'explore.type_sleep', durationLabel: `25 ${t('explore.min')}`, image: LANDING_IMAGES.preview2 },
+  { titleKey: 'preview.row_breathing_title', typeKey: 'explore.type_breathing', durationLabel: `5 ${t('explore.min')}`, gradient: 'linear-gradient(135deg,var(--forest-600),var(--forest-400))' },
+  { titleKey: 'preview.row_rain_title', typeKey: 'explore.type_soundscape', durationLabel: '∞', gradient: 'linear-gradient(135deg,var(--forest-700),var(--forest-300))' },
+  { titleKey: 'preview.row_strength_title', typeKey: 'explore.type_motivational', durationLabel: `8 ${t('explore.min')}`, gradient: 'linear-gradient(135deg,#1a3d21,#3d8b43)' },
 ]
 </script>
 

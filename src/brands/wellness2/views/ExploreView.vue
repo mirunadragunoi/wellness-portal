@@ -19,7 +19,7 @@
           :class="filters.type === chip.id ? 'chip-active' : 'chip-default'"
           @click="filters.type = chip.id"
         >
-          {{ chip.label }}
+          {{ t(chip.labelKey) }}
         </button>
       </div>
 
@@ -31,12 +31,12 @@
           :class="filters.duration === chip.id ? 'chip-active' : 'chip-default'"
           @click="filters.duration = chip.id"
         >
-          {{ chip.label }}
+          {{ t(chip.labelKey) }}
         </button>
       </div>
 
       <div class="results-head">
-        <span class="results-count">{{ filtered.length }} sessions found</span>
+        <span class="results-count">{{ t('explore.results_count', { n: filtered.length }) }}</span>
       </div>
 
       <Transition name="fade" mode="out-in">
@@ -48,7 +48,7 @@
             @click="playSession(s)"
           >
             <div class="s-thumb" :style="thumbStyle(s)">
-              <span class="s-badge">{{ s.category }}</span>
+              <span class="s-badge">{{ translateTaxonomyLabel(t, s.category) }}</span>
               <button
                 class="s-fav"
                 @click.stop="progressStore.toggleFavorite(s.id)"
@@ -60,8 +60,8 @@
             <div class="s-info">
               <h3 class="s-title">{{ s.title }}</h3>
               <div class="s-meta">
-                <span class="s-cat">{{ s.category }}</span>
-                <span class="s-dur">{{ Math.round(s.duration / 60) }} min</span>
+                <span class="s-cat">{{ translateTaxonomyLabel(t, s.category) }}</span>
+                <span class="s-dur">{{ Math.round(s.duration / 60) }} {{ t('explore.min') }}</span>
               </div>
             </div>
           </article>
@@ -84,6 +84,7 @@ import { useProgressStore } from '@/stores/progress'
 import { useProductsStore } from '@/stores/products'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 import { inferExploreAudioType, routeForProduct } from '@/utils/productKinds'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t }          = useI18n()
 const router         = useRouter()
@@ -94,17 +95,17 @@ const productsStore  = useProductsStore()
 const query          = ref('')
 const filters        = ref({ type: 'all', duration: 'all' })
 const typeChips = [
-  { id: 'all', label: t('explore.all') },
-  { id: 'meditation', label: t('explore.type_meditation') },
-  { id: 'soundscape', label: t('explore.type_soundscape') },
-  { id: 'motivational_speeches', label: t('explore.type_motivational_speeches') }
+  { id: 'all', labelKey: 'explore.all' },
+  { id: 'meditation', labelKey: 'explore.type_meditation' },
+  { id: 'soundscape', labelKey: 'explore.type_soundscape' },
+  { id: 'motivational_speeches', labelKey: 'explore.type_motivational_speeches' }
 ]
 const durationChips = [
-  { id: 'all', label: t('explore.all') },
-  { id: '1-5', label: t('explore.dur_1_5') },
-  { id: '5-10', label: t('explore.dur_5_10') },
-  { id: '10-20', label: t('explore.dur_10_20') },
-  { id: '20+', label: t('explore.dur_20plus') }
+  { id: 'all', labelKey: 'explore.all' },
+  { id: '1-5', labelKey: 'explore.dur_1_5' },
+  { id: '5-10', labelKey: 'explore.dur_5_10' },
+  { id: '10-20', labelKey: 'explore.dur_10_20' },
+  { id: '20+', labelKey: 'explore.dur_20plus' }
 ]
 
 onMounted(() => {
@@ -123,11 +124,7 @@ const filtered = computed(() => {
   }
   pool = pool.map(s => {
     const exploreType = inferExploreAudioType(s)
-    return {
-      ...s,
-      category: exploreType === 'motivational_speeches' ? 'Motivational Speeches' : exploreType,
-      exploreType
-    }
+    return { ...s, category: exploreType, exploreType }
   })
   if (filters.value.type !== 'all') {
     pool = pool.filter(s => s.exploreType === filters.value.type)

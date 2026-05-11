@@ -17,23 +17,23 @@
         >
           <div class="preview-card__img" :style="{ backgroundImage: `${card.gradient}, url(${card.image})` }">
             <div class="preview-card__overlay" />
-            <span class="preview-card__badge">{{ card.categoryLabel }}</span>
+            <span class="preview-card__badge">{{ t(card.categoryKey) }}</span>
             <div class="preview-card__play-wrap">
               <button type="button" class="preview-card__play" :aria-label="t('player.play')">
                 <Icon icon="lucide:play" class="app-icon app-icon--sm" />
               </button>
             </div>
-            <div class="preview-card__meta-bottom">{{ card.type }} · {{ Math.round(card.duration / 60) }} {{ t('explore.min') }}</div>
+            <div class="preview-card__meta-bottom">{{ t(card.typeKey) }} · {{ Math.round(card.duration / 60) }} {{ t('explore.min') }}</div>
           </div>
           <div class="preview-card__body">
-            <h4 class="preview-card__title">{{ card.title }}</h4>
+            <h4 class="preview-card__title">{{ t(card.titleKey) }}</h4>
           </div>
         </div>
       </div>
 
       <div class="preview__cta">
         <RouterLink to="/signup" class="cta-btn">
-          See all sessions
+          {{ t('preview.see_all_sessions') }}
           <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
         </RouterLink>
       </div>
@@ -49,10 +49,10 @@ const { t } = useI18n()
 const { preview1, preview2, preview3, preview4 } = LANDING_IMAGES
 
 const previewCards = [
-  { id: 1, title: '5 Minutes for Calm',  type: 'Meditation',  categoryLabel: 'Stress',      duration: 300,  gradient: 'linear-gradient(145deg, rgba(49,46,129,0.65), rgba(45,212,191,0.25))', image: preview1 },
-  { id: 2, title: 'Ocean Night Story',    type: 'Sleep Story', categoryLabel: 'Sleep',       duration: 1200, gradient: 'linear-gradient(145deg, rgba(30,27,75,0.72), rgba(167,139,250,0.22))', image: preview2 },
-  { id: 3, title: 'Morning Gratitude',    type: 'Meditation',  categoryLabel: 'Mindfulness', duration: 600,  gradient: 'linear-gradient(145deg, rgba(6,78,59,0.68), rgba(52,211,153,0.22))', image: preview3 },
-  { id: 4, title: 'Deep Focus Flow',      type: 'Meditation',  categoryLabel: 'Focus',       duration: 900,  gradient: 'linear-gradient(145deg, rgba(12,74,110,0.72), rgba(125,211,252,0.2))', image: preview4 },
+  { id: 1, titleKey: 'preview.card1_title', typeKey: 'explore.type_meditation', categoryKey: 'explore.cat_stress', duration: 300, gradient: 'linear-gradient(145deg, rgba(49,46,129,0.65), rgba(45,212,191,0.25))', image: preview1 },
+  { id: 2, titleKey: 'preview.card2_title', typeKey: 'explore.type_sleep', categoryKey: 'explore.cat_sleep', duration: 1200, gradient: 'linear-gradient(145deg, rgba(30,27,75,0.72), rgba(167,139,250,0.22))', image: preview2 },
+  { id: 3, titleKey: 'preview.card3_title', typeKey: 'explore.type_meditation', categoryKey: 'explore.cat_mindfulness', duration: 600, gradient: 'linear-gradient(145deg, rgba(6,78,59,0.68), rgba(52,211,153,0.22))', image: preview3 },
+  { id: 4, titleKey: 'preview.card4_title', typeKey: 'explore.type_meditation', categoryKey: 'explore.cat_focus', duration: 900, gradient: 'linear-gradient(145deg, rgba(12,74,110,0.72), rgba(125,211,252,0.2))', image: preview4 },
 ]
 </script>
 

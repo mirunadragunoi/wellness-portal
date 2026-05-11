@@ -74,11 +74,7 @@ const filtered = computed(() => {
   }
   return pool.map(s => {
     const exploreType = inferExploreAudioType(s)
-    return {
-      ...s,
-      category: exploreType === 'motivational_speeches' ? 'Motivational Speeches' : exploreType,
-      exploreType
-    }
+    return { ...s, category: exploreType, exploreType }
   })
 })
 

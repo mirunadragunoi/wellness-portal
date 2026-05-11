@@ -28,7 +28,8 @@ const emit  = defineEmits(['update:filters'])
 
 const typeOptions     = [
   { id: 'meditation',  key: 'explore.type_meditation' },
-  { id: 'soundscape',  key: 'explore.type_soundscape' }
+  { id: 'soundscape',  key: 'explore.type_soundscape' },
+  { id: 'motivational_speeches', key: 'explore.type_motivational_speeches' }
 ]
 const durationOptions = [
   { id: '1-5',   key: 'explore.dur_1_5'   },

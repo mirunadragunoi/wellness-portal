@@ -10,7 +10,7 @@
           :disabled="isRunning"
           @click="emit('update:modelValue', sec)"
         >
-          {{ sec / 60 }} min
+          {{ sec / 60 }} {{ t('explore.min') }}
         </button>
       </div>
     </div>

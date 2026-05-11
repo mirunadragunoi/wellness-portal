@@ -23,7 +23,7 @@
           <div class="mood-row">
             <button v-for="m in moodOptions" :key="m.id" class="mood-btn" :class="{ 'mood-btn--active': moodStore.todayMood === m.id }" @click="setMood(m.id)">
               <Icon :icon="m.icon" class="app-icon app-icon--md" />
-              <span>{{ m.label }}</span>
+              <span>{{ t(`home.mood_${m.id}`) }}</span>
             </button>
           </div>
         </article>

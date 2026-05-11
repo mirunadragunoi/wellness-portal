@@ -18,7 +18,7 @@
 
         <div class="hero__ctas">
           <RouterLink v-if="authStore.isLoggedIn" to="/home" class="hero-btn hero-btn--primary">
-            Go to Dashboard
+            {{ t('hero.cta_dashboard') }}
           </RouterLink>
           <template v-else>
             <RouterLink to="/signup" class="hero-btn hero-btn--primary">
@@ -40,9 +40,7 @@
               <img :src="avatar" alt="" />
             </span>
           </div>
-          <span class="hero__proof-text">
-            Trusted by <strong>12,000+</strong> members
-          </span>
+          <span class="hero__proof-text" v-html="proofHtml" />
         </div>
       </div>
 
@@ -51,6 +49,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { LANDING_IMAGES } from '@/constants/landingImages'
@@ -60,6 +59,9 @@ const authStore = useAuthStore()
 
 const { heroMain, heroProof1, heroProof2, heroProof3, heroProof4 } = LANDING_IMAGES
 const proofAvatars = [heroProof1, heroProof2, heroProof3, heroProof4]
+const proofHtml = computed(() =>
+  t('hero.proof', { count: `<strong>${t('hero.proof_count')}</strong>` })
+)
 </script>
 
 <style scoped>

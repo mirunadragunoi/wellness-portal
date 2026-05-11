@@ -1,7 +1,7 @@
 <template>
   <RouterLink :to="{ name: 'article', params: { slug: article.slug } }" class="article-card">
     <div class="article-card__img" :style="imgStyle">
-      <span class="article-card__cat">{{ article.category }}</span>
+      <span class="article-card__cat">{{ translateTaxonomyLabel(t, article.category) }}</span>
     </div>
     <div class="article-card__body">
       <h3 class="article-card__title">{{ article.title }}</h3>
@@ -18,7 +18,7 @@
             download
             @click.stop
           >
-            Download PDF
+            {{ t('learn.download_pdf') }}
           </a>
           <button
             type="button"
@@ -42,6 +42,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t } = useI18n()
 const props = defineProps({

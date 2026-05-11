@@ -29,6 +29,7 @@
     "subtitle": "Řízené meditace, dechová cvičení a personalizované nástroje pro wellness — vše na jednom místě. Zhluboka se nadechni. Jsi na správném místě.",
     "cta_primary": "Začít cestu",
     "cta_secondary": "Prozkoumat zdarma",
+    "cta_dashboard": "Přejít na nástěnku",
     "proof": "Přidalo se {count} lidí, kteří nacházejí svůj klid",
     "proof_count": "12 000+",
     "orb_text": "Dýchej...",
@@ -51,7 +52,11 @@
     "card3_title": "Osobní sledování",
     "card3_desc": "Kontroly nálady, sledování série, zaznamenávání návyků — sleduj svůj pokrok a porozuměj svým vzorcům.",
     "card4_title": "Personalizováno pro tebe",
-    "card4_desc": "Řekni nám své cíle a my vytvoříme plán, který ti vyhovuje. Doporučení, která se přizpůsobují tvé náladě a momentu."
+    "card4_desc": "Řekni nám své cíle a my vytvoříme plán, který ti vyhovuje. Doporučení, která se přizpůsobují tvé náladě a momentu.",
+    "feature_label": "Funkce",
+    "tag_sessions": "50+ sezení",
+    "tag_relief": "Okamžitá úleva",
+    "tag_insights": "Skutečné vhledy"
   },
   "howItWorks": {
     "label": "Jak to funguje",
@@ -72,7 +77,16 @@
     "feat_type": "Meditace",
     "feat_title": "Ranní jasnost",
     "feat_desc": "Začni svůj den vyrovnaně a soustředěně s touto jemnou ranní meditací, navržen pro rušná rána.",
-    "feat_chip": "Soustředění"
+    "feat_chip": "Soustředění",
+    "see_all_sessions": "Zobrazit všechna sezení",
+    "card1_title": "5 minut pro klid",
+    "card2_title": "Noční příběh oceánu",
+    "card3_title": "Ranní vděčnost",
+    "card4_title": "Tok hlubokého soustředění",
+    "row_forest_title": "Les v noci",
+    "row_breathing_title": "Box dýchání 4-4-4",
+    "row_rain_title": "Déšť na listech",
+    "row_strength_title": "Tvá vnitřní síla"
   },
   "metrics": {
     "title_1": "Skutečné výsledky,",
@@ -172,9 +186,13 @@
     "pace_slow_desc": "Dám si čas",
     "step7_title": "Kolik času můžeš věnovat denně?",
     "duration_2_5": "2–5 min",
+    "duration_2_5_sub": "Rychlý denní reset",
     "duration_5_10": "5–10 min",
+    "duration_5_10_sub": "Stálá praxe",
     "duration_10_20": "10–20 min",
+    "duration_10_20_sub": "Hlubší sezení",
     "duration_20plus": "20+ min",
+    "duration_20plus_sub": "Plné ponoření",
     "step8_loading_1": "Analyzujeme tvé preference...",
     "step8_loading_2": "Vytváříme tvůj personalizovaný plán...",
     "step8_loading_3": "100 % — Vítej!",
@@ -238,6 +256,7 @@
     "filter_duration": "Délka",
     "filter_sort": "Řadit",
     "all": "Vše",
+    "type_article": "Článek",
     "type_meditation": "Meditace",
     "type_breathing": "Dýchání",
     "type_sleep": "Pohádka na spaní",
@@ -258,6 +277,7 @@
     "sort_newest": "Nejnovější",
     "sort_recommended": "Doporučené",
     "no_results": "Žádná sezení nenalezena. Zkus jiné filtry.",
+    "results_count": "Nalezeno {n} sezení",
     "min": "min",
     "subtitle": "Objevuj meditace, pohádky na spaní, zvukové krajiny a další."
   },
@@ -282,6 +302,10 @@
     "hold": "Zadržení",
     "exhale": "Výdech",
     "pause": "Pauza",
+    "ready": "Připraveno",
+    "ready_to_start": "Připraveno začít",
+    "round": "Kolo {n}",
+    "seconds_short": "s",
     "start": "Start",
     "pause_btn": "Pauza",
     "stop": "Stop",
@@ -299,7 +323,11 @@
     "session_complete_body": "Výborně. Dokončil jsi {minutes} minut vědomého dýchání.",
     "practice_again": "Cvičit znovu",
     "type_badge": "Dechové cvičení",
-    "quick_breathing": "Rychlé dýchání"
+    "quick_breathing": "Rychlé dýchání",
+    "tab_box": "Box",
+    "tab_478": "4-7-8",
+    "tab_calm": "Klid",
+    "tab_sos": "SOS"
   },
   "learn": {
     "title": "Učit se",
@@ -319,6 +347,7 @@
     "ready_to_practice_body": "Uveď do praxe, co jsi se naučil, s řízeným sezením.",
     "not_found": "Článek nenalezen.",
     "download_pdf": "Stáhnout PDF",
+    "listen_audio": "Poslechnout audio",
     "cat_habits": "Návyky"
   },
   "practice": {

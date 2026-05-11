@@ -29,6 +29,7 @@
     "subtitle": "Guided meditations, breathing exercises, and personalized wellness tools — all in one place. Take a deep breath. You're in the right place.",
     "cta_primary": "Start Your Journey",
     "cta_secondary": "Explore Free",
+    "cta_dashboard": "Go to Dashboard",
     "proof": "Joined by {count} people finding their calm",
     "proof_count": "12,000+",
     "orb_text": "Breathe...",
@@ -51,7 +52,11 @@
     "card3_title": "Personal Tracking",
     "card3_desc": "Mood check-ins, streak tracking, habit logging — see your progress and understand your patterns.",
     "card4_title": "Personalized For You",
-    "card4_desc": "Tell us your goals and we'll create a plan that fits. Recommendations that adapt to your mood and moment."
+    "card4_desc": "Tell us your goals and we'll create a plan that fits. Recommendations that adapt to your mood and moment.",
+    "feature_label": "Feature",
+    "tag_sessions": "50+ sessions",
+    "tag_relief": "Instant relief",
+    "tag_insights": "Real insights"
   },
   "howItWorks": {
     "label": "How It Works",
@@ -72,7 +77,16 @@
     "feat_type": "Meditation",
     "feat_title": "Morning Clarity",
     "feat_desc": "Start your day grounded and focused with this gentle wake-up meditation designed for busy mornings.",
-    "feat_chip": "Focus"
+    "feat_chip": "Focus",
+    "see_all_sessions": "See all sessions",
+    "card1_title": "5 Minutes for Calm",
+    "card2_title": "Ocean Night Story",
+    "card3_title": "Morning Gratitude",
+    "card4_title": "Deep Focus Flow",
+    "row_forest_title": "Forest at Night",
+    "row_breathing_title": "Box Breathing 4-4-4",
+    "row_rain_title": "Rain on Leaves",
+    "row_strength_title": "Your Inner Strength"
   },
   "metrics": {
     "title_1": "Real results,",
@@ -172,9 +186,13 @@
     "pace_slow_desc": "Take my time",
     "step7_title": "How much time can you dedicate daily?",
     "duration_2_5": "2–5 min",
+    "duration_2_5_sub": "Quick daily reset",
     "duration_5_10": "5–10 min",
+    "duration_5_10_sub": "Steady practice",
     "duration_10_20": "10–20 min",
+    "duration_10_20_sub": "Deeper sessions",
     "duration_20plus": "20+ min",
+    "duration_20plus_sub": "Full immersion",
     "step8_loading_1": "Analyzing your preferences...",
     "step8_loading_2": "Creating your personalized plan...",
     "step8_loading_3": "100% — Welcome!",
@@ -238,6 +256,7 @@
     "filter_duration": "Duration",
     "filter_sort": "Sort",
     "all": "All",
+    "type_article": "Article",
     "type_meditation": "Meditation",
     "type_breathing": "Breathing",
     "type_sleep": "Sleep Story",
@@ -258,6 +277,7 @@
     "sort_newest": "Newest",
     "sort_recommended": "Recommended",
     "no_results": "No sessions found. Try different filters.",
+    "results_count": "{n} sessions found",
     "min": "min",
     "subtitle": "Discover meditations, sleep stories, soundscapes, and more."
   },
@@ -282,6 +302,10 @@
     "hold": "Hold",
     "exhale": "Exhale",
     "pause": "Pause",
+    "ready": "Ready",
+    "ready_to_start": "Ready to start",
+    "round": "Round {n}",
+    "seconds_short": "sec",
     "start": "Start",
     "pause_btn": "Pause",
     "stop": "Stop",
@@ -299,7 +323,11 @@
     "session_complete_body": "Great work. You've completed {minutes} minutes of mindful breathing.",
     "practice_again": "Practice Again",
     "type_badge": "Breathing exercise",
-    "quick_breathing": "Quick Breathing"
+    "quick_breathing": "Quick Breathing",
+    "tab_box": "Box",
+    "tab_478": "4-7-8",
+    "tab_calm": "Calm",
+    "tab_sos": "SOS"
   },
   "learn": {
     "title": "Learn",
@@ -319,6 +347,7 @@
     "ready_to_practice_body": "Put what you've learned into action with a guided session.",
     "not_found": "Article not found.",
     "download_pdf": "Download PDF",
+    "listen_audio": "Listen audio",
     "cat_habits": "Habits"
   },
   "practice": {

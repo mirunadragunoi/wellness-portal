@@ -14,7 +14,7 @@
           @click="openPractice(item.id)"
         >
           <div class="practice-card__thumb" :style="thumbStyle(item)">
-            <span class="practice-card__badge">{{ item.category }}</span>
+            <span class="practice-card__badge">{{ translateTaxonomyLabel(t, item.category) }}</span>
             <span class="practice-card__dur">{{ durationLabel(item) }}</span>
           </div>
           <h2 class="practice-card__title">{{ item.title }}</h2>
@@ -35,6 +35,7 @@ import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useProductsStore } from '@/stores/products'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 
 const { t } = useI18n()
 const router = useRouter()

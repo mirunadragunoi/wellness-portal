@@ -19,7 +19,11 @@ export function isMotivationalSpeechProduct(product) {
     hay.includes('motivational speeches') ||
     hay.includes('motivational_speeches') ||
     hay.includes('motivational') ||
-    hay.includes('speech')
+    hay.includes('motivation') ||
+    hay.includes('speech') ||
+    hay.includes('discurs') ||
+    hay.includes('motiva') ||
+    hay.includes('projev')
   )
 }
 

@@ -15,7 +15,7 @@
         <article class="article-content">
           <!-- Cover -->
           <div class="article-content__cover" :style="coverStyle(article)">
-            <span class="article-content__cat">{{ article.category }}</span>
+            <span class="article-content__cat">{{ translateTaxonomyLabel(t, article.category) }}</span>
           </div>
 
           <!-- Meta -->
@@ -31,7 +31,7 @@
               rel="noopener noreferrer"
               download
             >
-              Download PDF
+              {{ t('learn.download_pdf') }}
             </a>
             <button
               v-if="article.isAudioArticle && article.audioUrl"
@@ -40,7 +40,7 @@
               @click="listenAudio(article)"
             >
               <Icon icon="lucide:headphones" class="app-icon app-icon--sm" aria-hidden="true" />
-              Listen audio
+              {{ t('learn.listen_audio') }}
             </button>
             <button
               type="button"
@@ -121,6 +121,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useArticlePage } from '@/composables/useArticlePage'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
+import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
