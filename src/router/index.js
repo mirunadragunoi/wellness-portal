@@ -124,12 +124,14 @@ const routes = [
     component: views.practiceVideo,
     meta: { requiresAuth: true }
   },
-  {
-    path: '/listen',
-    name: 'listen',
-    component: views.listen,
-    meta: { requiresAuth: true }
-  },
+  ...(brand === 'wellness'
+    ? []
+    : [{
+        path: '/listen',
+        name: 'listen',
+        component: views.listen,
+        meta: { requiresAuth: true }
+      }]),
   {
     path: '/learn',
     name: 'learn',

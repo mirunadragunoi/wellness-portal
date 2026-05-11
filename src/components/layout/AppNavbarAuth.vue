@@ -23,7 +23,7 @@
             {{ t('nav.practice') }}
           </RouterLink>
         </li>
-        <li>
+        <li v-if="showListenNav">
           <RouterLink to="/listen" class="nav-link" :class="{ active: route.name === 'listen' }">
             {{ t('nav.listen') }}
           </RouterLink>
@@ -65,6 +65,7 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useProgressStore } from '@/stores/progress'
 import { AVATAR_ICONS } from '@/constants/appIcons'
+import { getBrandKey } from '@/config/brand'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
 
 const { t } = useI18n()
@@ -72,6 +73,7 @@ const route = useRoute()
 const userStore    = useUserStore()
 const progressStore = useProgressStore()
 const scrolled = ref(false)
+const showListenNav = getBrandKey() !== 'wellness'
 
 function onScroll() { scrolled.value = window.scrollY > 10 }
 onMounted(() => window.addEventListener('scroll', onScroll))

@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import { estimateReadMinutes } from '@/utils/articleContent'
 import { hydrateClientMediaDurations } from '@/utils/audioDuration'
 import { coalesceProductImageUrl, normalizeProductImageUrl } from '@/utils/productImageUrl'
+import { normalizeLabelKey } from '@/utils/i18nLabels'
 
 const GRADIENTS = [
   'linear-gradient(135deg, #bae6fd, #93c5fd)',
@@ -32,6 +33,22 @@ const TYPE_MAP = {
 }
 
 const CATEGORY_KEYWORDS = ['stress', 'sleep', 'focus', 'anxiety', 'mindfulness', 'energy', 'relax', 'calm']
+const CATEGORY_ALIASES = {
+  motivational_speeches: 'motivational_speeches',
+  motivational_speech: 'motivational_speeches',
+  motivational: 'motivational_speeches'
+}
+
+function productCategory(p, fallbackType) {
+  const rawCategory = p.category_label || p.categoryLabel || p.category || ''
+  const normalizedCategory = normalizeLabelKey(rawCategory)
+  if (CATEGORY_ALIASES[normalizedCategory]) return CATEGORY_ALIASES[normalizedCategory]
+  if (CATEGORY_KEYWORDS.includes(normalizedCategory)) return normalizedCategory
+
+  const codeLC = (p.code || '').toLowerCase()
+  const titleLC = (p.title || '').toLowerCase()
+  return CATEGORY_KEYWORDS.find(c => codeLC.includes(c) || titleLC.includes(c)) || fallbackType
+}
 
 /** Parse track length from API (seconds). Backend should expose e.g. duration_seconds on product JSON. */
 function productDurationSeconds(p) {
@@ -48,9 +65,7 @@ function productDurationSeconds(p) {
 
 export function mapProduct(p) {
   const type = TYPE_MAP[p.type] || 'meditation'
-  const codeLC = (p.code || '').toLowerCase()
-  const titleLC = (p.title || '').toLowerCase()
-  const category = CATEGORY_KEYWORDS.find(c => codeLC.includes(c) || titleLC.includes(c)) || type
+  const category = productCategory(p, type)
   const descriptionLong = p.description_long || ''
   const descriptionShort = p.description_short || ''
 
@@ -93,7 +108,7 @@ export function mapProduct(p) {
     rating: p.rating_points,
     ratingCount: p.rating_count,
     code: p.code,
-    dbCategoryLabel: p.category_label || p.categoryLabel || null,
+    dbCategoryLabel: p.category_label || p.categoryLabel || p.category || null,
     popular: (p.rating_points || 0) >= 4,
     featured: (p.rating_points || 0) >= 4.5,
     tags: []

@@ -9,12 +9,13 @@ import dayjs from 'dayjs'
 function productToArticleVm(p) {
   const long = p.descriptionLong || p.description || ''
   const excerpt = p.descriptionShort || ''
+  const isAudioArticle = isMotivationalSpeechProduct(p)
   return {
     id: p.id,
     slug: String(p.id),
     title: p.title,
     excerpt,
-    category: p.category,
+    category: isAudioArticle ? 'motivational_speeches' : p.category,
     readTime: p.readTimeMinutes || estimateReadMinutes(long),
     datePublished: dayjs(),
     thumbnail: p.thumbnail,
@@ -22,7 +23,7 @@ function productToArticleVm(p) {
     thumbnailGradient: p.thumbnailGradient,
     downloadUrl: p.downloadUrl || null,
     audioUrl: p.audioUrl || null,
-    isAudioArticle: isMotivationalSpeechProduct(p),
+    isAudioArticle,
     content: formatArticleBody(long),
     _source: 'api'
   }
