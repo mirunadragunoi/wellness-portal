@@ -38,11 +38,12 @@ export default defineConfig(({ mode }) => {
         {
           find: /^@\/constants\//,
           replacement: fileURLToPath(new URL(`./src/brands/${brand}/constants/`, import.meta.url))
-        },
-        {
-          find: /^@\/i18n\/locales\//,
-          replacement: fileURLToPath(new URL(`./src/brands/${brand}/i18n/locales/`, import.meta.url))
         }
+        // NOTE: NU adăuga alias pentru @/i18n/locales/ — i18n/index.js importă
+        // explicit `src/i18n/locales/*.json` (base neutru) și `src/brands/*/i18n/locales/*.json`
+        // (overrides per brand), apoi le merge-uiește cu mergeMessages(). Un alias aici
+        // ar redirecționa importurile de base către folder-ul brand-ului, care nu
+        // conține toate limbile și sparge build-ul.
       ]
     : []
 

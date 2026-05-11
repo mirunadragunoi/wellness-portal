@@ -49,6 +49,10 @@ src/
 │   # IMPORTANT: wellness2/wellness3 randează frecvent INLINE în view-uri
 │   # (LearnView, ExploreView), fără să folosească componentele partajate.
 │   # Vezi memoria "Brand override gotcha".
+│   # ALIAS gotcha: vite.config.js redirecționează @/components/ → src/brands/$brand/components/
+│   # pentru brand-urile non-default. Orice componentă nouă în src/components/layout/X.vue
+│   # importată cu @/components/layout/X.vue din fișiere brand-specific TREBUIE copiată
+│   # în toate 3 brand-urile (src/ + wellness2/ + wellness3/), altfel build-ul sparge ENOENT.
 │
 ├── components/                  # Componente partajate (pot fi suprascrise în brands/*/components)
 │   ├── base/                      # BaseButton, BaseCard, BaseChip, BaseModal, BaseProgressBar, BaseSkeleton, BaseToast
@@ -101,6 +105,13 @@ src/
 
 Categoria e derivată prin keyword matching pe `code`/`title` (`stress`, `sleep`, `focus`, etc.); fallback la `type` numeric.
 
+**Routing catalogue → player corect** (`src/utils/productKinds.js → routeForProduct(product)`):
+- `type === 'article'` sau `isMotivationalSpeechProduct(p)` → ruta `article` (text view)
+- `type === 'practice'` (yoga/video, rawType=5) → ruta `practice-video` (video player)
+- restul → ruta `session` (audio player)
+
+Folosit în ~16 call-site-uri (HomeRecommended/HomeMomentOfDay/ExploreView/ProfileView favorites/PlayerPostSession/AppMiniPlayer + HomeView pe wellness2/3). **NU folosesc helper-ul intenționat:** `AppSOSOverlay` (id hardcoded `med-010`, mereu audio) și `ArticleView.listenAudio` (forțează audio session cu autoplay pentru un articol).
+
 **Auto-inject pe toate apelurile** (din `services/api.js`):
 - `portal_name` = brand identifier (`Harmonoria` / `Innerawake` / `Calmasoul`)
 - `country` = cod țară 2 litere UPPERCASE (`UK` / `CZ` / `SK`) — `UK` e legacy, nu ISO (`GB`)
@@ -134,10 +145,20 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 
 **Fișiere locale** (cheie = limbă, NU țară):
 - `src/i18n/locales/{en,ro,cz,sk}.json` — base **NEUTRU** (fără referințe la branduri); `brand.name = "Wellness Portal"`, `footer.copy = "© 2026 All rights reserved."`, `onboarding.step4_body` fără numele brand-ului
-- `src/brands/wellness/i18n/locales/{en,ro,cz,sk}.json` — Harmonoria overrides (brand.{name,tagline,description}, footer.copy, onboarding.step4_body)
+- `src/brands/wellness/i18n/locales/{en,ro,cz,sk}.json` — Harmonoria overrides
 - `src/brands/wellness2/i18n/locales/{en,ro}.json` — Innerawake overrides
 - `src/brands/wellness3/i18n/locales/{en,ro,cz}.json` — Calmasoul overrides
-- **Toate brandurile au override-uri simetrice.** În override pui doar cheile care diferă de base (deep-merge cu `mergeMessages()`).
+
+**REGULĂ override:** în fișierele de brand pui **doar cheile care diferă** de base. `mergeMessages()` face deep-merge: cheile lipsă fallback la base. Pentru cele 3 branduri actuale, diferențele sunt în general:
+- `brand.{name, tagline, description}` (mereu diferă)
+- `footer.copy` (conține numele brand-ului)
+- `onboarding.step4_body` (text cu numele brand-ului)
+- `auth.*` (variate, fiecare brand are tagline/CTA-uri proprii pe Login/Signup)
+- Pentru wellness3 (Calmasoul) în plus: `nav.cta`, `hero.*`, `home.recommended_title`, `learn.subtitle`, `progress.title`, `profile.title` (vocabular diferit "begin/stillness/your" vs base "start/balance/—")
+
+**Nu duplica restul** — dacă în brand override apare exact aceeași valoare ca în base, șterge-o (curăță-te clutter).
+
+**Schimbare valori brand-specifice:** modifică în `src/brands/{brand}/i18n/locales/`, NU în base (base e neutru, partajat).
 
 **Dev override pentru test fără DNS:**
 ```
