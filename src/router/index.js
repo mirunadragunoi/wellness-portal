@@ -81,6 +81,48 @@ const routes = [
     meta: { public: true, hideForAuth: true }
   },
   {
+    path: '/about',
+    name: 'legal-about',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'about' }
+  },
+  {
+    path: '/contact',
+    name: 'legal-contact',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'contact' }
+  },
+  {
+    path: '/faq',
+    name: 'legal-faq',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'faq' }
+  },
+  {
+    path: '/terms-and-conditions',
+    name: 'legal-terms',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'terms' }
+  },
+  {
+    path: '/privacy-policy',
+    name: 'legal-privacy',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'privacy' }
+  },
+  {
+    path: '/cookies-policy',
+    name: 'legal-cookies',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'cookies' }
+  },
+  {
+    path: '/unsubscribe',
+    name: 'legal-unsubscribe',
+    component: () => import('../views/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'unsubscribe' }
+  },
+  {
     path: '/onboarding',
     name: 'onboarding',
     component: views.onboarding,

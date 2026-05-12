@@ -8,10 +8,13 @@
         <span class="footer__copy">{{ t('footer.copy') }}</span>
       </div>
       <ul class="footer__links">
-        <li><a href="#" class="footer__link">{{ t('footer.about') }}</a></li>
-        <li><a href="#" class="footer__link">{{ t('footer.contact') }}</a></li>
-        <li><a href="#" class="footer__link">{{ t('footer.terms') }}</a></li>
-        <li><a href="#" class="footer__link">{{ t('footer.privacy') }}</a></li>
+        <li><RouterLink to="/about" class="footer__link">{{ t('footer.about') }}</RouterLink></li>
+        <li><RouterLink to="/contact" class="footer__link">{{ t('footer.contact') }}</RouterLink></li>
+        <li><RouterLink to="/faq" class="footer__link">{{ t('footer.faq') }}</RouterLink></li>
+        <li><RouterLink to="/terms-and-conditions" class="footer__link">{{ t('footer.terms_conditions') }}</RouterLink></li>
+        <li><RouterLink to="/privacy-policy" class="footer__link">{{ t('footer.privacy_policy') }}</RouterLink></li>
+        <li><RouterLink to="/cookies-policy" class="footer__link">{{ t('footer.cookies_policy') }}</RouterLink></li>
+        <li><RouterLink to="/unsubscribe" class="footer__link">{{ t('footer.unsubscribe') }}</RouterLink></li>
       </ul>
     </div>
   </footer>

@@ -125,10 +125,50 @@
   "footer": {
     "about": "About",
     "contact": "Contact",
+    "faq": "FAQ",
     "terms": "Terms",
+    "terms_conditions": "Terms and Conditions",
     "privacy": "Privacy",
+    "privacy_policy": "Privacy Policy",
+    "cookies_policy": "Cookies Policy",
+    "unsubscribe": "Unsubscribe",
     "copy": "© 2026 All rights reserved.",
     "tagline": "Your daily companion for mindful living."
+  },
+  "legal": {
+    "back_home": "Back to home",
+    "eyebrow": "Legal",
+    "placeholder": "This page is ready. The final legal content will be loaded from the backend.",
+    "pages": {
+      "about": {
+        "title": "About",
+        "summary": "Learn more about this wellness portal and the service behind it."
+      },
+      "contact": {
+        "title": "Contact",
+        "summary": "Find the support details and contact information for this portal."
+      },
+      "faq": {
+        "title": "FAQ",
+        "summary": "Answers to common questions about access, subscriptions and using the portal."
+      },
+      "terms": {
+        "title": "Terms and Conditions",
+        "summary": "The terms that govern access to and use of this portal."
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "summary": "Information about how personal data is collected, used and protected."
+      },
+      "cookies": {
+        "title": "Cookies Policy",
+        "summary": "Details about the cookies and similar technologies used by this portal."
+      },
+      "unsubscribe": {
+        "title": "Unsubscribe",
+        "summary": "Manage unsubscribe requests and communication preferences."
+      }
+    }
   },
   "quizFloat": "Take the Wellness Quiz",
   "auth": {

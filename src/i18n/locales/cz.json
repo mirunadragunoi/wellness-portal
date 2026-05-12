@@ -125,10 +125,50 @@
   "footer": {
     "about": "O nás",
     "contact": "Kontakt",
+    "faq": "FAQ",
     "terms": "Podmínky",
+    "terms_conditions": "Obchodní podmínky",
     "privacy": "Ochrana soukromí",
+    "privacy_policy": "Zásady ochrany osobních údajů",
+    "cookies_policy": "Zásady používání cookies",
+    "unsubscribe": "Odhlášení",
     "copy": "© 2026 Všechna práva vyhrazena.",
     "tagline": "Tvůj každodenní průvodce vědomým životem."
+  },
+  "legal": {
+    "back_home": "Zpět domů",
+    "eyebrow": "Právní informace",
+    "placeholder": "Tato stránka je připravena. Finální právní obsah bude načten z backendu.",
+    "pages": {
+      "about": {
+        "title": "O nás",
+        "summary": "Zjisti více o tomto wellness portálu a službě, která za ním stojí."
+      },
+      "contact": {
+        "title": "Kontakt",
+        "summary": "Najdi údaje podpory a kontaktní informace pro tento portál."
+      },
+      "faq": {
+        "title": "FAQ",
+        "summary": "Odpovědi na časté otázky ohledně přístupu, předplatného a používání portálu."
+      },
+      "terms": {
+        "title": "Obchodní podmínky",
+        "summary": "Podmínky, které upravují přístup k tomuto portálu a jeho používání."
+      },
+      "privacy": {
+        "title": "Zásady ochrany osobních údajů",
+        "summary": "Informace o tom, jak jsou osobní údaje shromažďovány, používány a chráněny."
+      },
+      "cookies": {
+        "title": "Zásady používání cookies",
+        "summary": "Podrobnosti o cookies a podobných technologiích používaných tímto portálem."
+      },
+      "unsubscribe": {
+        "title": "Odhlášení",
+        "summary": "Spravuj žádosti o odhlášení a komunikační preference."
+      }
+    }
   },
   "quizFloat": "Vyplnit wellness dotazník",
   "auth": {

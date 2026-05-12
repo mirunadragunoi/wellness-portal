@@ -125,10 +125,50 @@
   "footer": {
     "about": "Despre",
     "contact": "Contact",
+    "faq": "Întrebări frecvente",
     "terms": "Termeni",
+    "terms_conditions": "Termeni și condiții",
     "privacy": "Confidențialitate",
+    "privacy_policy": "Politica de confidențialitate",
+    "cookies_policy": "Politica de cookies",
+    "unsubscribe": "Dezabonare",
     "copy": "© 2026 Toate drepturile rezervate.",
     "tagline": "Companionul tău zilnic pentru o viață conștientă."
+  },
+  "legal": {
+    "back_home": "Înapoi acasă",
+    "eyebrow": "Legal",
+    "placeholder": "Această pagină este pregătită. Conținutul legal final va fi încărcat din backend.",
+    "pages": {
+      "about": {
+        "title": "Despre",
+        "summary": "Află mai multe despre acest portal de wellness și serviciul din spatele lui."
+      },
+      "contact": {
+        "title": "Contact",
+        "summary": "Găsește detaliile de suport și informațiile de contact pentru acest portal."
+      },
+      "faq": {
+        "title": "Întrebări frecvente",
+        "summary": "Răspunsuri la întrebări comune despre acces, abonamente și folosirea portalului."
+      },
+      "terms": {
+        "title": "Termeni și condiții",
+        "summary": "Termenii care guvernează accesul la acest portal și utilizarea lui."
+      },
+      "privacy": {
+        "title": "Politica de confidențialitate",
+        "summary": "Informații despre modul în care datele personale sunt colectate, folosite și protejate."
+      },
+      "cookies": {
+        "title": "Politica de cookies",
+        "summary": "Detalii despre cookie-urile și tehnologiile similare folosite de acest portal."
+      },
+      "unsubscribe": {
+        "title": "Dezabonare",
+        "summary": "Gestionează cererile de dezabonare și preferințele de comunicare."
+      }
+    }
   },
   "quizFloat": "Completează chestionarul de wellness",
   "auth": {
