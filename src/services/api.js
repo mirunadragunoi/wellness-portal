@@ -18,9 +18,9 @@ async function request(method, path, { params = {}, body = null } = {}) {
   const ctx = currentContext()
 
   if (method === 'GET') {
-    params = { ...params, ...ctx }
+    params = { ...ctx, ...params }
   } else {
-    body = { ...(body || {}), ...ctx }
+    body = { ...ctx, ...(body || {}) }
   }
 
   const filteredParams = Object.fromEntries(
@@ -30,8 +30,11 @@ async function request(method, path, { params = {}, body = null } = {}) {
     url += '?' + new URLSearchParams(filteredParams)
   }
 
-  const options = { method, headers: { 'Content-Type': 'application/json' } }
-  if (body !== null) options.body = JSON.stringify(body)
+  const options = { method, headers: {} }
+  if (body !== null) {
+    options.headers['Content-Type'] = 'application/json'
+    options.body = JSON.stringify(body)
+  }
 
   const res = await fetch(url, options)
 
@@ -70,6 +73,52 @@ export const api = {
   getProduct: (accessCode, id) =>
     request('GET', `/wellness/products/${id}`, {
       params: { access_code: accessCode }
+    }),
+
+  getAbout: (accessCode = null) =>
+    request('GET', '/wellness/about', {
+      params: { access_code: accessCode }
+    }),
+
+  getLegalFaq: (accessCode = null) =>
+    request('GET', '/wellness/legals/faq', {
+      params: { access_code: accessCode }
+    }),
+
+  getLegalContact: (accessCode = null) =>
+    request('GET', '/wellness/legals/contact', {
+      params: { access_code: accessCode }
+    }),
+
+  getLegalTerms: (accessCode = null) =>
+    request('GET', '/wellness/legals/terms', {
+      params: { access_code: accessCode }
+    }),
+
+  getLegalPrivacy: (accessCode = null) =>
+    request('GET', '/wellness/legals/privacy', {
+      params: { access_code: accessCode }
+    }),
+
+  getLegalCookies: (accessCode = null) =>
+    request('GET', '/wellness/legals/cookies_policy', {
+      params: { access_code: accessCode }
+    }),
+
+  getLegalUnsubscribe: (accessCode = null) =>
+    request('GET', '/wellness/legals/unsubscribe', {
+      params: { access_code: accessCode }
+    }),
+
+  unsubscribePhoneNumber: ({ country, language, phoneNumber, recaptchaToken = null }) =>
+    request('GET', '/store/UnsubscribePhoneNumber', {
+      params: {
+        service: PORTAL_NAME,
+        country,
+        language,
+        phone_number: phoneNumber,
+        recaptcha_token: recaptchaToken
+      }
     }),
 
   completeSession: (accessCode, data) =>

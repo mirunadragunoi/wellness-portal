@@ -168,6 +168,18 @@
         "title": "Dezabonare",
         "summary": "Gestionează cererile de dezabonare și preferințele de comunicare."
       }
+    },
+    "unsubscribe_form": {
+      "country": "Prefix țară",
+      "phone": "Număr de telefon",
+      "phone_hint": "Folosește formatul {format}.",
+      "phone_required": "Te rugăm să introduci numărul de telefon.",
+      "recaptcha_required": "Te rugăm să finalizezi verificarea reCAPTCHA.",
+      "recaptcha_error": "Verificarea reCAPTCHA nu a putut fi încărcată. Te rugăm să încerci din nou.",
+      "submit": "Dezabonează-te",
+      "submitting": "Se trimite...",
+      "success": "Cererea ta de dezabonare a fost trimisă.",
+      "error": "Nu am putut trimite cererea de dezabonare. Te rugăm să încerci din nou."
     }
   },
   "quizFloat": "Completează chestionarul de wellness",

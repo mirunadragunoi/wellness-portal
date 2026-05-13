@@ -168,6 +168,18 @@
         "title": "Odhlásenie",
         "summary": "Spravuj žiadosti o odhlásenie a komunikačné preferencie."
       }
+    },
+    "unsubscribe_form": {
+      "country": "Predvoľba krajiny",
+      "phone": "Telefónne číslo",
+      "phone_hint": "Použite formát {format}.",
+      "phone_required": "Zadajte prosím telefónne číslo.",
+      "recaptcha_required": "Dokončite prosím overenie reCAPTCHA.",
+      "recaptcha_error": "Overenie reCAPTCHA sa nepodarilo načítať. Skúste to prosím znova.",
+      "submit": "Odhlásiť",
+      "submitting": "Odosielanie...",
+      "success": "Vaša žiadosť o odhlásenie bola odoslaná.",
+      "error": "Žiadosť o odhlásenie sa nepodarilo odoslať. Skúste to prosím znova."
     }
   },
   "quizFloat": "Vyplniť wellness dotazník",

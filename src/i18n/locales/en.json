@@ -168,6 +168,18 @@
         "title": "Unsubscribe",
         "summary": "Manage unsubscribe requests and communication preferences."
       }
+    },
+    "unsubscribe_form": {
+      "country": "Country prefix",
+      "phone": "Phone number",
+      "phone_hint": "Use the format {format}.",
+      "phone_required": "Please enter your phone number.",
+      "recaptcha_required": "Please complete the reCAPTCHA verification.",
+      "recaptcha_error": "The reCAPTCHA verification could not be loaded. Please try again.",
+      "submit": "Unsubscribe",
+      "submitting": "Sending...",
+      "success": "Your unsubscribe request has been submitted.",
+      "error": "We could not submit your unsubscribe request. Please try again."
     }
   },
   "quizFloat": "Take the Wellness Quiz",
