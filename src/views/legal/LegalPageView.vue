@@ -11,7 +11,7 @@
       <p>{{ t('common.loading') }}</p>
     </section>
 
-    <section v-else-if="errorMessage" class="legal-card legal-state">
+    <section v-else-if="errorMessage && pageKey !== 'unsubscribe'" class="legal-card legal-state">
       <p>{{ errorMessage }}</p>
       <button class="legal-retry" type="button" @click="loadContent">
         {{ t('common.retry') }}
@@ -26,21 +26,16 @@
     </section>
 
     <template v-else-if="pageKey === 'unsubscribe'">
+      <section v-if="errorMessage" class="legal-card legal-state legal-warning">
+        <p>{{ errorMessage }}</p>
+      </section>
+
       <section v-if="contentHtml" class="legal-card">
         <div class="legal-content" v-html="contentHtml" />
       </section>
 
       <section class="legal-card unsubscribe-card">
         <form class="unsubscribe-form" @submit.prevent="submitUnsubscribe">
-          <div class="form-row">
-            <label for="unsubscribe-country">{{ t('legal.unsubscribe_form.country') }}</label>
-            <select id="unsubscribe-country" v-model="selectedPhoneCountry">
-              <option v-for="country in phoneCountries" :key="country.code" :value="country.code">
-                {{ country.label }} ({{ country.dialCode }})
-              </option>
-            </select>
-          </div>
-
           <div class="form-row">
             <label for="unsubscribe-phone">{{ t('legal.unsubscribe_form.phone') }}</label>
             <div class="phone-input">
@@ -102,7 +97,6 @@ const errorMessage = ref('')
 const contentHtml = ref('')
 const faqItems = ref([])
 const phoneNumber = ref('')
-const selectedPhoneCountry = ref(defaultPhoneCountry())
 const recaptchaToken = ref('')
 const recaptchaContainer = ref(null)
 const recaptchaWidgetId = ref(null)
@@ -118,6 +112,11 @@ const phoneCountries = [
   { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: 'xxxxxxxxx' },
   { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: 'xxxxxxxxx' }
 ]
+
+const selectedPhoneCountry = computed(() => {
+  if (String(locale.value || '').toLowerCase() === 'ro') return 'RO'
+  return getCountryKey()
+})
 
 const selectedPhoneCountryMeta = computed(() =>
   phoneCountries.find((country) => country.code === selectedPhoneCountry.value) || phoneCountries[0]
@@ -195,12 +194,6 @@ function toHtml(content, payload = {}) {
     .split(/\n{2,}/)
     .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`)
     .join('')
-}
-
-function defaultPhoneCountry() {
-  const currentLocale = String(locale.value || '').toLowerCase()
-  if (currentLocale === 'ro') return 'RO'
-  return getCountryKey()
 }
 
 function currentApiLanguage() {
@@ -312,6 +305,10 @@ async function loadContent() {
     await renderRecaptcha()
   } catch (error) {
     errorMessage.value = error?.message || t('common.error')
+    if (pageKey.value === 'unsubscribe') {
+      await nextTick()
+      await renderRecaptcha()
+    }
   } finally {
     isLoading.value = false
   }
@@ -535,6 +532,12 @@ onBeforeUnmount(() => {
 .form-message--success {
   background: rgba(34, 197, 94, 0.12);
   color: #16a34a;
+}
+
+.legal-warning {
+  margin-bottom: 24px;
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.08);
 }
 
 .legal-retry:disabled {
