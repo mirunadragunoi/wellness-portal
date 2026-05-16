@@ -1,5 +1,8 @@
 <template>
-  <main class="legal-page">
+  <div class="legal-view">
+    <!-- Logged-in users already have AppNavbarAuth from App.vue -->
+    <AppNavbarPublic v-if="!auth.isLoggedIn" />
+    <main class="legal-page" :class="{ 'legal-page--public': !auth.isLoggedIn }">
     <section class="legal-hero">
       <RouterLink to="/" class="legal-back">{{ t('legal.back_home') }}</RouterLink>
       <p class="legal-eyebrow">{{ t('legal.eyebrow') }}</p>
@@ -21,7 +24,7 @@
     <section v-else-if="pageKey === 'faq' && faqItems.length" class="legal-card legal-faq">
       <article v-for="item in faqItems" :key="`${item.order}-${item.question}`" class="legal-faq__item">
         <h2>{{ item.question }}</h2>
-        <p>{{ item.answer }}</p>
+        <div class="legal-content" v-html="item.answerHtml" />
       </article>
     </section>
 
@@ -73,7 +76,8 @@
     <section v-else class="legal-card legal-state">
       <p>{{ t('legal.placeholder') }}</p>
     </section>
-  </main>
+    </main>
+  </div>
 </template>
 
 <script setup>
@@ -83,6 +87,7 @@ import { useI18n } from 'vue-i18n'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
 import { getCountryKey } from '@/config/brand'
+import AppNavbarPublic from '@/components/layout/AppNavbarPublic.vue'
 
 const route = useRoute()
 const { t, locale } = useI18n()
@@ -185,14 +190,53 @@ function replaceVariables(content, payload) {
   }, content)
 }
 
+/**
+ * Normalize newlines: backend may send `\n` as a literal two-char sequence
+ * (backslash + n) instead of a real newline char. Convert both literal escape
+ * sequences and real CR/CRLF into a single consistent `\n`.
+ */
+function normalizeNewlines(text) {
+  return String(text || '')
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '\n')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+}
+
+// Block-level tags mean the backend already structured the layout — trust it as-is.
+const BLOCK_HTML_RE = /<(?:p|div|ul|ol|li|h[1-6]|table|thead|tbody|tr|td|th|section|article|header|footer|blockquote|pre|figure|hr)[\s/>]/i
+// Any tag at all (used to detect inline markup like <a>, <strong>, <em>).
+const ANY_HTML_RE = /<[a-z][\s\S]*?>/i
+
+/**
+ * Convert backend content into safe display HTML. Handles 3 cases:
+ *  1. Structured HTML (has block tags) → returned as-is.
+ *  2. Mixed: plain text + inline tags (<a>, <strong>...) + newlines →
+ *     newline formatting applied, inline tags preserved.
+ *  3. Pure plain text → escaped, then newline formatting applied.
+ * In all cases `\n\n` becomes a new paragraph and a single `\n` becomes `<br>`.
+ */
 function toHtml(content, payload = {}) {
-  const text = replaceVariables(String(content || ''), payload).trim()
+  const text = normalizeNewlines(replaceVariables(String(content || ''), payload)).trim()
   if (!text) return ''
-  if (/<[a-z][\s\S]*>/i.test(text)) return text
+
+  // Case 1: structured HTML — trust the backend layout.
+  if (BLOCK_HTML_RE.test(text)) return text
+
+  // Case 2 (inline markup) keeps tags; Case 3 (no markup) escapes.
+  const hasInlineHtml = ANY_HTML_RE.test(text)
+  const render = hasInlineHtml ? (s) => s : escapeHtml
 
   return text
     .split(/\n{2,}/)
-    .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`)
+    .map((paragraph) => {
+      const html = render(paragraph)
+        // Collapse explicit <br> + any adjacent newline so we don't double the break.
+        .replace(/\n?[ \t]*<br\s*\/?>[ \t]*\n?/gi, '<br>')
+        .replace(/\n/g, '<br>')
+      return `<p>${html}</p>`
+    })
     .join('')
 }
 
@@ -296,7 +340,9 @@ async function loadContent() {
   try {
     const response = await loader(auth.accessCode)
     if (pageKey.value === 'faq') {
-      faqItems.value = normalizeItems(response).sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      faqItems.value = normalizeItems(response)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((item) => ({ ...item, answerHtml: toHtml(item.answer) }))
     } else {
       const payload = normalizePayload(response)
       contentHtml.value = toHtml(payload.content, payload)
@@ -322,10 +368,23 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* Distinct page background so the content area separates clearly from the
+   translucent navbar (which shares --bg-base) and makes the white cards pop. */
+.legal-view {
+  min-height: 100vh;
+  background: var(--bg-muted);
+}
+
 .legal-page {
   width: min(900px, calc(100% - 32px));
   margin: 0 auto;
   padding: 72px 0 96px;
+}
+
+/* Public layout has no global navbar — LegalPageView renders its own fixed
+   AppNavbarPublic, so the content needs extra top clearance. */
+.legal-page--public {
+  padding-top: calc(var(--navbar-height) + 40px);
 }
 
 .legal-hero {
@@ -421,10 +480,6 @@ onBeforeUnmount(() => {
   font-family: var(--font-display);
   font-size: 22px;
   line-height: 1.3;
-}
-
-.legal-faq__item p {
-  color: var(--text-secondary);
 }
 
 .legal-content :deep(p) {

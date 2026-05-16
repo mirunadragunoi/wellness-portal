@@ -124,14 +124,14 @@
   },
   "footer": {
     "about": "O nás",
-    "contact": "Kontakt",
+    "contact": "Kontaktujte nás",
     "faq": "FAQ",
     "terms": "Podmienky",
-    "terms_conditions": "Obchodné podmienky",
+    "terms_conditions": "Všeobecné podmienky",
     "privacy": "Ochrana súkromia",
-    "privacy_policy": "Zásady ochrany osobných údajov",
-    "cookies_policy": "Zásady používania cookies",
-    "unsubscribe": "Odhlásenie",
+    "privacy_policy": "Ochrana osobných údajov",
+    "cookies_policy": "Zásady používania súborov cookie",
+    "unsubscribe": "Odhlásiť sa z odberu",
     "copy": "© 2026 Všetky práva vyhradené.",
     "tagline": "Tvoj každodenný sprievodca vedomým životom."
   },
@@ -145,7 +145,7 @@
         "summary": "Zisti viac o tomto wellness portáli a službe, ktorá za ním stojí."
       },
       "contact": {
-        "title": "Kontakt",
+        "title": "Kontaktujte nás",
         "summary": "Nájdi údaje podpory a kontaktné informácie pre tento portál."
       },
       "faq": {
@@ -153,19 +153,19 @@
         "summary": "Odpovede na časté otázky o prístupe, predplatnom a používaní portálu."
       },
       "terms": {
-        "title": "Obchodné podmienky",
+        "title": "Všeobecné podmienky",
         "summary": "Podmienky, ktoré upravujú prístup k tomuto portálu a jeho používanie."
       },
       "privacy": {
-        "title": "Zásady ochrany osobných údajov",
+        "title": "Ochrana osobných údajov",
         "summary": "Informácie o tom, ako sa osobné údaje zhromažďujú, používajú a chránia."
       },
       "cookies": {
-        "title": "Zásady používania cookies",
+        "title": "Zásady používania súborov cookie",
         "summary": "Podrobnosti o cookies a podobných technológiách používaných týmto portálom."
       },
       "unsubscribe": {
-        "title": "Odhlásenie",
+        "title": "Odhlásiť sa z odberu",
         "summary": "Spravuj žiadosti o odhlásenie a komunikačné preferencie."
       }
     },

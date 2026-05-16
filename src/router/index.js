@@ -99,13 +99,13 @@ const routes = [
     meta: { public: true, legalKey: 'faq' }
   },
   {
-    path: '/terms-and-conditions',
+    path: '/terms',
     name: 'legal-terms',
     component: () => import('../views/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'terms' }
   },
   {
-    path: '/privacy-policy',
+    path: '/privacy',
     name: 'legal-privacy',
     component: () => import('../views/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'privacy' }
@@ -117,7 +117,7 @@ const routes = [
     meta: { public: true, legalKey: 'cookies' }
   },
   {
-    path: '/unsubscribe',
+    path: '/unsubscription',
     name: 'legal-unsubscribe',
     component: () => import('../views/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'unsubscribe' }
