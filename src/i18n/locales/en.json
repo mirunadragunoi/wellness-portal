@@ -179,7 +179,8 @@
       "submit": "Unsubscribe",
       "submitting": "Sending...",
       "success": "Your unsubscribe request has been submitted.",
-      "error": "We could not submit your unsubscribe request. Please try again."
+      "error": "We could not submit your unsubscribe request. Please try again.",
+      "not_found": "We couldn't find a subscription for this phone number."
     }
   },
   "quizFloat": "Take the Wellness Quiz",

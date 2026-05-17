@@ -41,15 +41,17 @@
         <form class="unsubscribe-form" @submit.prevent="submitUnsubscribe">
           <div class="form-row">
             <label for="unsubscribe-phone">{{ t('legal.unsubscribe_form.phone') }}</label>
-            <div class="phone-input">
+            <div class="phone-input" :class="{ 'phone-input--valid': isPhoneValid }">
               <span>{{ selectedPhoneCountryMeta.dialCode }}</span>
               <input
                 id="unsubscribe-phone"
-                v-model.trim="phoneNumber"
-                inputmode="tel"
+                :value="phoneNumber"
+                inputmode="numeric"
                 type="tel"
+                :maxlength="selectedPhoneCountryMeta.length"
                 :placeholder="selectedPhoneCountryMeta.hint"
                 autocomplete="tel"
+                @input="onPhoneInput"
               >
             </div>
             <p class="form-hint">
@@ -62,7 +64,7 @@
           <p v-if="submitError" class="form-message form-message--error">{{ submitError }}</p>
           <p v-if="submitMessage" class="form-message form-message--success">{{ submitMessage }}</p>
 
-          <button class="legal-retry" type="submit" :disabled="isSubmitting">
+          <button class="legal-retry" type="submit" :disabled="isSubmitting || !isPhoneValid">
             {{ isSubmitting ? t('legal.unsubscribe_form.submitting') : t('legal.unsubscribe_form.submit') }}
           </button>
         </form>
@@ -111,11 +113,12 @@ const submitMessage = ref('')
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LdDBHcqAAAAADmNepiNSpPMrtRUDwY7FTRds_72'
 
+// `length` = expected digit count, `pattern` = full validation (prefix + length).
 const phoneCountries = [
-  { code: 'UK', label: 'United Kingdom', dialCode: '+44', hint: '7xxxxxxxxx' },
-  { code: 'RO', label: 'Romania', dialCode: '+40', hint: '7xxxxxxxx' },
-  { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: 'xxxxxxxxx' },
-  { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: 'xxxxxxxxx' }
+  { code: 'UK', label: 'United Kingdom', dialCode: '+44', hint: '7xxxxxxxxx', length: 10, pattern: /^7\d{9}$/ },
+  { code: 'RO', label: 'Romania', dialCode: '+40', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ },
+  { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ },
+  { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: '9xxxxxxxx', length: 9, pattern: /^9\d{8}$/ }
 ]
 
 const selectedPhoneCountry = computed(() => {
@@ -126,6 +129,25 @@ const selectedPhoneCountry = computed(() => {
 const selectedPhoneCountryMeta = computed(() =>
   phoneCountries.find((country) => country.code === selectedPhoneCountry.value) || phoneCountries[0]
 )
+
+// Valid only when the digits match the country's full pattern (prefix + length).
+const isPhoneValid = computed(() =>
+  selectedPhoneCountryMeta.value.pattern.test(phoneNumber.value)
+)
+
+// Keep the input digits-only and capped at the country's expected length.
+function onPhoneInput(event) {
+  const digits = event.target.value
+    .replace(/\D/g, '')
+    .slice(0, selectedPhoneCountryMeta.value.length)
+  phoneNumber.value = digits
+  event.target.value = digits
+}
+
+// Target country can change at runtime (language switch) — reset stale input.
+watch(selectedPhoneCountry, () => {
+  phoneNumber.value = ''
+})
 
 const loaders = {
   about: api.getAbout,
@@ -252,35 +274,48 @@ function resetRecaptcha() {
 }
 
 function loadRecaptchaScript() {
-  if (window.grecaptcha?.render) return Promise.resolve()
-  if (document.querySelector('script[data-recaptcha-v2]')) {
-    return new Promise((resolve) => {
-      const interval = window.setInterval(() => {
-        if (window.grecaptcha?.render) {
-          window.clearInterval(interval)
-          resolve()
-        }
-      }, 100)
-    })
-  }
-
   return new Promise((resolve, reject) => {
-    const script = document.createElement('script')
-    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit'
-    script.async = true
-    script.defer = true
-    script.dataset.recaptchaV2 = 'true'
-    script.onload = resolve
-    script.onerror = reject
-    document.head.appendChild(script)
+    // Already fully initialized.
+    if (window.grecaptcha?.render) {
+      resolve()
+      return
+    }
+
+    // Inject the script once.
+    if (!document.querySelector('script[data-recaptcha-v2]')) {
+      const script = document.createElement('script')
+      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit'
+      script.async = true
+      script.defer = true
+      script.dataset.recaptchaV2 = 'true'
+      script.onerror = () => reject(new Error('Failed to load reCAPTCHA script'))
+      document.head.appendChild(script)
+    }
+
+    // `script.onload` fires before grecaptcha.render is defined — poll until
+    // the API is actually usable, with a timeout so we never hang forever.
+    let waited = 0
+    const interval = window.setInterval(() => {
+      if (window.grecaptcha?.render) {
+        window.clearInterval(interval)
+        resolve()
+      } else if ((waited += 100) >= 10000) {
+        window.clearInterval(interval)
+        reject(new Error('reCAPTCHA failed to initialize'))
+      }
+    }, 100)
   })
 }
 
 async function renderRecaptcha() {
   if (pageKey.value !== 'unsubscribe' || !recaptchaContainer.value || recaptchaWidgetId.value !== null) return
   await loadRecaptchaScript()
+  // The widget iframe can't be styled by us — only its built-in light/dark
+  // theme. Follow the site theme so it blends instead of a stark white box.
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
   recaptchaWidgetId.value = window.grecaptcha.render(recaptchaContainer.value, {
     sitekey: RECAPTCHA_SITE_KEY,
+    theme,
     callback: (token) => {
       recaptchaToken.value = token
       submitError.value = ''
@@ -321,7 +356,11 @@ async function submitUnsubscribe() {
     phoneNumber.value = ''
     resetRecaptcha()
   } catch (error) {
-    submitError.value = error?.message || t('legal.unsubscribe_form.error')
+    // error_code 2048 = backend "subscription not found" → show a localized,
+    // user-friendly message instead of the raw "HTTP 500".
+    submitError.value = error?.errorCode === 2048
+      ? t('legal.unsubscribe_form.not_found')
+      : t('legal.unsubscribe_form.error')
     resetRecaptcha()
   } finally {
     isSubmitting.value = false
@@ -347,16 +386,21 @@ async function loadContent() {
       const payload = normalizePayload(response)
       contentHtml.value = toHtml(payload.content, payload)
     }
-    await nextTick()
-    await renderRecaptcha()
   } catch (error) {
     errorMessage.value = error?.message || t('common.error')
-    if (pageKey.value === 'unsubscribe') {
-      await nextTick()
-      await renderRecaptcha()
-    }
   } finally {
     isLoading.value = false
+  }
+
+  // Render reCAPTCHA only after isLoading is false — otherwise the form (and
+  // its container ref) is not yet in the DOM and the widget is never mounted.
+  if (pageKey.value === 'unsubscribe') {
+    await nextTick()
+    try {
+      await renderRecaptcha()
+    } catch (e) {
+      console.warn('reCAPTCHA render failed:', e?.message || e)
+    }
   }
 }
 
@@ -549,6 +593,13 @@ onBeforeUnmount(() => {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   background: var(--bg-base);
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+/* Highlight when the entered number is valid for the selected country. */
+.phone-input--valid {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
 .phone-input span {

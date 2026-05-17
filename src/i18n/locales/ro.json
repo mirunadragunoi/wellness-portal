@@ -179,7 +179,8 @@
       "submit": "Dezabonează-te",
       "submitting": "Se trimite...",
       "success": "Cererea ta de dezabonare a fost trimisă.",
-      "error": "Nu am putut trimite cererea de dezabonare. Te rugăm să încerci din nou."
+      "error": "Nu am putut trimite cererea de dezabonare. Te rugăm să încerci din nou.",
+      "not_found": "Nu am găsit niciun abonament pentru acest număr de telefon."
     }
   },
   "quizFloat": "Completează chestionarul de wellness",

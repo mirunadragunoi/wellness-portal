@@ -179,7 +179,8 @@
       "submit": "Odhlásiť",
       "submitting": "Odosielanie...",
       "success": "Vaša žiadosť o odhlásenie bola odoslaná.",
-      "error": "Žiadosť o odhlásenie sa nepodarilo odoslať. Skúste to prosím znova."
+      "error": "Žiadosť o odhlásenie sa nepodarilo odoslať. Skúste to prosím znova.",
+      "not_found": "Pre toto telefónne číslo sme nenašli žiadne predplatné."
     }
   },
   "quizFloat": "Vyplniť wellness dotazník",
