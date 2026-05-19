@@ -2,7 +2,7 @@
   <nav class="navbar" :class="{ 'navbar--scrolled': scrolled }">
     <div class="navbar__inner container">
       <RouterLink to="/" class="navbar__logo">
-        <span class="navbar__logo-text">{{ t('brand.name') }}</span>
+        <img :src="logoUrl" :alt="t('brand.name')" class="navbar__logo-img" />
       </RouterLink>
 
       <ul class="navbar__links">
@@ -40,6 +40,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
+import logoUrl from '@/assets/calmasoul-sparkle-horizontal.png'
 
 const { t } = useI18n()
 const scrolled    = ref(false)
@@ -84,13 +85,10 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   align-items: center;
   text-decoration: none;
 }
-.navbar__logo-text {
-  font-family: var(--font-d);
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--text-primary);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.navbar__logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .navbar__links {

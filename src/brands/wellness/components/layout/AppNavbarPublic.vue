@@ -3,7 +3,7 @@
     <div class="navbar__inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar__logo">
-        <span class="navbar__logo-text">{{ t('brand.name') }}</span>
+        <img :src="logoUrl" :alt="t('brand.name')" class="navbar__logo-img" />
       </RouterLink>
 
       <!-- Desktop links -->
@@ -45,6 +45,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
+import logoUrl from '@/assets/harmonoria-lotus-horizontal.png'
 
 const { t } = useI18n()
 const scrolled    = ref(false)
@@ -89,12 +90,10 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   align-items: center;
   text-decoration: none;
 }
-.navbar__logo-text {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 500;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
+.navbar__logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .navbar__links {

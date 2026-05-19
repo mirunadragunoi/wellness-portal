@@ -19,6 +19,7 @@
       to="/onboarding"
       class="quiz-float"
       :class="{ 'quiz-float--auth-mobile': authStore.isLoggedIn }"
+      :style="{ translate: `0 -${floatLift}px` }"
     >
       <Icon icon="lucide:sparkles" class="quiz-float__icon app-icon app-icon--md" />
       {{ t('quizFloat') }}
@@ -27,7 +28,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import AppNavbarPublic   from '@/components/layout/AppNavbarPublic.vue'
@@ -41,6 +42,30 @@ import LandingFinalCTA   from '@/components/landing/LandingFinalCTA.vue'
 const { t } = useI18n()
 const authStore = useAuthStore()
 
+// Lift the floating quiz button so it parks above the footer instead of
+// overlapping it (which would block clicks on the footer links).
+const floatLift = ref(0)
+let floatRaf = null
+
+function updateFloatPosition() {
+  floatRaf = null
+  const footer = document.querySelector('.footer')
+  const float = document.querySelector('.quiz-float')
+  if (!footer || !float) {
+    floatLift.value = 0
+    return
+  }
+  const bottomGap = parseFloat(getComputedStyle(float).bottom) || 32
+  const floatBottomY = window.innerHeight - bottomGap
+  const footerTop = footer.getBoundingClientRect().top
+  const overlap = floatBottomY - footerTop + 16
+  floatLift.value = overlap > 0 ? overlap : 0
+}
+
+function onScrollOrResize() {
+  if (floatRaf == null) floatRaf = requestAnimationFrame(updateFloatPosition)
+}
+
 onMounted(() => {
   const io = new IntersectionObserver(
     (entries) => {
@@ -51,6 +76,16 @@ onMounted(() => {
     { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
   )
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el))
+
+  updateFloatPosition()
+  window.addEventListener('scroll', onScrollOrResize, { passive: true })
+  window.addEventListener('resize', onScrollOrResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScrollOrResize)
+  window.removeEventListener('resize', onScrollOrResize)
+  if (floatRaf != null) cancelAnimationFrame(floatRaf)
 })
 </script>
 
@@ -92,7 +127,10 @@ main {
   font-size: 14px; font-weight: 500; text-decoration: none;
   border: 1.5px solid var(--border-default);
   box-shadow: var(--shadow-md);
-  transition: all var(--duration-normal) var(--ease-smooth);
+  /* transform is excluded from the transition so the lift tracks scroll 1:1 */
+  transition: background var(--duration-normal) var(--ease-smooth),
+              border-color var(--duration-normal) var(--ease-smooth),
+              box-shadow var(--duration-normal) var(--ease-smooth);
   animation: fadeInUp 0.8s var(--ease-smooth) 1.2s both;
 }
 .quiz-float:hover { background: var(--sky-50); border-color: var(--sky-300); transform: translateY(-2px); box-shadow: var(--shadow-lg); }

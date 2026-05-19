@@ -6,21 +6,21 @@ const brand = getBrandKey()
 
 const brandViews = {
   wellness: {
-    landing: () => import('@/views/LandingView.vue'),
-    login: () => import('@/views/auth/LoginView.vue'),
-    signup: () => import('@/views/auth/SignupView.vue'),
-    onboarding: () => import('@/views/OnboardingView.vue'),
-    home: () => import('@/views/HomeView.vue'),
-    explore: () => import('@/views/ExploreView.vue'),
-    session: () => import('@/views/session/SessionView.vue'),
-    breathing: () => import('@/views/breathing/BreathingView.vue'),
-    practice: () => import('@/views/PracticeView.vue'),
-    practiceVideo: () => import('@/views/PracticeVideoView.vue'),
-    listen: () => import('@/views/ListenView.vue'),
-    learn: () => import('@/views/learn/LearnView.vue'),
-    article: () => import('@/views/learn/ArticleView.vue'),
-    progress: () => import('@/views/ProgressView.vue'),
-    profile: () => import('@/views/ProfileView.vue')
+    landing: () => import('@/brands/wellness/views/LandingView.vue'),
+    login: () => import('@/brands/wellness/views/auth/LoginView.vue'),
+    signup: () => import('@/brands/wellness/views/auth/SignupView.vue'),
+    onboarding: () => import('@/brands/wellness/views/OnboardingView.vue'),
+    home: () => import('@/brands/wellness/views/HomeView.vue'),
+    explore: () => import('@/brands/wellness/views/ExploreView.vue'),
+    session: () => import('@/brands/wellness/views/session/SessionView.vue'),
+    breathing: () => import('@/brands/wellness/views/breathing/BreathingView.vue'),
+    practice: () => import('@/brands/wellness/views/PracticeView.vue'),
+    practiceVideo: () => import('@/brands/wellness/views/PracticeVideoView.vue'),
+    listen: () => import('@/brands/wellness/views/ListenView.vue'),
+    learn: () => import('@/brands/wellness/views/learn/LearnView.vue'),
+    article: () => import('@/brands/wellness/views/learn/ArticleView.vue'),
+    progress: () => import('@/brands/wellness/views/ProgressView.vue'),
+    profile: () => import('@/brands/wellness/views/ProfileView.vue')
   },
   wellness2: {
     landing: () => import('@/brands/wellness2/views/LandingView.vue'),
@@ -83,43 +83,43 @@ const routes = [
   {
     path: '/about',
     name: 'legal-about',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'about' }
   },
   {
     path: '/contact',
     name: 'legal-contact',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'contact' }
   },
   {
     path: '/faq',
     name: 'legal-faq',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'faq' }
   },
   {
     path: '/terms',
     name: 'legal-terms',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'terms' }
   },
   {
     path: '/privacy',
     name: 'legal-privacy',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'privacy' }
   },
   {
     path: '/cookies-policy',
     name: 'legal-cookies',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'cookies' }
   },
   {
     path: '/unsubscription',
     name: 'legal-unsubscribe',
-    component: () => import('../views/legal/LegalPageView.vue'),
+    component: () => import('@/legal/LegalPageView.vue'),
     meta: { public: true, legalKey: 'unsubscribe' }
   },
   {

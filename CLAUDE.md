@@ -26,45 +26,40 @@ Platformă de **meditație și wellness** multi-brand: sesiuni audio ghidate, ex
 
 ## Structura `src/`
 
+**SIMETRIE COMPLETĂ:** toate cele 3 branduri trăiesc identic sub `src/brands/{wellness,wellness2,wellness3}/`. NU există master brand — Harmonoria (`wellness`) e tratat la fel ca celelalte. `src/` la nivel top conține DOAR cod partajat.
+
 ```
 src/
-├── views/                       # Pagini brand-ul default (wellness/Harmonoria)
-│   ├── LandingView.vue            # / — landing public
-│   ├── auth/{LoginView,SignupView}.vue
-│   ├── OnboardingView.vue         # /onboarding — 8 pași
-│   ├── HomeView.vue               # /home — dashboard
-│   ├── ExploreView.vue            # /explore — catalog sesiuni
-│   ├── ListenView.vue             # /listen — audio/MP3
-│   ├── PracticeView.vue           # /practice — exerciții ghidate
-│   ├── PracticeVideoView.vue      # /practice/:id — player video
-│   ├── session/SessionView.vue    # /session/:id — player audio
-│   ├── breathing/BreathingView.vue
-│   ├── learn/{LearnView,ArticleView}.vue
-│   ├── ProgressView.vue
-│   └── ProfileView.vue
-│
 ├── brands/
+│   ├── wellness/                  # Harmonoria — assets, components, constants, i18n, styles, views
 │   ├── wellness2/                 # Innerawake — assets, components, constants, i18n, styles, views
 │   └── wellness3/                 # Calmasoul — assets, components, constants, i18n, styles, views
-│   # IMPORTANT: wellness2/wellness3 randează frecvent INLINE în view-uri
-│   # (LearnView, ExploreView), fără să folosească componentele partajate.
-│   # Vezi memoria "Brand override gotcha".
-│   # ALIAS gotcha: vite.config.js redirecționează @/components/ → src/brands/$brand/components/
-│   # pentru brand-urile non-default. Orice componentă nouă în src/components/layout/X.vue
-│   # importată cu @/components/layout/X.vue din fișiere brand-specific TREBUIE copiată
-│   # în toate 3 brand-urile (src/ + wellness2/ + wellness3/), altfel build-ul sparge ENOENT.
+│   #
+│   # Fiecare brand are structură identică:
+│   #   views/      LandingView, auth/{Login,Signup}, OnboardingView, HomeView, ExploreView,
+│   #               ListenView, PracticeView, PracticeVideoView, session/SessionView,
+│   #               breathing/BreathingView, learn/{LearnView,ArticleView}, ProgressView, ProfileView
+│   #   components/ base/ landing/ home/ explore/ player/ breathing/ learn/ progress/ onboarding/ layout/
+│   #   constants/  appIcons.js, landingImages.js
+│   #   styles/     variables.css, base.css, typography.css, animations.css, utilities.css
+│   #   assets/     landing/ + logo-uri
+│   #   i18n/locales/ {en,ro,cz,sk}.json (overrides — doar diferențele față de base)
+│   #
+│   # ALIAS: vite.config.js redirecționează @/views/, @/components/, @/styles/, @/assets/,
+│   # @/constants/ → src/brands/$brand/... pentru BRANDUL ACTIV (toate, inclusiv wellness).
+│   # Deci importurile @/components/... din orice fișier se rezolvă la brandul curent.
+│   #
+│   # GOTCHA componente shared noi: dacă creezi o componentă în brands/wellness/components/
+│   # și o imporți cu @/components/... dintr-un fișier brand-specific, TREBUIE copiată în
+│   # toate 3 brandurile (altfel build-ul altui brand sparge ENOENT). Vezi memoria.
+│   #
+│   # GOTCHA inline rendering: wellness2/wellness3 randează frecvent INLINE în view-uri
+│   # (LearnView, ExploreView) fără componentele din components/. Fix-urile trebuie aplicate
+│   # în toate brandurile relevante.
 │
-├── components/                  # Componente partajate (pot fi suprascrise în brands/*/components)
-│   ├── base/                      # BaseButton, BaseCard, BaseChip, BaseModal, BaseProgressBar, BaseSkeleton, BaseToast
-│   ├── landing/                   # LandingHero, LandingFeatures, LandingHowItWorks, LandingMetrics, LandingPreview, LandingTestimonials, LandingFinalCTA
-│   ├── home/                      # HomeGreeting, HomeMoodCheckin, HomeRecommended, HomeCategoriesGrid, HomeStreakCard, HomePhraseOfDay, HomeMomentOfDay
-│   ├── explore/                   # ExploreCategoryChips, ExploreFilterPanel, ExploreSearch, ExploreSessionCard
-│   ├── player/                    # PlayerPrePlay, PlayerAudio, PlayerPostSession
-│   ├── breathing/                 # BreathingCircle, BreathingControls
-│   ├── learn/                     # LearnArticleCard
-│   ├── progress/                  # ProgressStatsGrid, ProgressMoodChart, ProgressSessionHistory
-│   ├── onboarding/                # OnboardingProgressBar + steps/ (8 step-uri)
-│   └── layout/                    # AppNavbarPublic, AppNavbarAuth, AppBottomBar, AppFooter, AppMiniPlayer, AppSOSButton, AppSOSOverlay
+├── legal/                       # LegalPageView.vue — view PARTAJAT (legal/about/contact/faq/
+│                                # terms/privacy/cookies/unsubscribe). NU e per-brand; folosit
+│                                # de router cu @/legal/ (nealiasat). Afișează navbar-ul brandului activ.
 │
 ├── config/
 │   ├── brand.js                   # Resolver brand + country (din env / hostname / ?country=)
@@ -82,12 +77,13 @@ src/
 ├── composables/                 # useAudioPlayer, useArticlePage, useBreathing, useGreeting, useNativePracticeVideoProgress
 ├── utils/                       # articleContent, audioDuration, cookies, productImageUrl, productKinds
 ├── data/                        # sessions.js, articles.js, phrases.js (mock — în uz parțial, deprecated treptat)
-├── constants/                   # appIcons.js, landingImages.js
-├── i18n/                        # index.js + locales/{en,ro,cz,sk}.json (brand overrides în brands/*/i18n/locales/)
+├── i18n/                        # index.js + locales/{en,ro,cz,sk}.json BASE neutru (overrides în brands/*/i18n/locales/)
 ├── router/                      # index.js
-├── styles/                      # variables.css, base.css, typography.css, animations.css, utilities.css
+├── App.vue
 └── main.js
 ```
+
+**Partajat (în `src/`, nealiasat — un singur exemplar pentru toate brandurile):** `stores/`, `composables/`, `utils/`, `config/`, `services/`, `data/`, `router/`, `i18n/` (index + base locales), `legal/`, `App.vue`, `main.js`.
 
 ---
 
@@ -213,7 +209,6 @@ Comportament cerut explicit de user: audio-ul curent NU se oprește la navigare,
 - [ ] Push notificări
 - [ ] Pagina de profil completată
 - [ ] Traduceri complete în ro/cz/sk
-- [ ] Symmetrie completă brand wellness pentru views/components (Harmonoria în `src/brands/wellness/views/` + `components/`) — i18n e deja simetric, dar views/components rămân în `src/views/` + `src/components/`
 
 ---
 

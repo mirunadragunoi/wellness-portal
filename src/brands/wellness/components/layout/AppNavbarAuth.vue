@@ -3,7 +3,7 @@
     <div class="navbar-auth__inner">
       <!-- Logo -->
       <RouterLink :to="{ name: 'landing' }" class="navbar-auth__logo">
-        <span class="logo-text">{{ t('brand.name') }}</span>
+        <img :src="logoUrl" :alt="t('brand.name')" class="navbar-auth__logo-img" />
       </RouterLink>
 
       <!-- Desktop Nav -->
@@ -67,6 +67,7 @@ import { useProgressStore } from '@/stores/progress'
 import { AVATAR_ICONS } from '@/constants/appIcons'
 import { getBrandKey } from '@/config/brand'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
+import logoUrl from '@/assets/harmonoria-lotus-horizontal.png'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -108,11 +109,10 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   align-items: center;
   text-decoration: none;
 }
-.logo-text {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--text-primary);
+.navbar-auth__logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .navbar-auth__links {

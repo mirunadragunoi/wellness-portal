@@ -3,8 +3,7 @@
     <div class="navbar-auth__inner">
       <!-- Logo -->
       <RouterLink to="/home" class="navbar-auth__logo">
-        <span class="navbar-auth__logo-dot" />
-        {{ t('brand.name') }}
+        <img :src="logoUrl" :alt="t('brand.name')" class="navbar-auth__logo-img" />
       </RouterLink>
 
       <!-- Nav tabs -->
@@ -78,6 +77,7 @@ import { useUserStore } from '@/stores/user'
 import { useUIStore } from '@/stores/ui'
 import { AVATAR_ICONS } from '@/brands/wellness2/constants/appIcons'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
+import logoUrl from '@/assets/innerawake-horizontal.png'
 
 const { t } = useI18n()
 const open = ref(false)
@@ -103,16 +103,9 @@ const userIcon = AVATAR_ICONS[userStore.profile?.avatar] || 'lucide:user'
 
 /* Logo */
 .navbar-auth__logo {
-  display: flex; align-items: center; gap: 7px;
-  font-family: var(--font-display); font-size: 23px; font-weight: 700;
-  color: #f3fff4; text-decoration: none; letter-spacing: -0.2px;
-  text-shadow: 0 0 12px rgba(184,245,102,0.22);
+  display: flex; align-items: center; text-decoration: none;
 }
-.navbar-auth__logo-dot {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--lime-500); box-shadow: 0 0 12px rgba(184,245,102,0.9);
-  animation: pulse-dot 2.5s ease infinite; flex-shrink: 0;
-}
+.navbar-auth__logo-img { height: 40px; width: auto; display: block; }
 
 /* Nav tabs */
 .navbar-auth__tabs { display: flex; align-items: center; gap: 2px; list-style: none; }

@@ -17,35 +17,36 @@ export default defineConfig(({ mode }) => {
     }
   ]
 
-  const brandAlias = brand !== 'wellness'
-    ? [
-        {
-          find: /^@\/views\//,
-          replacement: fileURLToPath(new URL(`./src/brands/${brand}/views/`, import.meta.url))
-        },
-        {
-          find: /^@\/components\//,
-          replacement: fileURLToPath(new URL(`./src/brands/${brand}/components/`, import.meta.url))
-        },
-        {
-          find: /^@\/styles\//,
-          replacement: fileURLToPath(new URL(`./src/brands/${brand}/styles/`, import.meta.url))
-        },
-        {
-          find: /^@\/assets\//,
-          replacement: fileURLToPath(new URL(`./src/brands/${brand}/assets/`, import.meta.url))
-        },
-        {
-          find: /^@\/constants\//,
-          replacement: fileURLToPath(new URL(`./src/brands/${brand}/constants/`, import.meta.url))
-        }
-        // NOTE: NU adăuga alias pentru @/i18n/locales/ — i18n/index.js importă
-        // explicit `src/i18n/locales/*.json` (base neutru) și `src/brands/*/i18n/locales/*.json`
-        // (overrides per brand), apoi le merge-uiește cu mergeMessages(). Un alias aici
-        // ar redirecționa importurile de base către folder-ul brand-ului, care nu
-        // conține toate limbile și sparge build-ul.
-      ]
-    : []
+  // Brand-scoped folders. ALL brands (incl. the default `wellness`) live under
+  // src/brands/<brand>/ — there is no master brand. `@/views/`, `@/components/`,
+  // `@/styles/`, `@/assets/`, `@/constants/` always resolve to the active brand.
+  const brandAlias = [
+    {
+      find: /^@\/views\//,
+      replacement: fileURLToPath(new URL(`./src/brands/${brand}/views/`, import.meta.url))
+    },
+    {
+      find: /^@\/components\//,
+      replacement: fileURLToPath(new URL(`./src/brands/${brand}/components/`, import.meta.url))
+    },
+    {
+      find: /^@\/styles\//,
+      replacement: fileURLToPath(new URL(`./src/brands/${brand}/styles/`, import.meta.url))
+    },
+    {
+      find: /^@\/assets\//,
+      replacement: fileURLToPath(new URL(`./src/brands/${brand}/assets/`, import.meta.url))
+    },
+    {
+      find: /^@\/constants\//,
+      replacement: fileURLToPath(new URL(`./src/brands/${brand}/constants/`, import.meta.url))
+    }
+    // NOTE: NU adăuga alias pentru @/i18n/locales/ — i18n/index.js importă
+    // explicit `src/i18n/locales/*.json` (base neutru) și `src/brands/*/i18n/locales/*.json`
+    // (overrides per brand), apoi le merge-uiește cu mergeMessages(). Un alias aici
+    // ar redirecționa importurile de base către folder-ul brand-ului, care nu
+    // conține toate limbile și sparge build-ul.
+  ]
 
   return {
     plugins: [vue()],

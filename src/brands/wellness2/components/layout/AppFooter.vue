@@ -3,7 +3,7 @@
     <div class="footer__top">
       <div class="footer__brand">
         <RouterLink to="/" class="footer__logo">
-          {{ t('brand.name') }}
+          <img :src="logoUrl" :alt="t('brand.name')" class="footer__logo-img" />
         </RouterLink>
         <p class="footer__tagline">{{ t('footer.tagline') }}</p>
       </div>
@@ -25,6 +25,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import logoUrl from '@/assets/innerawake-horizontal.png'
 const { t } = useI18n()
 </script>
 
@@ -42,12 +43,11 @@ const { t } = useI18n()
 }
 .footer__brand { display:flex; flex-direction:column; gap:10px; }
 .footer__logo {
-  display:inline-flex; align-items:center; gap:10px;
-  font-family:var(--font-display); font-size:20px; font-weight:700;
-  color:var(--text-primary); text-decoration:none;
-  transition: opacity 150ms;
+  display:inline-flex; align-items:center;
+  text-decoration:none; transition: opacity 150ms;
 }
 .footer__logo:hover { opacity: 0.8; }
+.footer__logo-img { height: 34px; width: auto; display: block; }
 .footer__tagline {
   font-size: 13px;
   color: var(--text-secondary);

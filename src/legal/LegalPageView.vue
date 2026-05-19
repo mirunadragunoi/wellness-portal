@@ -2,10 +2,8 @@
   <div class="legal-view">
     <!-- Logged-in users already have AppNavbarAuth from App.vue -->
     <AppNavbarPublic v-if="!auth.isLoggedIn" />
-    <main class="legal-page" :class="{ 'legal-page--public': !auth.isLoggedIn }">
+    <main class="legal-page">
     <section class="legal-hero">
-      <RouterLink to="/" class="legal-back">{{ t('legal.back_home') }}</RouterLink>
-      <p class="legal-eyebrow">{{ t('legal.eyebrow') }}</p>
       <h1>{{ title }}</h1>
       <p class="legal-summary">{{ summary }}</p>
     </section>
@@ -422,38 +420,13 @@ onBeforeUnmount(() => {
 .legal-page {
   width: min(900px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 72px 0 96px;
-}
-
-/* Public layout has no global navbar — LegalPageView renders its own fixed
-   AppNavbarPublic, so the content needs extra top clearance. */
-.legal-page--public {
-  padding-top: calc(var(--navbar-height) + 40px);
+  /* Top padding clears the fixed navbar — AppNavbarPublic for guests,
+     AppNavbarAuth (from App.vue) for logged-in users — both ~--navbar-height. */
+  padding: calc(var(--navbar-height) + 40px) 0 96px;
 }
 
 .legal-hero {
   margin-bottom: 28px;
-}
-
-.legal-back {
-  display: inline-flex;
-  margin-bottom: 28px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.legal-back:hover {
-  color: var(--text-primary);
-}
-
-.legal-eyebrow {
-  margin: 0 0 12px;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .legal-hero h1 {

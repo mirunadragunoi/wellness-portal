@@ -2,9 +2,9 @@
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__left">
-        <span class="footer__logo">
-          {{ t('brand.name') }}
-        </span>
+        <RouterLink to="/" class="footer__logo">
+          <img :src="logoUrl" :alt="t('brand.name')" class="footer__logo-img" />
+        </RouterLink>
         <span class="footer__copy">{{ t('footer.copy') }}</span>
       </div>
       <ul class="footer__links">
@@ -22,6 +22,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import logoUrl from '@/assets/calmasoul-sparkle-horizontal.png'
 
 const { t } = useI18n()
 </script>
@@ -38,10 +39,8 @@ const { t } = useI18n()
   gap: 24px;
 }
 .footer__left { display: flex; align-items: center; gap: 24px; }
-.footer__logo {
-  display: inline-flex; align-items: center;
-  font-family: var(--font-display); font-size: 20px; font-weight: 500; color: var(--text-primary);
-}
+.footer__logo { display: inline-flex; align-items: center; }
+.footer__logo-img { height: 34px; width: auto; display: block; }
 .footer__copy { font-size: 13px; color: var(--text-muted); }
 .footer__links { display: flex; gap: 24px; list-style: none; }
 .footer__link { font-size: 14px; color: var(--text-secondary); text-decoration: none; transition: color var(--duration-fast); }

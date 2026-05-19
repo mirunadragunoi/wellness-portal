@@ -3,8 +3,7 @@
     <div class="navbar__inner">
       <!-- Logo -->
       <RouterLink to="/" class="navbar__logo">
-        <span class="navbar__logo-dot" />
-        {{ t('brand.name') }}
+        <img :src="logoUrl" :alt="t('brand.name')" class="navbar__logo-img" />
       </RouterLink>
 
       <!-- Links -->
@@ -49,6 +48,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
+import logoUrl from '@/assets/innerawake-horizontal.png'
 
 const { t } = useI18n()
 const scrolled = ref(false)
@@ -84,18 +84,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 /* Logo */
 .navbar__logo {
-  display: flex; align-items: center; gap: 7px;
-  font-family: var(--font-display); font-size: 24px; font-weight: 700;
-  color: #f3fff4; text-decoration: none; letter-spacing: -0.2px;
-  text-shadow: 0 0 12px rgba(184,245,102,0.25);
+  display: flex; align-items: center; text-decoration: none;
 }
-.navbar__logo-dot {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--lime-500);
-  box-shadow: 0 0 12px rgba(184,245,102,0.9);
-  animation: pulse-dot 2.5s ease infinite;
-  flex-shrink: 0;
-}
+.navbar__logo-img { height: 40px; width: auto; display: block; }
 
 /* Links */
 .navbar__links {
