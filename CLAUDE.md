@@ -134,6 +134,13 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 | Calmasoul    | calmasoul.com         | `www`/apex  | UK      | en, ro              | en      |
 | Calmasoul    | calmasoul.com         | `cz.`       | CZ      | cz                  | cz      |
 
+**Înregistrare externă per instanță** (`src/config/brands/*.js → registrationUrls`):
+- Unele instanțe (brand × country) au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. Cheie = cod țară: Harmonoria SK → `premium.harmonoria.com/skharm/click/`, Calmasoul CZ → `premium.calmasoul.com/czcalm/`.
+- Helper: `getRegistrationUrl()` în `brand.js` — întoarce URL-ul pentru brand+country activ sau `null`.
+- Ruta `/signup` are `beforeEnter` care, dacă există URL extern, face `window.location.href = url`. Astfel TOATE CTA-urile care duc la `/signup` (navbar, hero, final CTA, preview, link signup din login) redirecționează automat extern.
+- `quiz-float` din LandingView (wellness/wellness3) duce la `/onboarding`, deci e tratat separat: `<a href>` extern când există URL, altfel `RouterLink` intern.
+- UK: fără URL extern → `/signup` intern. Instanță nouă = o linie în `registrationUrls`.
+
 **Selectorul de limbă** (`components/layout/LanguageSelector.vue`):
 - Afișat în navbar (Auth + Public) **doar dacă country are 2+ limbi** (deci doar pe UK momentan).
 - La schimbare: persist în **cookie** (`{brand-storagePrefix}-locale-{country}`, ex: `calmasoul-locale-UK`), `SameSite=Lax`, max-age 1 an.

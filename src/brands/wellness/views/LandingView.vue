@@ -14,16 +14,18 @@
       <div class="reveal reveal-4"><LandingFinalCTA /></div>
     </main>
 
-    <!-- Quiz float button -->
-    <RouterLink
-      to="/onboarding"
+    <!-- Quiz float button — external registration URL when set, else internal quiz -->
+    <component
+      :is="registrationUrl ? 'a' : 'RouterLink'"
+      :to="registrationUrl ? undefined : '/onboarding'"
+      :href="registrationUrl || undefined"
       class="quiz-float"
       :class="{ 'quiz-float--auth-mobile': authStore.isLoggedIn }"
       :style="{ translate: `0 -${floatLift}px` }"
     >
       <Icon icon="lucide:sparkles" class="quiz-float__icon app-icon app-icon--md" />
       {{ t('quizFloat') }}
-    </RouterLink>
+    </component>
   </div>
 </template>
 
@@ -31,6 +33,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
+import { getRegistrationUrl } from '@/config/brand'
 import AppNavbarPublic   from '@/components/layout/AppNavbarPublic.vue'
 import LandingHero       from '@/components/landing/LandingHero.vue'
 import LandingFeatures   from '@/components/landing/LandingFeatures.vue'
@@ -41,6 +44,7 @@ import LandingTestimonials from '@/components/landing/LandingTestimonials.vue'
 import LandingFinalCTA   from '@/components/landing/LandingFinalCTA.vue'
 const { t } = useI18n()
 const authStore = useAuthStore()
+const registrationUrl = getRegistrationUrl()
 
 // Lift the floating quiz button so it parks above the footer instead of
 // overlapping it (which would block clicks on the footer links).

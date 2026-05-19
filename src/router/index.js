@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { getBrandKey } from '@/config/brand'
+import { getBrandKey, getRegistrationUrl } from '@/config/brand'
 
 const brand = getBrandKey()
 
@@ -78,7 +78,16 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: views.signup,
-    meta: { public: true, hideForAuth: true }
+    meta: { public: true, hideForAuth: true },
+    // Instances with an external registration URL (e.g. Harmonoria SK,
+    // Calmasoul CZ) redirect here instead of rendering the internal signup.
+    beforeEnter: () => {
+      const url = getRegistrationUrl()
+      if (url) {
+        window.location.href = url
+        return false
+      }
+    }
   },
   {
     path: '/about',

@@ -69,3 +69,12 @@ export function getCountryKey() {
 export function getCountry() {
   return getCountryConfig(getCountryKey())
 }
+
+/**
+ * External registration URL for the active brand + country, or null.
+ * When set, signup CTAs lead here instead of the internal /signup flow.
+ */
+export function getRegistrationUrl() {
+  const urls = getBrandConfig().registrationUrls || {}
+  return urls[getCountryKey()] || null
+}
