@@ -4,8 +4,9 @@ export default {
   portalName: 'Harmonoria',
   apiBaseUrl: 'https://api.rvdhub.com',
   countries: ['UK', 'SK'],
-  // External registration ("landing") URLs per country. When set for the
-  // active country, all signup CTAs point here instead of the internal /signup.
+  // External registration ("premium landing") URLs per COUNTRY (from subdomain).
+  // When set for the active country, all signup CTAs point here instead of the
+  // internal /signup. SK = sk.harmonoria.com.
   registrationUrls: {
     SK: 'https://premium.harmonoria.com/skharm/click/'
   },

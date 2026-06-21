@@ -161,17 +161,35 @@ function unwrapData(response) {
   return response?.data ?? response
 }
 
+// The backend wraps every legal response in an envelope and puts the actual
+// payload under a resource-named key, e.g. `{ ...meta, faq: [...] }`,
+// `{ ...meta, contact: [...] }`. Content pages instead expose `content`
+// directly (`{ ...meta, content: "..." }`). Find the first array value so we
+// don't have to hardcode each resource key.
+function firstArray(data) {
+  if (!data || typeof data !== 'object') return null
+  return Object.values(data).find(Array.isArray) || null
+}
+
 function normalizeItems(payload) {
   const data = unwrapData(payload)
   if (Array.isArray(data)) return data
   if (Array.isArray(data?.items)) return data.items
-  return []
+  return firstArray(data) || []
 }
 
 function normalizePayload(payload) {
   const data = unwrapData(payload)
-  if (Array.isArray(data)) {
-    return { content: data.map((item) => item.content).filter(Boolean).join('\n\n') }
+  const list = Array.isArray(data) ? data : firstArray(data)
+  if (list) {
+    return {
+      content: list
+        .slice()
+        .sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0))
+        .map((item) => item?.content)
+        .filter(Boolean)
+        .join('\n\n')
+    }
   }
   return data || {}
 }

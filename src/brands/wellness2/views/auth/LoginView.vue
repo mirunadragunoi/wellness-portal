@@ -1,7 +1,7 @@
 <template>
   <div class="auth-page">
+    <AppNavbarPublic />
     <div class="auth-visual">
-      <RouterLink to="/" class="auth-logo"><span class="auth-logo-dot" />{{ t('brand.name') }}</RouterLink>
       <div>
         <h2 class="auth-quote" v-html="welcomeQuoteHtml" />
         <p class="auth-visual-sub">{{ t('auth.login_visual_sub') }}</p>
@@ -43,16 +43,19 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
+import AppNavbarPublic from '@/components/layout/AppNavbarPublic.vue'
 
 const { t }   = useI18n()
+const route   = useRoute()
 const router  = useRouter()
 const auth    = useAuthStore()
 const user    = useUserStore()
 const code    = ref('')
-const error   = ref('')
+// A failed /dologin/:code deep-link redirects here with ?error=invalid_code.
+const error   = ref(route.query.error ? t('auth.invalid_code') : '')
 const loading = ref(false)
 
 const welcomeQuoteHtml = computed(() => t('auth.welcome_back_visual_html'))
@@ -79,6 +82,8 @@ async function submit() {
   display: grid;
   grid-template-columns: 1fr 1fr;
   background: var(--forest-900);
+  padding-top: var(--navbar-height);
+  box-sizing: border-box;
 }
 .auth-visual {
   padding: 40px clamp(28px, 5vw, 72px);
@@ -86,24 +91,7 @@ async function submit() {
   border-right: 1px solid rgba(184,245,102,0.08);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-.auth-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: var(--text-primary);
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 800;
-}
-.auth-logo-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--lime-500);
-  box-shadow: 0 0 10px rgba(184,245,102,0.7);
+  justify-content: flex-end;
 }
 .auth-quote {
   font-family: var(--font-display);

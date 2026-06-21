@@ -75,10 +75,12 @@ export const api = {
       params: { access_code: accessCode }
     }),
 
-  getAbout: (accessCode = null) =>
-    request('GET', '/wellness/about', {
-      params: { access_code: accessCode }
-    }),
+  // EVOLUȚIE (încă nu în prod): ruta `about` nu mai folosește `access_code`.
+  // Se bazează doar pe `country` + `language`, deja auto-injectate în request().
+  // Argumentul e ignorat intenționat ca să rămână compatibil cu apelarea generică
+  // din LegalPageView (`loader(auth.accessCode)`).
+  getAbout: () =>
+    request('GET', '/wellness/about'),
 
   getLegalFaq: (accessCode = null) =>
     request('GET', '/wellness/legals/faq', {

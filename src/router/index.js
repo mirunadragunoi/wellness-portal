@@ -75,6 +75,15 @@ const routes = [
     meta: { public: true, hideForAuth: true }
   },
   {
+    // Deep auto-login: ro.calmasoul.com/dologin/123456 (or with a 2-letter
+    // prefix, e.g. /dologin/RO123456 — the prefix is ignored). On failure the
+    // view redirects to /login?error=invalid_code. Shared across brands.
+    path: '/dologin/:code',
+    name: 'dologin',
+    component: () => import('@/auth/DoLoginView.vue'),
+    meta: { public: true }
+  },
+  {
     path: '/signup',
     name: 'signup',
     component: views.signup,

@@ -26,6 +26,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 
 import OnboardingProgressBar from '@/components/onboarding/OnboardingProgressBar.vue'
 import StepObjectives    from '@/components/onboarding/steps/StepObjectives.vue'
@@ -40,6 +41,7 @@ import StepLoading       from '@/components/onboarding/steps/StepLoading.vue'
 const { t }     = useI18n()
 const router    = useRouter()
 const userStore = useUserStore()
+const authStore = useAuthStore()
 const step      = ref(1)
 const responses = ref({})
 
@@ -63,6 +65,13 @@ function handleNext(data = {}) {
 
 function finish() {
   userStore.completeOnboarding(responses.value)
+  // Reached from the marketing quiz popup (not logged in): send to /signup,
+  // whose beforeEnter redirects to the external premium landing when the
+  // instance has one (UK falls through to the internal signup form).
+  if (!authStore.isLoggedIn) {
+    router.push({ name: 'signup' })
+    return
+  }
   router.push({ name: 'home' })
 }
 </script>

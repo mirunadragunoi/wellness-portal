@@ -61,13 +61,16 @@ src/
 │                                # terms/privacy/cookies/unsubscribe). NU e per-brand; folosit
 │                                # de router cu @/legal/ (nealiasat). Afișează navbar-ul brandului activ.
 │
+├── auth/                        # DoLoginView.vue — view PARTAJAT pentru ruta /dologin/:code
+│                                # (auto-login din URL). NU e per-brand; @/auth/ (nealiasat).
+│
 ├── config/
 │   ├── brand.js                   # Resolver brand + country (din env / hostname / ?country=)
-│   ├── countries.js               # COUNTRIES (UK/CZ/SK), subdomainToCountry, getCountryConfig
+│   ├── countries.js               # COUNTRIES (UK/CZ/SK/RO), subdomainToCountry, getCountryConfig
 │   └── brands/
 │       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", countries: UK+SK
 │       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", countries: UK
-│       └── wellness3.js           # Calmasoul — apiBase rvdhub, portalName "Calmasoul", countries: UK+CZ
+│       └── wellness3.js           # Calmasoul — apiBase rvdhub, portalName "Calmasoul", countries: UK+CZ+RO
 │
 ├── services/
 │   └── api.js                     # `request()` — auto-injectează `portal_name` + `country` (UPPER) + `language` (lower)
@@ -83,7 +86,7 @@ src/
 └── main.js
 ```
 
-**Partajat (în `src/`, nealiasat — un singur exemplar pentru toate brandurile):** `stores/`, `composables/`, `utils/`, `config/`, `services/`, `data/`, `router/`, `i18n/` (index + base locales), `legal/`, `App.vue`, `main.js`.
+**Partajat (în `src/`, nealiasat — un singur exemplar pentru toate brandurile):** `stores/`, `composables/`, `utils/`, `config/`, `services/`, `data/`, `router/`, `i18n/` (index + base locales), `legal/`, `auth/`, `App.vue`, `main.js`.
 
 ---
 
@@ -115,13 +118,19 @@ Folosit în ~16 call-site-uri (HomeRecommended/HomeMomentOfDay/ExploreView/Profi
 
 Pentru GET: ca query params. Pentru POST/PUT: în body.
 
+**Pagini legale (`/wellness/legals/{faq,contact,terms,privacy,cookies_policy,unsubscribe}` + `/wellness/about`):**
+- Backend-ul împachetează răspunsul într-un **envelope**: `{ treatment, error_code, error_description, <resursă> }`.
+- Listele vin sub o cheie denumită după resursă (`faq`, `contact`), NU sub `data`/`items`. Paginile de conținut au `content` string direct în envelope (terms/privacy/cookies/unsubscribe).
+- `LegalPageView.vue` normalizează generic: `firstArray()` găsește prima valoare-array din envelope (pt. faq/contact); altfel folosește `content`. **Nu hardcoda cheia resursei** — dacă apare o resursă nouă, `firstArray` o prinde.
+- `getAbout` (în `api.js`) NU mai trimite `access_code` — se bazează doar pe `country` + `language` (auto-injectate). Celelalte `legals/*` primesc `access_code` doar dacă userul e logat, dar backend-ul nu îl folosește acolo.
+
 ---
 
 ## Country & limbă — arhitectură
 
 **Detectare country** (în `src/config/brand.js → getCountryKey()`), priorități:
 1. `?country=XX` URL param (dev/test override, normalizat upper)
-2. Subdomain: `cz.` → CZ, `sk.` → SK, `www.` sau apex → UK
+2. Subdomain: `cz.` → CZ, `sk.` → SK, `ro.` → RO, `www.` sau apex → UK
 3. Fallback: prima țară din allow-list-ul brand-ului
 
 **Matrice brand × country × limbi disponibile** (`src/config/brands/*.js` → `countries[]` + `src/config/countries.js` → `COUNTRIES`):
@@ -133,13 +142,15 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 | Innerawake   | innerawake.com        | `www`/apex  | UK      | en, ro              | en      |
 | Calmasoul    | calmasoul.com         | `www`/apex  | UK      | en, ro              | en      |
 | Calmasoul    | calmasoul.com         | `cz.`       | CZ      | cz                  | cz      |
+| Calmasoul    | calmasoul.com         | `ro.`       | RO      | ro                  | ro      |
 
 **Înregistrare externă per instanță** (`src/config/brands/*.js → registrationUrls`):
-- Unele instanțe (brand × country) au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. Cheie = cod țară: Harmonoria SK → `premium.harmonoria.com/skharm/click/`, Calmasoul CZ → `premium.calmasoul.com/czcalm/`.
-- Helper: `getRegistrationUrl()` în `brand.js` — întoarce URL-ul pentru brand+country activ sau `null`.
+- Unele instanțe au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. **Cheie = cod țară** (rezolvat din subdomeniu), fiindcă fiecare landing premium e o instanță de țară dedicată: Harmonoria `SK` (`sk.`) → `premium.harmonoria.com/skharm/click/`, Calmasoul `CZ` (`cz.`) → `premium.calmasoul.com/czcalm/`, Calmasoul `RO` (`ro.`) → `premium.calmasoul.com/rocalm/click/`.
+- `RO` e o **țară** (subdomeniu `ro.`), distinctă de limba `ro` disponibilă sub UK. Calmasoul RO = piață românească dedicată cu landing premium; UK+ro = doar traducerea română a instanței UK (signup intern).
+- Helper: `getRegistrationUrl()` în `brand.js` — întoarce URL-ul pentru brand + country activ (`getCountryKey()`) sau `null`.
 - Ruta `/signup` are `beforeEnter` care, dacă există URL extern, face `window.location.href = url`. Astfel TOATE CTA-urile care duc la `/signup` (navbar, hero, final CTA, preview, link signup din login) redirecționează automat extern.
 - `quiz-float` din LandingView (wellness/wellness3) duce la `/onboarding`, deci e tratat separat: `<a href>` extern când există URL, altfel `RouterLink` intern.
-- UK: fără URL extern → `/signup` intern. Instanță nouă = o linie în `registrationUrls`.
+- UK: fără URL extern → `/signup` intern. Instanță nouă = țară în `countries[]` + subdomeniu în `countries.js` + o linie (cheie = cod țară) în `registrationUrls`.
 
 **Selectorul de limbă** (`components/layout/LanguageSelector.vue`):
 - Afișat în navbar (Auth + Public) **doar dacă country are 2+ limbi** (deci doar pe UK momentan).
@@ -170,6 +181,25 @@ http://localhost:5173/?country=sk   # SK
 http://localhost:5173/?country=UK   # UK (sau orice case)
 ```
 Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cade pe default.
+
+---
+
+## Navigare & auth public
+
+**Navbar public = meniu complet (paritate cu logat).** `AppNavbarPublic` (per brand) afișează ACELEAȘI link-uri ca `AppNavbarAuth` (Home/Explore/Practice/[Listen]/Learn/Progress; wellness n-are Listen), plus în dreapta selector limbă + Login + Signup. Apare pe landing și pe paginile legale când nu ești logat. Link-urile duc la rute `requiresAuth` → guard-ul din `router/index.js` redirecționează la `/login?redirect=...`. Deci „blocarea cu access code" e implicită prin guard, nu prin ascunderea meniului.
+
+**Pagina de login are header.** `LoginView` (toate 3 brandurile) randează `AppNavbarPublic` în partea de sus; layout-ul rezervă spațiu cu `padding-top: var(--navbar-height)` (wellness2 e split-screen, logo-ul propriu din panou a fost scos ca să nu se dubleze).
+
+**Flux CTA pe landing:**
+- Header „Începe" + hero „Începe Călătoria" + FinalCTA + Preview → `/signup` → `beforeEnter` redirecționează la landing premium extern (când instanța are `registrationUrl`), altfel signup intern. **Direct, fără chestionar.**
+- `quiz-float` (popup stânga jos) → MEREU `/onboarding` (chestionar). La final, `OnboardingView.finish()`: dacă `!auth.isLoggedIn` → `/signup` (deci → landing premium când există, sau signup intern UK); dacă logat → `/home`. (Userul a cerut explicit acest comportament.)
+
+**Auto-login din URL — `/dologin/:code`** (`src/auth/DoLoginView.vue`, partajat, `meta.public`):
+- Codul de la final acceptă fie **6 cifre** (`123456`), fie **prefix 2 litere mari + 6 cifre** (`RO123456`) — prefixul se ignoră (regex `^[A-Z]{2}\d{6}$` → `slice(2)`).
+- Apelează `auth.login(code)`, apoi același flux ca LoginView (profil → `/home`, fără profil → `/onboarding`). La eroare → `router.replace('/login?error=invalid_code')`, iar LoginView afișează mesaj generic „cod invalid" (backend-ul nu distinge expirat vs invalid).
+- NU are `hideForAuth` → rulează mereu, chiar dacă userul e deja logat (re-loghează cu noul cod).
+
+**Footer — `unsubscribe` ascuns pe RO.** `AppFooter` (toate 3) calculează `isRO = getCountryKey() === 'RO'` și pune `v-if="!isRO"` pe link-ul de dezabonare. Ruta `/unsubscription` rămâne accesibilă direct prin URL — doar link-ul din footer e ascuns.
 
 ---
 

@@ -8,9 +8,12 @@
 
       <!-- Links -->
       <ul class="navbar__links">
-        <li><a href="#features" class="navbar__link">{{ t('nav.explore') }}</a></li>
-        <li><a href="#sessions" class="navbar__link">{{ t('nav.sessions') }}</a></li>
-        <li><a href="#how"      class="navbar__link">{{ t('nav.about') }}</a></li>
+        <li><RouterLink to="/home"     class="navbar__link">{{ t('nav.home') }}</RouterLink></li>
+        <li><RouterLink to="/explore"  class="navbar__link">{{ t('nav.explore') }}</RouterLink></li>
+        <li><RouterLink to="/practice" class="navbar__link">{{ t('nav.practice') }}</RouterLink></li>
+        <li><RouterLink to="/listen"   class="navbar__link">{{ t('nav.listen') }}</RouterLink></li>
+        <li><RouterLink to="/learn"    class="navbar__link">{{ t('nav.learn') }}</RouterLink></li>
+        <li><RouterLink to="/progress" class="navbar__link">{{ t('nav.progress') }}</RouterLink></li>
       </ul>
 
       <!-- CTA -->
@@ -33,9 +36,12 @@
     <!-- Mobile drawer -->
     <Transition name="drawer">
       <div v-if="open" class="navbar__drawer">
-        <a href="#features" class="drawer__link" @click="open=false">{{ t('nav.features') }}</a>
-        <a href="#sessions" class="drawer__link" @click="open=false">{{ t('nav.sessions') }}</a>
-        <a href="#how"      class="drawer__link" @click="open=false">{{ t('nav.how_it_works') }}</a>
+        <RouterLink to="/home"     class="drawer__link" @click="open=false">{{ t('nav.home') }}</RouterLink>
+        <RouterLink to="/explore"  class="drawer__link" @click="open=false">{{ t('nav.explore') }}</RouterLink>
+        <RouterLink to="/practice" class="drawer__link" @click="open=false">{{ t('nav.practice') }}</RouterLink>
+        <RouterLink to="/listen"   class="drawer__link" @click="open=false">{{ t('nav.listen') }}</RouterLink>
+        <RouterLink to="/learn"    class="drawer__link" @click="open=false">{{ t('nav.learn') }}</RouterLink>
+        <RouterLink to="/progress" class="drawer__link" @click="open=false">{{ t('nav.progress') }}</RouterLink>
         <hr class="drawer__rule" />
         <RouterLink to="/login"  class="drawer__link" @click="open=false">{{ t('nav.login') }}</RouterLink>
         <RouterLink to="/signup" class="navbar__btn drawer__btn" @click="open=false">{{ t('nav.cta') }}</RouterLink>

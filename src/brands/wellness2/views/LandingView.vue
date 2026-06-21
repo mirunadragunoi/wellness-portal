@@ -23,7 +23,7 @@
     </main>
 
     <RouterLink
-      :to="quizTarget"
+      to="/onboarding"
       class="quiz-float"
       :class="{ 'quiz-float--auth-mobile': authStore.isLoggedIn }"
       :style="{ translate: `0 -${floatLift}px` }"
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import AppNavbarPublic   from '@/components/layout/AppNavbarPublic.vue'
@@ -49,7 +49,6 @@ import LandingFinalCTA   from '@/components/landing/LandingFinalCTA.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
-const quizTarget = computed(() => (authStore.isLoggedIn ? '/onboarding' : '/signup'))
 
 const marqueeItems = ['Breathe', 'Meditate', 'Sleep Better', 'Find Calm', 'Reduce Stress', 'Increase Focus', 'Improve Mood']
 

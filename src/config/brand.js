@@ -71,7 +71,12 @@ export function getCountry() {
 }
 
 /**
- * External registration URL for the active brand + country, or null.
+ * External registration ("premium landing") URL for the active brand +
+ * country, or null. Keyed by COUNTRY (resolved from subdomain): each premium
+ * landing is a dedicated country instance — Harmonoria SK (sk.), Calmasoul CZ
+ * (cz.), Calmasoul RO (ro.). The UK instances have no entry and fall back to
+ * the internal /signup flow.
+ *
  * When set, signup CTAs lead here instead of the internal /signup flow.
  */
 export function getRegistrationUrl() {

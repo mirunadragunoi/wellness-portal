@@ -14,7 +14,7 @@
         <li><RouterLink to="/terms" class="footer__link">{{ t('footer.terms_conditions') }}</RouterLink></li>
         <li><RouterLink to="/privacy" class="footer__link">{{ t('footer.privacy_policy') }}</RouterLink></li>
         <li><RouterLink to="/cookies-policy" class="footer__link">{{ t('footer.cookies_policy') }}</RouterLink></li>
-        <li><RouterLink to="/unsubscription" class="footer__link">{{ t('footer.unsubscribe') }}</RouterLink></li>
+        <li v-if="!isRO"><RouterLink to="/unsubscription" class="footer__link">{{ t('footer.unsubscribe') }}</RouterLink></li>
       </ul>
     </div>
   </footer>
@@ -22,9 +22,12 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { getCountryKey } from '@/config/brand'
 import logoUrl from '@/assets/calmasoul-sparkle-horizontal.png'
 
 const { t } = useI18n()
+// RO instance hides the unsubscribe link (handled on the premium landing side).
+const isRO = getCountryKey() === 'RO'
 </script>
 
 <style scoped>
