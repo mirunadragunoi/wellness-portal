@@ -9,7 +9,9 @@ export const COUNTRIES = {
   UK: { code: 'UK', defaultLanguage: 'en', languages: ['en', 'ro'] },
   CZ: { code: 'CZ', defaultLanguage: 'cz', languages: ['cz'] },
   SK: { code: 'SK', defaultLanguage: 'sk', languages: ['sk'] },
-  RO: { code: 'RO', defaultLanguage: 'ro', languages: ['ro'] }
+  RO: { code: 'RO', defaultLanguage: 'ro', languages: ['ro'] },
+  LV: { code: 'LV', defaultLanguage: 'lv', languages: ['lv'] },
+  FR: { code: 'FR', defaultLanguage: 'fr', languages: ['fr'] }
 }
 
 /**
@@ -20,7 +22,9 @@ const SUBDOMAIN_COUNTRY = {
   www: 'UK',
   cz: 'CZ',
   sk: 'SK',
-  ro: 'RO'
+  ro: 'RO',
+  lv: 'LV',
+  fr: 'FR'
 }
 
 export function subdomainToCountry(subdomain) {

@@ -8,6 +8,25 @@
       <p class="legal-summary">{{ summary }}</p>
     </section>
 
+    <section v-if="pageKey === 'contact'" class="legal-card legal-intro">
+      <p>{{ contactIntro.provider }}</p>
+      <i18n-t keypath="legal.contact_intro.faq" tag="p" scope="global">
+        <template #brand>{{ contactIntro.brand }}</template>
+        <template #faqLink>
+          <RouterLink class="legal-intro__link" to="/faq">{{ t('legal.contact_intro.faq_link') }}</RouterLink>
+        </template>
+      </i18n-t>
+      <p>{{ contactIntro.help }}</p>
+
+      <p v-if="isLoading" class="contact-details contact-details--state">{{ t('common.loading') }}</p>
+      <template v-else-if="errorMessage">
+        <p class="contact-details contact-details--state">{{ errorMessage }}</p>
+        <button class="legal-retry" type="button" @click="loadContent">{{ t('common.retry') }}</button>
+      </template>
+      <div v-else-if="contentHtml" class="legal-content contact-details" v-html="contentHtml" />
+    </section>
+
+    <template v-if="pageKey !== 'contact'">
     <section v-if="isLoading" class="legal-card legal-state">
       <p>{{ t('common.loading') }}</p>
     </section>
@@ -20,9 +39,28 @@
     </section>
 
     <section v-else-if="pageKey === 'faq' && faqItems.length" class="legal-card legal-faq">
-      <article v-for="item in faqItems" :key="`${item.order}-${item.question}`" class="legal-faq__item">
-        <h2>{{ item.question }}</h2>
-        <div class="legal-content" v-html="item.answerHtml" />
+      <article
+        v-for="(item, i) in faqItems"
+        :key="`${item.order}-${item.question}`"
+        class="legal-faq__item"
+        :class="{ 'legal-faq__item--open': openFaqs.has(i) }"
+      >
+        <h2 class="legal-faq__heading">
+          <button
+            type="button"
+            class="legal-faq__q"
+            :aria-expanded="openFaqs.has(i)"
+            @click="toggleFaq(i)"
+          >
+            <span class="legal-faq__q-text">{{ item.question }}</span>
+            <Icon icon="lucide:chevron-down" class="app-icon app-icon--sm legal-faq__chev" aria-hidden="true" />
+          </button>
+        </h2>
+        <div class="legal-faq__a-wrap">
+          <div class="legal-faq__a-inner">
+            <div class="legal-content" v-html="item.answerHtml" />
+          </div>
+        </div>
       </article>
     </section>
 
@@ -76,6 +114,7 @@
     <section v-else class="legal-card legal-state">
       <p>{{ t('legal.placeholder') }}</p>
     </section>
+    </template>
     </main>
   </div>
 </template>
@@ -84,9 +123,10 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
-import { getCountryKey } from '@/config/brand'
+import { getBrandConfig, getCountryKey } from '@/config/brand'
 import AppNavbarPublic from '@/components/layout/AppNavbarPublic.vue'
 
 const route = useRoute()
@@ -97,10 +137,29 @@ const pageKey = computed(() => route.meta.legalKey || 'about')
 const title = computed(() => t(`legal.pages.${pageKey.value}.title`))
 const summary = computed(() => t(`legal.pages.${pageKey.value}.summary`))
 
+// Static intro shown above the backend-loaded contact content. Product name
+// comes from the active brand (brand.name), legal entity from brand config.
+const contactIntro = computed(() => {
+  const brand = t('brand.name')
+  return {
+    brand,
+    provider: t('legal.contact_intro.provider', { company: getBrandConfig().companyName }),
+    // `faq` is rendered via <i18n-t> so the FAQ link can be a real <RouterLink>.
+    help: t('legal.contact_intro.help')
+  }
+})
+
 const isLoading = ref(false)
 const errorMessage = ref('')
 const contentHtml = ref('')
 const faqItems = ref([])
+// FAQ accordion: set of open item indices. All closed by default.
+const openFaqs = ref(new Set())
+
+function toggleFaq(key) {
+  if (openFaqs.value.has(key)) openFaqs.value.delete(key)
+  else openFaqs.value.add(key)
+}
 const phoneNumber = ref('')
 const recaptchaToken = ref('')
 const recaptchaContainer = ref(null)
@@ -391,6 +450,7 @@ async function loadContent() {
   errorMessage.value = ''
   contentHtml.value = ''
   faqItems.value = []
+  openFaqs.value.clear()
 
   try {
     const response = await loader(auth.accessCode)
@@ -481,6 +541,48 @@ onBeforeUnmount(() => {
   gap: 16px;
 }
 
+/* Static intro card above the backend-loaded contact content. */
+.legal-intro {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.legal-intro__link {
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
+/* Backend contact details rendered inside the same card, below the intro.
+   Separated by a rule and visually emphasized (larger, bolder). */
+.contact-details {
+  margin-top: 4px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.contact-details--state {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.contact-details :deep(p) {
+  margin: 0 0 10px;
+}
+
+.contact-details :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+/* Email / phone are usually mailto:/tel: links — make them stand out. */
+.contact-details :deep(a) {
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
 .legal-retry {
   justify-self: start;
   border: 0;
@@ -494,27 +596,71 @@ onBeforeUnmount(() => {
 
 .legal-faq {
   display: grid;
-  gap: 24px;
+  gap: 0;
 }
 
 .legal-faq__item {
-  display: grid;
-  gap: 10px;
-  padding-bottom: 24px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .legal-faq__item:last-child {
-  padding-bottom: 0;
   border-bottom: 0;
 }
 
-.legal-faq__item h2 {
+.legal-faq__heading {
   margin: 0;
+}
+
+/* Question row = full-width toggle button. */
+.legal-faq__q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
   color: var(--text-primary);
   font-family: var(--font-display);
-  font-size: 22px;
-  line-height: 1.3;
+  font-size: 20px;
+  line-height: 1.35;
+  transition: color var(--duration-fast);
+}
+
+.legal-faq__q:hover {
+  color: var(--brand-primary);
+}
+
+.legal-faq__chev {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: transform var(--duration-fast) ease;
+}
+
+.legal-faq__item--open .legal-faq__chev {
+  transform: rotate(180deg);
+}
+
+/* Smooth height animation via grid-template-rows 0fr → 1fr. */
+.legal-faq__a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-fast) ease;
+}
+
+.legal-faq__item--open .legal-faq__a-wrap {
+  grid-template-rows: 1fr;
+}
+
+.legal-faq__a-inner {
+  overflow: hidden;
+}
+
+.legal-faq__a-inner .legal-content {
+  padding-bottom: 22px;
 }
 
 .legal-content :deep(p) {

@@ -4,11 +4,14 @@ import baseEn from '@/i18n/locales/en.json'
 import baseRo from '@/i18n/locales/ro.json'
 import baseCz from '@/i18n/locales/cz.json'
 import baseSk from '@/i18n/locales/sk.json'
+import baseLv from '@/i18n/locales/lv.json'
+import baseFr from '@/i18n/locales/fr.json'
 
 import wellnessEn from '@/brands/wellness/i18n/locales/en.json'
 import wellnessRo from '@/brands/wellness/i18n/locales/ro.json'
 import wellnessCz from '@/brands/wellness/i18n/locales/cz.json'
 import wellnessSk from '@/brands/wellness/i18n/locales/sk.json'
+import wellnessLv from '@/brands/wellness/i18n/locales/lv.json'
 
 import wellness2En from '@/brands/wellness2/i18n/locales/en.json'
 import wellness2Ro from '@/brands/wellness2/i18n/locales/ro.json'
@@ -16,6 +19,7 @@ import wellness2Ro from '@/brands/wellness2/i18n/locales/ro.json'
 import wellness3En from '@/brands/wellness3/i18n/locales/en.json'
 import wellness3Ro from '@/brands/wellness3/i18n/locales/ro.json'
 import wellness3Cz from '@/brands/wellness3/i18n/locales/cz.json'
+import wellness3Fr from '@/brands/wellness3/i18n/locales/fr.json'
 
 import { getBrandConfig, getBrandKey, getCountry, getCountryKey } from '@/config/brand'
 import { getCookie, setCookie } from '@/utils/cookies'
@@ -34,12 +38,12 @@ function mergeMessages(base, override) {
 }
 
 const BRAND_LOCALES = {
-  wellness: { en: wellnessEn, ro: wellnessRo, cz: wellnessCz, sk: wellnessSk },
+  wellness: { en: wellnessEn, ro: wellnessRo, cz: wellnessCz, sk: wellnessSk, lv: wellnessLv },
   wellness2: { en: wellness2En, ro: wellness2Ro },
-  wellness3: { en: wellness3En, ro: wellness3Ro, cz: wellness3Cz }
+  wellness3: { en: wellness3En, ro: wellness3Ro, cz: wellness3Cz, fr: wellness3Fr }
 }
 
-const BASE_LOCALES = { en: baseEn, ro: baseRo, cz: baseCz, sk: baseSk }
+const BASE_LOCALES = { en: baseEn, ro: baseRo, cz: baseCz, sk: baseSk, lv: baseLv, fr: baseFr }
 
 const brand = getBrandConfig()
 const brandKey = getBrandKey()
@@ -94,7 +98,9 @@ export const LOCALE_LABELS = {
   en: 'English',
   ro: 'Română',
   cz: 'Čeština',
-  sk: 'Slovenčina'
+  sk: 'Slovenčina',
+  lv: 'Latviešu',
+  fr: 'Français'
 }
 
 export const availableLocales = country.languages.map(code => ({

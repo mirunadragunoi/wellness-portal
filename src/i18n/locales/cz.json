@@ -139,6 +139,12 @@
     "back_home": "Zpět domů",
     "eyebrow": "Právní informace",
     "placeholder": "Tato stránka je připravena. Finální právní obsah bude načten z backendu.",
+    "contact_intro": {
+      "provider": "Službu poskytuje {company}.",
+      "faq": "Máte-li dotazy k produktům {brand} nebo ke svému účtu, navštivte prosím {faqLink}, kde najdete odpovědi na většinu otázek.",
+      "faq_link": "naši stránku Časté dotazy",
+      "help": "Pokud potřebujete pomoc, můžete nás kontaktovat e-mailem (do zprávy prosím uveďte své telefonní číslo a další důležité údaje týkající se vašeho požadavku)."
+    },
     "pages": {
       "about": {
         "title": "O nás",

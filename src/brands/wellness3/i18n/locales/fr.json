@@ -1,0 +1,45 @@
+{
+  "brand": {
+    "name": "Calmasoul",
+    "tagline": "Ressourcez votre âme",
+    "description": "Méditations guidées, rituels de respiration et outils de concentration profonde pour un système nerveux plus calme."
+  },
+  "nav": {
+    "cta": "Commencer"
+  },
+  "hero": {
+    "badge": "Votre chemin vers la paix intérieure",
+    "title_em": "quiétude",
+    "title_line2": "en vous",
+    "subtitle": "Méditations guidées, rituels de respiration et outils de concentration profonde conçus pour un système nerveux plus calme.",
+    "cta_secondary": "Se connecter"
+  },
+  "footer": {
+    "copy": "© 2026 Calmasoul. Tous droits réservés."
+  },
+  "auth": {
+    "signup_title": "Créez votre compte",
+    "signup_subtitle": "Saisissez votre numéro de téléphone et votre code d'accès pour commencer votre voyage personnalisé.",
+    "login_subtitle": "Connectez-vous à l'aide de votre code d'accès.",
+    "phone_label": "Numéro de téléphone",
+    "phone_placeholder": "+33 6 12 34 56 78",
+    "signup_btn": "Créer un compte",
+    "login_btn": "Se connecter",
+    "signup_link": "S'inscrire",
+    "no_code": "Vous n'avez pas encore de code d'accès ?",
+    "no_code_info": "Les codes d'accès sont fournis avec votre abonnement de bien-être. Contactez votre fournisseur.",
+    "invalid_code": "Code d'accès invalide. Veuillez vérifier et réessayer."
+  },
+  "onboarding": {
+    "step4_body": "Calmasoul a aidé des milliers de personnes à réduire leur stress et à mieux dormir."
+  },
+  "home": {
+    "recommended_title": "Séances recommandées"
+  },
+  "learn": {
+    "subtitle": "Des articles validés par la science pour le calme, la récupération et la concentration."
+  },
+  "profile": {
+    "title": "Votre profil"
+  }
+}

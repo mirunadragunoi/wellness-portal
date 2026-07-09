@@ -139,6 +139,12 @@
     "back_home": "Înapoi acasă",
     "eyebrow": "Legal",
     "placeholder": "Această pagină este pregătită. Conținutul legal final va fi încărcat din backend.",
+    "contact_intro": {
+      "provider": "Serviciul este furnizat de {company}.",
+      "faq": "Dacă ai întrebări despre produsele {brand} sau despre contul tău, vizitează {faqLink}, unde vei găsi răspunsuri la majoritatea întrebărilor.",
+      "faq_link": "pagina noastră de Întrebări frecvente",
+      "help": "Dacă ai nevoie de ajutor, ne poți contacta prin e-mail (te rugăm să incluzi în mesaj numărul tău de telefon și alte date relevante despre solicitarea ta)."
+    },
     "pages": {
       "about": {
         "title": "Despre",

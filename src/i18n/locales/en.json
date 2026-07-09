@@ -139,6 +139,12 @@
     "back_home": "Back to home",
     "eyebrow": "Legal",
     "placeholder": "This page is ready. The final legal content will be loaded from the backend.",
+    "contact_intro": {
+      "provider": "The service is provided by {company}.",
+      "faq": "If you have questions about {brand} products or your account, please visit our {faqLink}, where you'll find answers to most questions.",
+      "faq_link": "FAQ page",
+      "help": "If you need help, you can contact us by email (please include your phone number and any other relevant details about your request in your message)."
+    },
     "pages": {
       "about": {
         "title": "About",
