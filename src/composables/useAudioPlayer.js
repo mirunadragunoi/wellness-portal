@@ -2,12 +2,59 @@ import { watch } from 'vue'
 import { Howl } from 'howler'
 import { usePlayerStore } from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
+import { api } from '@/services/api'
 
 let howl = null
 let ticker = null
 let mode = 'idle'
 let loadedSessionId = null
 let watcherInstalled = false
+
+// ─── Consumption tracking (604) — audio ──────────────────────────────────────
+// Sum only the wall-clock time actually spent playing (pauses are not counted).
+// Log 604 once per listening session: on natural end, on session switch, on
+// unmount (destroy), or on tab close (beforeunload). This captures PARTIAL
+// consumption (abandon mid-track) without heartbeats — the abandon is caught by
+// the switch/unmount/beforeunload flush. Module-level, mirroring the singleton
+// howl above.
+let watchedSeconds = 0
+let playStartTs = null
+let loggedConsumption = false
+let playingProductId = null
+let beforeUnloadBound = false
+
+function startAccum(productId) {
+  // A fresh play after a completed/flushed session starts a new session.
+  if (loggedConsumption) {
+    watchedSeconds = 0
+    loggedConsumption = false
+  }
+  playStartTs = Date.now()
+  if (productId != null) playingProductId = productId
+}
+
+function accumulate() {
+  if (playStartTs != null) {
+    watchedSeconds += (Date.now() - playStartTs) / 1000
+    playStartTs = null
+  }
+}
+
+function flushConsumption() {
+  accumulate()
+  const seconds = Math.round(watchedSeconds)
+  if (!loggedConsumption && seconds >= 1 && playingProductId != null) {
+    api.logEvent({ event_type: 604, product: playingProductId, duration_seconds: seconds })
+    loggedConsumption = true
+  }
+}
+
+function resetConsumption() {
+  watchedSeconds = 0
+  playStartTs = null
+  loggedConsumption = false
+  playingProductId = null
+}
 
 export function useAudioPlayer() {
   const playerStore   = usePlayerStore()
@@ -20,13 +67,23 @@ export function useAudioPlayer() {
     watcherInstalled = true
   }
 
+  // Flush any pending 604 on tab close. Bound once (module-level guard).
+  if (!beforeUnloadBound && typeof window !== 'undefined') {
+    window.addEventListener('beforeunload', flushConsumption)
+    beforeUnloadBound = true
+  }
+
   function load(session) {
     if (loadedSessionId !== null && String(loadedSessionId) === String(session.id) && (howl || mode === 'sim')) {
       return
     }
-    destroy()
+    destroy()               // flushes the previous session's 604 (see destroy)
     playerStore.loadSession(session)
     loadedSessionId = session.id
+    playingProductId = session.id
+
+    // 602 launch — user started this audio product (once per session load).
+    api.logEvent({ event_type: 602, product: session.id })
 
     if (!session.audioUrl) {
       mode = 'sim'
@@ -49,18 +106,22 @@ export function useAudioPlayer() {
       },
       onplay: () => {
         playerStore.play()
+        startAccum(playerStore.currentSession?.id)
         startTicker()
       },
       onpause: () => {
         playerStore.pause()
+        accumulate()
         stopTicker()
       },
       onstop: () => {
         playerStore.pause()
+        accumulate()
         stopTicker()
       },
       onend: () => {
         stopTicker()
+        flushConsumption()   // 604 — natural end of the track
         onComplete()
       },
       onloaderror: (_, err) => {
@@ -77,6 +138,7 @@ export function useAudioPlayer() {
       howl.play()
     } else if (mode === 'sim') {
       playerStore.play()
+      startAccum(playerStore.currentSession?.id)
       startTicker()
     }
   }
@@ -86,6 +148,7 @@ export function useAudioPlayer() {
       howl.pause()
     } else if (mode === 'sim') {
       playerStore.pause()
+      accumulate()
       stopTicker()
     }
   }
@@ -143,6 +206,7 @@ export function useAudioPlayer() {
       if (next >= playerStore.duration) {
         playerStore.tick(playerStore.duration)
         stopTicker()
+        flushConsumption()   // 604 — natural end (simulated)
         onComplete()
       } else {
         playerStore.tick(next)
@@ -157,11 +221,16 @@ export function useAudioPlayer() {
   function simulatePlayback(duration) {
     playerStore.duration = duration
     playerStore.play()
+    startAccum(playerStore.currentSession?.id)
     startTicker()
   }
 
   function destroy() {
     stopTicker()
+    // Flush the previous session's 604 before tearing down (covers session
+    // switch and component unmount / partial-consumption abandon).
+    flushConsumption()
+    resetConsumption()
     if (howl) {
       howl.unload()
       howl = null

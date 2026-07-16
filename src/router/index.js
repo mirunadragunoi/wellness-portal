@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { getBrandKey, getRegistrationUrl } from '@/config/brand'
+import { api } from '@/services/api'
+
+// Routes whose :id param is a store.product id — used to attach `product` to
+// the 603 page_view event on product pages (audio meditation, yoga video).
+const PRODUCT_ROUTES = new Set(['session', 'practice-video'])
 
 const brand = getBrandKey()
 
@@ -266,6 +271,16 @@ router.beforeEach((to) => {
   if (to.meta.requiresAuth && !auth.isLoggedIn) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
+})
+
+// ─── User-action logging: 603 page_view ─────────────────
+// Fire a page_view for every navigation (legals included). Attach `product`
+// only on product pages (:id is a numeric product id there). Fire-and-forget.
+router.afterEach((to) => {
+  const rawId = to.params?.id
+  const product =
+    PRODUCT_ROUTES.has(to.name) && /^\d+$/.test(String(rawId)) ? rawId : undefined
+  api.logEvent({ event_type: 603, page: to.name || to.path, product })
 })
 
 export default router

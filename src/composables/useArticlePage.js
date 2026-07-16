@@ -1,6 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProductsStore } from '@/stores/products'
+import { api } from '@/services/api'
 import { getArticleBySlug, articles } from '@/data/articles'
 import { formatArticleBody, estimateReadMinutes } from '@/utils/articleContent'
 import { isMotivationalSpeechProduct } from '@/utils/productKinds'
@@ -61,6 +62,8 @@ export function useArticlePage() {
       if (p && (p.type === 'article' || isMotivationalSpeechProduct(p))) {
         article.value = productToArticleVm(p)
         loading.value = false
+        // 602 launch — user opened this article product (real product id).
+        api.logEvent({ event_type: 602, product: p.id })
         return
       }
     }
@@ -68,6 +71,8 @@ export function useArticlePage() {
     const mock = getArticleBySlug(slug)
     article.value = mock ? mockToArticleVm(mock) : null
     loading.value = false
+    // 602 launch — mock/demo article has no store.product id, so no `product`.
+    if (article.value) api.logEvent({ event_type: 602 })
   }
 
   watch(() => route.params.slug, load, { immediate: true })

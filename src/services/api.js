@@ -13,6 +13,23 @@ function currentContext() {
   }
 }
 
+/**
+ * Read the logged-in access code from the persisted auth store.
+ * The auth Pinia store persists under localStorage key `auth`
+ * (pinia-plugin-persistedstate, default key = store id). Read from there
+ * instead of importing the store to avoid a circular import (the auth store
+ * imports this module). Returns '' when not logged in.
+ */
+function currentAccessCode() {
+  try {
+    const raw = localStorage.getItem('auth')
+    if (!raw) return ''
+    return JSON.parse(raw)?.accessCode || ''
+  } catch {
+    return ''
+  }
+}
+
 async function request(method, path, { params = {}, body = null } = {}) {
   let url = `${BASE_URL}${path}`
   const ctx = currentContext()
@@ -150,5 +167,37 @@ export const api = {
   completeBreathing: (accessCode, breathingType, durationSeconds) =>
     request('POST', '/wellness/breathing/complete', {
       body: { access_code: accessCode, breathing_type: breathingType, duration_seconds: durationSeconds }
-    })
+    }),
+
+  /**
+   * Log a user action to store.portal_event_log via POST /wellness/logEvent.
+   * Fire-and-forget: never throws, never blocks the caller. portal_name /
+   * country / language are auto-injected by request(); access_code is added
+   * from the persisted auth store when the user is logged in (public pages
+   * log anonymously).
+   *
+   * @param {object}  opts
+   * @param {number}  opts.event_type        602 / 603 / 604
+   * @param {number} [opts.product]          store.product id (omit when N/A)
+   * @param {string} [opts.page]             route name (page_view / 603)
+   * @param {number} [opts.duration_seconds] seconds (consumption / 604 only)
+   */
+  logEvent({ event_type, product, page, duration_seconds } = {}) {
+    try {
+      const body = { event_type }
+      const accessCode = currentAccessCode()
+      if (accessCode) body.access_code = accessCode
+      if (product !== undefined && product !== null && product !== '') {
+        body.product = Number(product)
+      }
+      if (page !== undefined && page !== null && page !== '') body.page = String(page)
+      if (duration_seconds !== undefined && duration_seconds !== null) {
+        body.duration_seconds = Number(duration_seconds)
+      }
+      // fire-and-forget — swallow any network/parse error silently
+      request('POST', '/wellness/logEvent', { body }).catch(() => {})
+    } catch {
+      /* never let logging break a caller */
+    }
+  }
 }
