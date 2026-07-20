@@ -128,6 +128,16 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 - **Pagina Contact:** deasupra conținutului de la backend se randează un bloc intro static din i18n (`legal.contact_intro.{provider,faq,help}`), în ACELAȘI card (`.legal-card`) cu lista de contact, separat printr-o linie. Textul e un template per limbă cu `{brand}` (din `brand.name`) + `{company}` (din `getBrandConfig().companyName`) — deci fără duplicare per brand. Cuvântul „FAQ page" e `<RouterLink to="/faq">` randat via `<i18n-t>` (slot `faqLink`). Datele de contact (email/telefon) sunt evidențiate (mărite + bold; linkurile `mailto:`/`tel:` primesc culoarea brandului).
 - **Pagina FAQ:** accordion (harmonică). Toate întrebările închise by default; click → deschide răspunsul (state `openFaqs: Set<index>`, se pot deschide mai multe simultan). Chevron rotativ + animație smooth via `grid-template-rows: 0fr → 1fr`.
 
+**User-action logging → `store.portal_event_log`** (via `POST /wellness/logEvent`):
+- Helper: `api.logEvent({ event_type, product?, page?, duration_seconds? })` în `services/api.js`. **Fire-and-forget** — nu aruncă, nu blochează caller-ul, înghite orice eroare rețea/parse. Auto-injectează `portal_name`/`country`/`language` (via `request()`); adaugă `access_code` din auth store-ul persistat în localStorage (citit direct din `localStorage['auth']`, NU prin import, ca să evite import circular — auth store importă `api`). Pe pagini publice loghează anonim.
+- **Trei event types:** `602` launch (user pornește un produs), `603` page_view (fiecare navigare), `604` consumption (secunde efectiv consumate).
+- **Call-sites:**
+  - `router/index.js` `afterEach` → `603` la fiecare navigare; atașează `product` doar pe rutele de produs (`PRODUCT_ROUTES = {session, practice-video}`, unde `:id` e id numeric).
+  - `useAudioPlayer.js` → `602` la load; `604` cu timp real ascultat (pauzele NU se numără). Flush pe final natural / schimbare sesiune / unmount / `beforeunload` → prinde și consum **parțial** (abandon la mijloc) fără heartbeat. State la nivel de modul (mirror la singleton-ul howl).
+  - `useNativePracticeVideoProgress.js` → aceeași logică 602/604 pentru video native (MP4); ascultător `pause` pe `<video>`. YouTube/Vimeo iframe = out of scope.
+  - `useArticlePage.js` → `602` la deschiderea unui articol (cu `product` pentru produse reale din store; fără pentru mock/demo).
+- **Backend:** endpoint-ul `POST /wellness/logEvent` trebuie implementat ca datele să ajungă în `store.portal_event_log`. Până atunci apelurile eșuează silențios, fără efect pe UX.
+
 ---
 
 ## Country & limbă — arhitectură
@@ -243,6 +253,7 @@ Comportament cerut explicit de user: audio-ul curent NU se oprește la navigare,
 - Persistență date (localStorage via Pinia)
 - Multi-country routing (subdomain → country, `?country=` dev override) — UK, SK, RO, CZ, LV, FR
 - Multi-language i18n (en, ro, cz, sk, lv, fr) cu selector în navbar, persist în cookie
+- User-action logging (602 launch / 603 page_view / 604 consumption) → `store.portal_event_log` via `api.logEvent` (fire-and-forget; necesită endpoint backend `POST /wellness/logEvent`)
 
 ### În tranziție / parțial
 - **Migrare mock → API:** multe componente încă referă `thumbnailGradient` (placeholder) în loc de `thumbnail`/`banner` reale. Pattern recurent de bug-uri "imaginile nu apar pe X".
