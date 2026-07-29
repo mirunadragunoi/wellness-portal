@@ -589,7 +589,8 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-full);
   padding: 10px 18px;
   background: var(--brand-primary);
-  color: white;
+  /* Per-brand: dark text on light primaries (Innerawake lime), white on dark. */
+  color: var(--brand-on-primary, white);
   font-weight: 700;
   cursor: pointer;
 }

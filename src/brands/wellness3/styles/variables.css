@@ -61,6 +61,7 @@
   --border-strong:  rgba(167,139,250,0.35);
 
   --brand-primary: var(--violet);
+  --brand-on-primary: #ffffff; /* white text on the (dark) violet primary */
   --brand-dark:    #7c5af5;
   --brand-light:   rgba(167,139,250,0.15);
 

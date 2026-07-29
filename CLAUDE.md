@@ -69,7 +69,7 @@ src/
 │   ├── countries.js               # COUNTRIES (UK/CZ/SK/RO/LV/FR), subdomainToCountry, getCountryConfig
 │   └── brands/
 │       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", companyName "Runvas Digital", countries: UK+SK+LV
-│       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", companyName "DNA Mobile Content", countries: UK
+│       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", companyName "DNA Mobile Content", countries: UK+RO
 │       └── wellness3.js           # Calmasoul — apiBase dnaperf, portalName "Calmasoul", companyName "DNA Mobile Content", countries: UK+CZ+RO+FR
 │
 ├── services/
@@ -155,13 +155,14 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 | Harmonoria   | harmonoria.com        | `sk.`       | SK      | sk                  | sk      |
 | Harmonoria   | harmonoria.com        | `lv.`       | LV      | lv                  | lv      |
 | Innerawake   | innerawake.com        | `www`/apex  | UK      | en, ro              | en      |
+| Innerawake   | innerawake.com        | `ro.`       | RO      | ro                  | ro      |
 | Calmasoul    | calmasoul.com         | `www`/apex  | UK      | en, ro              | en      |
 | Calmasoul    | calmasoul.com         | `cz.`       | CZ      | cz                  | cz      |
 | Calmasoul    | calmasoul.com         | `ro.`       | RO      | ro                  | ro      |
 | Calmasoul    | calmasoul.com         | `fr.`       | FR      | fr                  | fr      |
 
 **Înregistrare externă per instanță** (`src/config/brands/*.js → registrationUrls`):
-- Unele instanțe au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. **Cheie = cod țară** (rezolvat din subdomeniu), fiindcă fiecare landing premium e o instanță de țară dedicată: Harmonoria `SK` (`sk.`) → `premium.harmonoria.com/skharm/click/`, Harmonoria `LV` (`lv.`) → `premium.harmonoria.com/lvharm/mo/`, Calmasoul `CZ` (`cz.`) → `premium.calmasoul.com/czcalm/`, Calmasoul `RO` (`ro.`) → `premium.calmasoul.com/rocalm/click/`, Calmasoul `FR` (`fr.`) → `premium.calmasoul.com/frcalm/click/` (**PLACEHOLDER** — încă nu există landing FR real; vezi `TODO(FR)` în `wellness3.js`).
+- Unele instanțe au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. **Cheie = cod țară** (rezolvat din subdomeniu), fiindcă fiecare landing premium e o instanță de țară dedicată: Harmonoria `SK` (`sk.`) → `premium.harmonoria.com/skharm/click/`, Harmonoria `LV` (`lv.`) → `premium.harmonoria.com/lvharm/mo/`, Innerawake `RO` (`ro.`) → `subscribe.innerawake.com/trezit/`, Calmasoul `CZ` (`cz.`) → `premium.calmasoul.com/czcalm/`, Calmasoul `RO` (`ro.`) → `premium.calmasoul.com/rocalm/click/`, Calmasoul `FR` (`fr.`) → `premium.calmasoul.com/frcalm/click/` (**PLACEHOLDER** — încă nu există landing FR real; vezi `TODO(FR)` în `wellness3.js`).
 - `RO` e o **țară** (subdomeniu `ro.`), distinctă de limba `ro` disponibilă sub UK. Calmasoul RO = piață românească dedicată cu landing premium; UK+ro = doar traducerea română a instanței UK (signup intern). Analog: `FR` (Calmasoul, `fr.`) e o piață dedicată; `LV` (Harmonoria, `lv.`) o piață dedicată cu limbă proprie.
 - Helper: `getRegistrationUrl()` în `brand.js` — întoarce URL-ul pentru brand + country activ (`getCountryKey()`) sau `null`.
 - Ruta `/signup` are `beforeEnter` care, dacă există URL extern, face `window.location.href = url`. Astfel TOATE CTA-urile care duc la `/signup` (navbar, hero, final CTA, preview, link signup din login) redirecționează automat extern.
@@ -217,7 +218,7 @@ Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cad
 - Apelează `auth.login(code)`, apoi același flux ca LoginView (profil → `/home`, fără profil → `/onboarding`). La eroare → `router.replace('/login?error=invalid_code')`, iar LoginView afișează mesaj generic „cod invalid" (backend-ul nu distinge expirat vs invalid).
 - NU are `hideForAuth` → rulează mereu, chiar dacă userul e deja logat (re-loghează cu noul cod).
 
-**Footer — `unsubscribe` ascuns pe RO.** `AppFooter` (toate 3) calculează `isRO = getCountryKey() === 'RO'` și pune `v-if="!isRO"` pe link-ul de dezabonare. Ruta `/unsubscription` rămâne accesibilă direct prin URL — doar link-ul din footer e ascuns.
+**Footer — `unsubscribe` per brand.** `AppFooter` la **Harmonoria (wellness)** și **Calmasoul (wellness3)** ascunde link-ul pe RO (`isRO = getCountryKey() === 'RO'` → `v-if="!isRO"`; dezabonarea e gestionată pe landing-ul premium). **Innerawake (wellness2) îl afișează MEREU** (inclusiv RO) — e flux DCB Orange RO cu **abonament recurent** (ca Workinfit), deci unsubscribe trebuie accesibil în portal. Ruta `/unsubscription` rămâne oricum accesibilă direct prin URL pe toate brandurile.
 
 ---
 

@@ -31,10 +31,13 @@
           {{ t('hero.cta_primary') }}
           <Icon icon="lucide:arrow-right" class="app-icon app-icon--sm" />
         </RouterLink>
-        <RouterLink to="/explore" class="hero__btn-ghost">
+        <RouterLink v-if="!isRO" to="/explore" class="hero__btn-ghost">
           {{ t('hero.cta_secondary') }}
         </RouterLink>
       </div>
+
+      <!-- RO (Innerawake, DCB Orange recurring): show the price near the paid CTA. -->
+      <p v-if="isRO" class="hero__price">{{ t('hero.price') }}</p>
 
       <!-- Social proof -->
       <div class="hero__proof">
@@ -83,6 +86,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
+import { getCountryKey } from '@/config/brand'
 import heroBackgroundVideo from '@/brands/wellness2/assets/landing/hero-background.mp4'
 
 // Importă imaginile de proof
@@ -90,6 +94,9 @@ import proof1 from '@/brands/wellness2/assets/landing/hero-proof-1.png'
 import proof2 from '@/brands/wellness2/assets/landing/hero-proof-2.png'
 
 const { t } = useI18n()
+
+// RO market shows the recurring price and hides the "explore free" CTA.
+const isRO = getCountryKey() === 'RO'
 
 const proofAvatars = [proof1, proof2, proof1, proof2]
 const proofHtml = computed(() =>
@@ -196,6 +203,14 @@ const floatCards = [
   transition: all 200ms;
 }
 .hero__btn-ghost:hover { background: rgba(255,255,255,0.09); }
+
+/* RO recurring-price note, sits just under the paid CTA. */
+.hero__price {
+  margin: -16px 0 30px;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.2px;
+  color: var(--lime-400);
+  animation: fadeInUp 0.8s var(--ease-smooth) 0.45s both;
+}
 
 /* Social proof */
 .hero__proof {

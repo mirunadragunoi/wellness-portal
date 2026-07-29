@@ -84,6 +84,7 @@
   --border-subtle:  var(--sky-100);
   --border-default: var(--sky-200);
   --brand-primary:  var(--sky-500);
+  --brand-on-primary: #ffffff; /* white text on the (dark) sky primary */
   --brand-dark:     var(--sky-600);
 }
 

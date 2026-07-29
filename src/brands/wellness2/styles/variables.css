@@ -107,6 +107,7 @@
   --border-subtle:  rgba(255, 255, 255, 0.06);
   --border-default: rgba(184, 245, 102, 0.15);
   --brand-primary:  var(--lime-500);
+  --brand-on-primary: var(--forest-900); /* dark text — lime is a light primary */
   --brand-dark:     var(--forest-400);
 
   /* ── Legacy compatibility tokens (old wellness2 components) ── */
