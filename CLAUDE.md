@@ -68,7 +68,7 @@ src/
 │   ├── brand.js                   # Resolver brand + country (din env / hostname / ?country=)
 │   ├── countries.js               # COUNTRIES (UK/CZ/SK/RO/LV/FR), subdomainToCountry, getCountryConfig
 │   └── brands/
-│       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", companyName "Runvas Digital", countries: UK+SK+LV
+│       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", companyName "Runvas Digital", countries: UK+SK+LV+CZ
 │       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", companyName "DNA Mobile Content", countries: UK+RO
 │       └── wellness3.js           # Calmasoul — apiBase dnaperf, portalName "Calmasoul", companyName "DNA Mobile Content", countries: UK+CZ+RO+FR
 │
@@ -154,6 +154,7 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 | Harmonoria   | harmonoria.com        | `www`/apex  | UK      | en, ro              | en      |
 | Harmonoria   | harmonoria.com        | `sk.`       | SK      | sk                  | sk      |
 | Harmonoria   | harmonoria.com        | `lv.`       | LV      | lv                  | lv      |
+| Harmonoria   | harmonoria.com        | `cz.`       | CZ      | cz                  | cz      |
 | Innerawake   | innerawake.com        | `www`/apex  | UK      | en, ro              | en      |
 | Innerawake   | innerawake.com        | `ro.`       | RO      | ro                  | ro      |
 | Calmasoul    | calmasoul.com         | `www`/apex  | UK      | en, ro              | en      |
@@ -162,7 +163,7 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 | Calmasoul    | calmasoul.com         | `fr.`       | FR      | fr                  | fr      |
 
 **Înregistrare externă per instanță** (`src/config/brands/*.js → registrationUrls`):
-- Unele instanțe au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. **Cheie = cod țară** (rezolvat din subdomeniu), fiindcă fiecare landing premium e o instanță de țară dedicată: Harmonoria `SK` (`sk.`) → `premium.harmonoria.com/skharm/click/`, Harmonoria `LV` (`lv.`) → `premium.harmonoria.com/lvharm/mo/`, Innerawake `RO` (`ro.`) → `subscribe.innerawake.com/trezit/`, Calmasoul `CZ` (`cz.`) → `premium.calmasoul.com/czcalm/`, Calmasoul `RO` (`ro.`) → `premium.calmasoul.com/rocalm/click/`, Calmasoul `FR` (`fr.`) → `premium.calmasoul.com/frcalm/click/` (**PLACEHOLDER** — încă nu există landing FR real; vezi `TODO(FR)` în `wellness3.js`).
+- Unele instanțe au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. **Cheie = cod țară** (rezolvat din subdomeniu), fiindcă fiecare landing premium e o instanță de țară dedicată: Harmonoria `SK` (`sk.`) → `premium.harmonoria.com/skharm/click/`, Harmonoria `LV` (`lv.`) → `premium.harmonoria.com/lvharm/mo/`, Harmonoria `CZ` (`cz.`) → `premium.harmonoria.com/czharm/click/` (**PLACEHOLDER** — confirmă URL-ul real; vezi `TODO(CZ)` în `wellness.js`), Innerawake `RO` (`ro.`) → `subscribe.innerawake.com/trezit/`, Calmasoul `CZ` (`cz.`) → `premium.calmasoul.com/czcalm/`, Calmasoul `RO` (`ro.`) → `premium.calmasoul.com/rocalm/click/`, Calmasoul `FR` (`fr.`) → `premium.calmasoul.com/frcalm/click/` (**PLACEHOLDER** — încă nu există landing FR real; vezi `TODO(FR)` în `wellness3.js`).
 - `RO` e o **țară** (subdomeniu `ro.`), distinctă de limba `ro` disponibilă sub UK. Calmasoul RO = piață românească dedicată cu landing premium; UK+ro = doar traducerea română a instanței UK (signup intern). Analog: `FR` (Calmasoul, `fr.`) e o piață dedicată; `LV` (Harmonoria, `lv.`) o piață dedicată cu limbă proprie.
 - Helper: `getRegistrationUrl()` în `brand.js` — întoarce URL-ul pentru brand + country activ (`getCountryKey()`) sau `null`.
 - Ruta `/signup` are `beforeEnter` care, dacă există URL extern, face `window.location.href = url`. Astfel TOATE CTA-urile care duc la `/signup` (navbar, hero, final CTA, preview, link signup din login) redirecționează automat extern.
