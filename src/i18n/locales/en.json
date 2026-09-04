@@ -186,7 +186,11 @@
       "submitting": "Sending...",
       "success": "Your unsubscribe request has been submitted.",
       "error": "We could not submit your unsubscribe request. Please try again.",
-      "not_found": "We couldn't find a subscription for this phone number."
+      "not_found": "We couldn't find a subscription for this phone number.",
+      "already_canceled": "This number no longer has an active subscription.",
+      "invalid_format": "This phone number doesn't look valid for the selected country.",
+      "blacklisted": "We can't process a request from this connection.",
+      "too_many_requests": "Too many requests. Please try again in a few minutes."
     }
   },
   "quizFloat": "Take the Wellness Quiz",

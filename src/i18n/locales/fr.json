@@ -186,7 +186,11 @@
       "submitting": "Envoi en cours...",
       "success": "Votre demande de désabonnement a été envoyée.",
       "error": "Nous n'avons pas pu envoyer votre demande de désabonnement. Veuillez réessayer.",
-      "not_found": "Nous n'avons trouvé aucun abonnement pour ce numéro de téléphone."
+      "not_found": "Nous n'avons trouvé aucun abonnement pour ce numéro de téléphone.",
+      "already_canceled": "Ce numéro n'a plus d'abonnement actif.",
+      "invalid_format": "Ce numéro de téléphone ne semble pas valide pour le pays sélectionné.",
+      "blacklisted": "Nous ne pouvons pas traiter une demande depuis cette connexion.",
+      "too_many_requests": "Trop de demandes. Veuillez réessayer dans quelques minutes."
     }
   },
   "quizFloat": "Faites le questionnaire de bien-être",

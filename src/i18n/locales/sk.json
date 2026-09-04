@@ -186,7 +186,11 @@
       "submitting": "Odosielanie...",
       "success": "Vaša žiadosť o odhlásenie bola odoslaná.",
       "error": "Žiadosť o odhlásenie sa nepodarilo odoslať. Skúste to prosím znova.",
-      "not_found": "Pre toto telefónne číslo sme nenašli žiadne predplatné."
+      "not_found": "Pre toto telefónne číslo sme nenašli žiadne predplatné.",
+      "already_canceled": "Toto číslo už nemá aktívne predplatné.",
+      "invalid_format": "Toto telefónne číslo sa pre vybranú krajinu nezdá platné.",
+      "blacklisted": "Z tohto pripojenia nemôžeme požiadavku spracovať.",
+      "too_many_requests": "Príliš veľa požiadaviek. Skúste to prosím o niekoľko minút."
     }
   },
   "quizFloat": "Vyplniť wellness dotazník",

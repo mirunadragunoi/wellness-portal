@@ -186,7 +186,11 @@
       "submitting": "Nosūta...",
       "success": "Tavs atrakstīšanās pieprasījums ir iesniegts.",
       "error": "Neizdevās iesniegt tavu atrakstīšanās pieprasījumu. Lūdzu, mēģini vēlreiz.",
-      "not_found": "Mēs neatradām abonementu šim tālruņa numuram."
+      "not_found": "Mēs neatradām abonementu šim tālruņa numuram.",
+      "already_canceled": "Šim numuram vairs nav aktīva abonementa.",
+      "invalid_format": "Šis tālruņa numurs nešķiet derīgs izvēlētajai valstij.",
+      "blacklisted": "No šī savienojuma nevaram apstrādāt pieprasījumu.",
+      "too_many_requests": "Pārāk daudz pieprasījumu. Lūdzu, mēģini vēlreiz pēc dažām minūtēm."
     }
   },
   "quizFloat": "Aizpildi labsajūtas aptauju",

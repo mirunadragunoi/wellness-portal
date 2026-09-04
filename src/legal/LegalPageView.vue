@@ -170,11 +170,13 @@ const submitMessage = ref('')
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LdDBHcqAAAAADmNepiNSpPMrtRUDwY7FTRds_72'
 
-// `length` = expected digit count, `pattern` = full validation (prefix + length).
+// `length` = expected digit count, `pattern` = prefix + length. CZ mobiles start
+// with 6 or 7; the others with the prefix shown. The backend still does the
+// authoritative format check on submit (error 2031 → invalid_format).
 const phoneCountries = [
   { code: 'UK', label: 'United Kingdom', dialCode: '+44', hint: '7xxxxxxxxx', length: 10, pattern: /^7\d{9}$/ },
   { code: 'RO', label: 'Romania', dialCode: '+40', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ },
-  { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ },
+  { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: '6xxxxxxxx', length: 9, pattern: /^[67]\d{8}$/ },
   { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: '9xxxxxxxx', length: 9, pattern: /^9\d{8}$/ }
 ]
 
@@ -187,7 +189,8 @@ const selectedPhoneCountryMeta = computed(() =>
   phoneCountries.find((country) => country.code === selectedPhoneCountry.value) || phoneCountries[0]
 )
 
-// Valid only when the digits match the country's full pattern (prefix + length).
+// Valid when the digits match the country's pattern (prefix + length); the
+// backend does the authoritative format check on submit (error 2031).
 const isPhoneValid = computed(() =>
   selectedPhoneCountryMeta.value.pattern.test(phoneNumber.value)
 )
@@ -431,11 +434,25 @@ async function submitUnsubscribe() {
     phoneNumber.value = ''
     resetRecaptcha()
   } catch (error) {
-    // error_code 2048 = backend "subscription not found" → show a localized,
-    // user-friendly message instead of the raw "HTTP 500".
-    submitError.value = error?.errorCode === 2048
-      ? t('legal.unsubscribe_form.not_found')
-      : t('legal.unsubscribe_form.error')
+    // Map known backend error codes to localized, user-friendly messages
+    // instead of the raw "HTTP 500". Codes not listed (2001/2054/2055/2056/999)
+    // are internal/frontend bugs → generic error.
+    const code = error?.errorCode
+    if (code === 2057) {
+      // ERR_SUBSCRIPTION_ALREADY_CANCELED_FOR_USER — the desired end state
+      // (no active subscription) is already true, so show it as a positive/info
+      // message, not a red error.
+      submitMessage.value = t('legal.unsubscribe_form.already_canceled')
+      phoneNumber.value = ''
+    } else {
+      const ERROR_KEYS = {
+        2048: 'not_found',          // ERR_SUBSCRIPTION_NOT_FOUND_FOR_USER
+        2031: 'invalid_format',     // ERR_INVALID_NUMBER_FORMAT (user can fix)
+        2027: 'blacklisted',        // ERR_IP_ADDRESS_IN_BLACKLIST
+        2053: 'too_many_requests'   // ERR_PORTAL_TOO_MANY_UNSUB_REQUESTS
+      }
+      submitError.value = t(`legal.unsubscribe_form.${ERROR_KEYS[code] || 'error'}`)
+    }
     resetRecaptcha()
   } finally {
     isSubmitting.value = false

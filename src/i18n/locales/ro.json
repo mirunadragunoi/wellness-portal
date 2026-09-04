@@ -186,7 +186,11 @@
       "submitting": "Se trimite...",
       "success": "Cererea ta de dezabonare a fost trimisă.",
       "error": "Nu am putut trimite cererea de dezabonare. Te rugăm să încerci din nou.",
-      "not_found": "Nu am găsit niciun abonament pentru acest număr de telefon."
+      "not_found": "Nu am găsit niciun abonament pentru acest număr de telefon.",
+      "already_canceled": "Acest număr nu mai are un abonament activ.",
+      "invalid_format": "Numărul de telefon nu pare valid pentru țara selectată.",
+      "blacklisted": "Nu putem procesa cererea de la această conexiune.",
+      "too_many_requests": "Prea multe cereri. Te rugăm să încerci din nou peste câteva minute."
     }
   },
   "quizFloat": "Completează chestionarul de wellness",
