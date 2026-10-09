@@ -221,6 +221,21 @@ Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cad
 
 **Footer — `unsubscribe` per brand.** `AppFooter` la **Harmonoria (wellness)** și **Calmasoul (wellness3)** ascunde link-ul pe RO (`isRO = getCountryKey() === 'RO'` → `v-if="!isRO"`; dezabonarea e gestionată pe landing-ul premium). **Innerawake (wellness2) îl afișează MEREU** (inclusiv RO) — e flux DCB Orange RO cu **abonament recurent** (ca Workinfit), deci unsubscribe trebuie accesibil în portal. Ruta `/unsubscription` rămâne oricum accesibilă direct prin URL pe toate brandurile.
 
+**Formular de dezabonare (`/unsubscription`)** — în `src/legal/LegalPageView.vue`, sub conținutul de la backend:
+- **Endpoint:** `api.unsubscribePhoneNumber({ country, language, phoneNumber, recaptchaToken })` → `GET /store/UnsubscribePhoneNumber` (cu `service` = `portal_name`). NU e sub `/wellness/`.
+- **reCAPTCHA v2** obligatoriu înainte de submit. Site key din `VITE_RECAPTCHA_SITE_KEY` (are fallback hardcodat în fișier). Widget-ul se re-randează la schimbarea temei; token-ul se resetează după fiecare submit și pe `expired-callback`.
+- **Țara formularului** = `locale === 'ro'` → `RO`, altfel `getCountryKey()`. Se poate schimba în runtime (selector limbă) → `watch` resetează inputul ca să nu rămână cifre de la țara precedentă.
+- **Validare telefon** (`phoneCountries`, doar cifre, tăiat la `length`): UK `/^7\d{9}$/`, RO `/^7\d{8}$/`, CZ `/^[67]\d{8}$/` (mobilele cehe încep cu **6 SAU 7** — fix în 9887e22), SK `/^9\d{8}$/`. Validarea e doar UX-gating pentru buton; verificarea autoritativă o face backend-ul (`error_code` 2031).
+- **Error codes → mesaje localizate** (`legal.unsubscribe_form.*` în toate locale-urile `{en,ro,cz,sk,lv,fr}.json`). `request()` din `api.js` pune `error_code` din body pe `err.errorCode`, deci handler-ul nu vede „HTTP 500":
+  | Cod | Cheie i18n | Afișare |
+  |------|----------------------|----------|
+  | 2057 | `already_canceled` | mesaj **pozitiv** (`submitMessage`), nu eroare roșie — starea dorită e deja atinsă |
+  | 2048 | `not_found` | eroare |
+  | 2031 | `invalid_format` | eroare (userul poate corecta) |
+  | 2027 | `blacklisted` | eroare (IP în blacklist) |
+  | 2053 | `too_many_requests` | eroare (rate limit) |
+  | alt cod (2001/2054/2055/2056/999) | `error` generic | bug intern/frontend, nu-l expunem |
+
 ---
 
 ## Audio player — arhitectură
@@ -256,6 +271,7 @@ Comportament cerut explicit de user: audio-ul curent NU se oprește la navigare,
 - Multi-country routing (subdomain → country, `?country=` dev override) — UK, SK, RO, CZ, LV, FR
 - Multi-language i18n (en, ro, cz, sk, lv, fr) cu selector în navbar, persist în cookie
 - User-action logging (602 launch / 603 page_view / 604 consumption) → `store.portal_event_log` via `api.logEvent` (fire-and-forget; necesită endpoint backend `POST /wellness/logEvent`)
+- Formular de dezabonare cu reCAPTCHA v2, validare telefon per țară (UK/RO/CZ/SK) și mesaje localizate pe error-code-urile backend (2057/2048/2031/2027/2053)
 
 ### În tranziție / parțial
 - **Migrare mock → API:** multe componente încă referă `thumbnailGradient` (placeholder) în loc de `thumbnail`/`banner` reale. Pattern recurent de bug-uri "imaginile nu apar pe X".
