@@ -3,6 +3,7 @@ import { Howl } from 'howler'
 import { usePlayerStore } from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { api } from '@/services/api'
+import { createCoverageTracker, createPeriodicEmitter } from './coverageCore'
 
 let howl = null
 let ticker = null
@@ -10,49 +11,46 @@ let mode = 'idle'
 let loadedSessionId = null
 let watcherInstalled = false
 
-// ─── Consumption tracking (604) — audio ──────────────────────────────────────
-// Sum only the wall-clock time actually spent playing (pauses are not counted).
-// Log 604 once per listening session: on natural end, on session switch, on
-// unmount (destroy), or on tab close (beforeunload). This captures PARTIAL
-// consumption (abandon mid-track) without heartbeats — the abandon is caught by
-// the switch/unmount/beforeunload flush. Module-level, mirroring the singleton
-// howl above.
-let watchedSeconds = 0
-let playStartTs = null
-let loggedConsumption = false
+// ─── Consumption tracking (604) — audio, CONTENT COVERAGE (varianta b) ───────
+// DISTINCT seconds of the track actually played (seek-safe, re-listen dedupes),
+// NOT wall-clock. The position source is the existing 1 s ticker (real:
+// howl.seek(); sim: playerStore.currentTime). 604 emitted as DELTA periodically
+// (60 s) and on flush (natural end, session switch, unmount, tab close). This
+// REPLACES the old wall-clock 604 — no second path, no double counting.
+let tracker = null
+let periodic = null
 let playingProductId = null
 let beforeUnloadBound = false
 
-function startAccum(productId) {
-  // A fresh play after a completed/flushed session starts a new session.
-  if (loggedConsumption) {
-    watchedSeconds = 0
-    loggedConsumption = false
-  }
-  playStartTs = Date.now()
-  if (productId != null) playingProductId = productId
+function ensureTracker() {
+  if (tracker) return
+  const pid = playingProductId
+  tracker = createCoverageTracker((delta) => {
+    if (pid != null) api.logEvent({ event_type: 604, product: pid, duration_seconds: delta })
+  })
+  periodic = createPeriodicEmitter(() => { if (tracker) tracker.emitDelta() }, { intervalMs: 60000 })
 }
 
-function accumulate() {
-  if (playStartTs != null) {
-    watchedSeconds += (Date.now() - playStartTs) / 1000
-    playStartTs = null
-  }
+function startAccum(productId) {
+  if (productId != null) playingProductId = productId
+  ensureTracker()
+  if (periodic) periodic.start()
+}
+
+// Mark the whole second currently being rendered (fed by the 1 s ticker).
+function markPosition(sec) {
+  if (tracker && typeof sec === 'number' && isFinite(sec)) tracker.markSecond(sec)
 }
 
 function flushConsumption() {
-  accumulate()
-  const seconds = Math.round(watchedSeconds)
-  if (!loggedConsumption && seconds >= 1 && playingProductId != null) {
-    api.logEvent({ event_type: 604, product: playingProductId, duration_seconds: seconds })
-    loggedConsumption = true
-  }
+  if (periodic) periodic.stop()
+  if (tracker) tracker.emitDelta()   // residual delta only — never cumulative
 }
 
 function resetConsumption() {
-  watchedSeconds = 0
-  playStartTs = null
-  loggedConsumption = false
+  if (periodic) periodic.stop()
+  tracker = null
+  periodic = null
   playingProductId = null
 }
 
@@ -111,12 +109,12 @@ export function useAudioPlayer() {
       },
       onpause: () => {
         playerStore.pause()
-        accumulate()
+        if (periodic) periodic.stop()   // coverage already marked up to last tick
         stopTicker()
       },
       onstop: () => {
         playerStore.pause()
-        accumulate()
+        if (periodic) periodic.stop()
         stopTicker()
       },
       onend: () => {
@@ -148,7 +146,7 @@ export function useAudioPlayer() {
       howl.pause()
     } else if (mode === 'sim') {
       playerStore.pause()
-      accumulate()
+      if (periodic) periodic.stop()
       stopTicker()
     }
   }
@@ -197,19 +195,22 @@ export function useAudioPlayer() {
 
       if (mode === 'real' && howl) {
         const t = howl.seek()
-        if (typeof t === 'number') playerStore.tick(t)
+        if (typeof t === 'number') { playerStore.tick(t); markPosition(t) }  // 604 coverage
         return
       }
 
-      // simulation mode — drive playback ourselves
+      // simulation mode — drive playback ourselves. Position is real (tracked in
+      // playerStore.currentTime), so coverage is measured, not invented.
       const next = playerStore.currentTime + 1
       if (next >= playerStore.duration) {
         playerStore.tick(playerStore.duration)
+        markPosition(playerStore.duration)   // 604 coverage — final second
         stopTicker()
         flushConsumption()   // 604 — natural end (simulated)
         onComplete()
       } else {
         playerStore.tick(next)
+        markPosition(next)   // 604 coverage
       }
     }, 1000)
   }

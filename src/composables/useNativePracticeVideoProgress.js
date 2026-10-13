@@ -1,72 +1,76 @@
 import { ref, watch, onBeforeUnmount } from 'vue'
 import { useProgressStore } from '@/stores/progress'
 import { api } from '@/services/api'
+import { createCoverageTracker, createPeriodicEmitter } from './coverageCore'
 
 /**
  * Syncs duration from metadata and records session_completion when a native
  * HTML5 practice video (e.g. MP4) finishes. YouTube/Vimeo iframes are out of scope.
  *
- * Also emits user-action logging (store.portal_event_log):
+ * Emits user-action logging (store.portal_event_log):
  *   - 602 launch      on first play of the video product;
- *   - 604 consumption on natural end, prolonged pause abandon, unmount, or tab
- *     close — summing only wall-clock time actually played (pauses excluded).
- *     This captures PARTIAL consumption without heartbeats: the abandon is
- *     caught by the unmount / beforeunload / item-change flush.
+ *   - 604 consumption as CONTENT COVERAGE (varianta b): distinct seconds of the
+ *     clip actually rendered, emitted as DELTA periodically (60 s, only when
+ *     coverage grows) and on flush (end / unmount / tab close / item change).
+ *     This REPLACES the old wall-clock 604 — a seek-to-end no longer inflates it.
+ *
+ * UNCHANGED: the wellness progress system (progressStore.recordSession with
+ * currentTime) and breathing. This only migrates the portal_event_log 604.
  */
 export function useNativePracticeVideoProgress(itemRef, nativeVideoRef) {
   const progressStore = useProgressStore()
   const playbackStartedAt = ref(null)
 
-  // ─── 602/604 accumulator (per component instance) ──────────────────────────
-  let watchedSeconds = 0
-  let playStartTs = null
-  let loggedConsumption = false
+  // ─── 602/604 coverage accumulator (per component instance) ──────────────────
+  let tracker = null
+  let periodic = null
   let launched = false          // 602 fired once per product
   let playingProductId = null
-  let pauseListenerEl = null    // native <video> we attached a 'pause' listener to
+  let listenerEl = null         // native <video> we attached pause/timeupdate to
 
-  function accumulate() {
-    if (playStartTs != null) {
-      watchedSeconds += (Date.now() - playStartTs) / 1000
-      playStartTs = null
-    }
+  function ensureTracker() {
+    if (tracker) return
+    const pid = playingProductId
+    tracker = createCoverageTracker((delta) => {
+      if (pid != null) api.logEvent({ event_type: 604, product: pid, duration_seconds: delta })
+    })
+    periodic = createPeriodicEmitter(() => { if (tracker) tracker.emitDelta() }, { intervalMs: 60000 })
   }
 
   function flushConsumption() {
-    accumulate()
-    const seconds = Math.round(watchedSeconds)
-    if (!loggedConsumption && seconds >= 1 && playingProductId != null) {
-      api.logEvent({ event_type: 604, product: playingProductId, duration_seconds: seconds })
-      loggedConsumption = true
-    }
+    if (periodic) periodic.stop()
+    if (tracker) tracker.emitDelta()   // residual delta only — never cumulative
   }
 
   function resetConsumption() {
-    watchedSeconds = 0
-    playStartTs = null
-    loggedConsumption = false
+    if (periodic) periodic.stop()
+    tracker = null
+    periodic = null
     launched = false
     playingProductId = null
   }
 
-  function onNativePause() {
-    // Accumulate the played span; do NOT log here (user may resume). The log
-    // happens on end / unmount / beforeunload / item change.
-    accumulate()
+  function markNow() {
+    if (tracker && listenerEl) tracker.markSecond(listenerEl.currentTime)
   }
 
-  function attachPauseListener(el) {
-    if (el && el !== pauseListenerEl) {
-      detachPauseListener()
+  function onNativeTime() { markNow() }
+  function onNativePause() { markNow() }   // bank the current second; not a 604 flush
+
+  function attachListeners(el) {
+    if (el && el !== listenerEl) {
+      detachListeners()
       el.addEventListener('pause', onNativePause)
-      pauseListenerEl = el
+      el.addEventListener('timeupdate', onNativeTime)
+      listenerEl = el
     }
   }
 
-  function detachPauseListener() {
-    if (pauseListenerEl) {
-      pauseListenerEl.removeEventListener('pause', onNativePause)
-      pauseListenerEl = null
+  function detachListeners() {
+    if (listenerEl) {
+      listenerEl.removeEventListener('pause', onNativePause)
+      listenerEl.removeEventListener('timeupdate', onNativeTime)
+      listenerEl = null
     }
   }
 
@@ -98,12 +102,8 @@ export function useNativePracticeVideoProgress(itemRef, nativeVideoRef) {
     const productId = itemRef.value?.id ?? playingProductId
     if (productId != null) playingProductId = productId
 
-    // A fresh play after a completed/flushed session starts a new span.
-    if (loggedConsumption) {
-      watchedSeconds = 0
-      loggedConsumption = false
-    }
-    playStartTs = Date.now()
+    ensureTracker()
+    if (periodic) periodic.start()
 
     // 602 launch — user started this video product (once per product).
     if (!launched && productId != null) {
@@ -111,9 +111,9 @@ export function useNativePracticeVideoProgress(itemRef, nativeVideoRef) {
       launched = true
     }
 
-    // Attach a native pause listener so partial spans are counted even though
-    // the template only binds @play/@ended.
-    attachPauseListener(nativeVideoRef.value)
+    // Attach pause + timeupdate listeners so coverage is marked even though the
+    // template only binds @play/@ended.
+    attachListeners(nativeVideoRef.value)
   }
 
   function onEnded() {
@@ -124,6 +124,7 @@ export function useNativePracticeVideoProgress(itemRef, nativeVideoRef) {
     const startedAt = playbackStartedAt.value || endedAt
     let listened = Math.round(el?.currentTime ?? 0)
     if (!listened && session.duration) listened = session.duration
+    // UNCHANGED: wellness progress system (content position), not portal_event_log.
     progressStore.recordSession(session, {
       started_at: startedAt,
       ended_at: endedAt,
@@ -132,7 +133,8 @@ export function useNativePracticeVideoProgress(itemRef, nativeVideoRef) {
     })
     playbackStartedAt.value = null
 
-    // 604 — natural end of the video.
+    // 604 — natural end of the video (residual coverage delta).
+    markNow()
     flushConsumption()
   }
 
@@ -146,7 +148,8 @@ export function useNativePracticeVideoProgress(itemRef, nativeVideoRef) {
       window.removeEventListener('beforeunload', onBeforeUnload)
     }
     flushConsumption()
-    detachPauseListener()
+    detachListeners()
+    resetConsumption()
   })
 
   return {
