@@ -124,6 +124,12 @@ export const api = {
       params: { access_code: accessCode }
     }),
 
+  // Customer Care + complaints + refunds on one page (first used by Calmasoul GB).
+  getLegalCustomerCare: (accessCode = null) =>
+    request('GET', '/wellness/legals/customer_care', {
+      params: { access_code: accessCode }
+    }),
+
   getLegalUnsubscribe: (accessCode = null) =>
     request('GET', '/wellness/legals/unsubscribe', {
       params: { access_code: accessCode }

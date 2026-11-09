@@ -123,13 +123,14 @@ import { useArticlePage } from '@/composables/useArticlePage'
 import { cssBackgroundFromImageUrl } from '@/utils/productImageUrl'
 import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 import dayjs from 'dayjs'
+import { getMarket } from '@/config/market'
 
 const { t } = useI18n()
 const router = useRouter()
 const { article, related, loading } = useArticlePage()
 const isBookmarked = ref(false)
 
-const formatDate = (d) => dayjs(d).format('MMMM D, YYYY')
+const formatDate = (d) => dayjs(d).format(getMarket()?.dateFormat || 'MMMM D, YYYY')
 
 function coverStyle(a) {
   const img = cssBackgroundFromImageUrl(a.thumbnail || a.banner, {

@@ -5,7 +5,7 @@ export default {
   // Legal entity shown in Contact page intro. Harmonoria = Runvas Digital.
   companyName: 'Runvas Digital',
   apiBaseUrl: 'https://api.rvdhub.com',
-  countries: ['UK', 'SK', 'LV', 'CZ'],
+  countries: ['GB', 'SK', 'LV', 'CZ'],
   // External registration ("premium landing") URLs per COUNTRY (from subdomain).
   // When set for the active country, all signup CTAs point here instead of the
   // internal /signup. SK = sk.harmonoria.com, LV = lv.harmonoria.com, CZ = cz.harmonoria.com.

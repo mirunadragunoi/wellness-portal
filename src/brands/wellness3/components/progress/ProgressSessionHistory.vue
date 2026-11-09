@@ -23,11 +23,12 @@ import { useProgressStore } from '@/stores/progress'
 import { sessionTypeIcon } from '@/constants/appIcons'
 import { translateTaxonomyLabel } from '@/utils/i18nLabels'
 import dayjs from 'dayjs'
+import { getMarket } from '@/config/market'
 
 const { t }         = useI18n()
 const progressStore = useProgressStore()
 
-const formatDate = (iso) => dayjs(iso).format('MMM D, YYYY')
+const formatDate = (iso) => dayjs(iso).format(getMarket()?.dateFormat || 'MMM D, YYYY')
 
 const catColors = {
   stress:      { bg: '#dbeafe', color: '#1e40af' },

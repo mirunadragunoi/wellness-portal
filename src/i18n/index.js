@@ -21,7 +21,12 @@ import wellness3Ro from '@/brands/wellness3/i18n/locales/ro.json'
 import wellness3Cz from '@/brands/wellness3/i18n/locales/cz.json'
 import wellness3Fr from '@/brands/wellness3/i18n/locales/fr.json'
 
+// Market overlays (brand × country), merged last. Calmasoul GB: regulated
+// wording (no outcome claims, "Subscribe" CTAs), British spelling.
+import wellness3GbEn from '@/brands/wellness3/i18n/markets/gb.en.json'
+
 import { getBrandConfig, getBrandKey, getCountry, getCountryKey } from '@/config/brand'
+import { getMarket } from '@/config/market'
 import { getCookie, setCookie } from '@/utils/cookies'
 
 function mergeMessages(base, override) {
@@ -45,16 +50,21 @@ const BRAND_LOCALES = {
 
 const BASE_LOCALES = { en: baseEn, ro: baseRo, cz: baseCz, sk: baseSk, lv: baseLv, fr: baseFr }
 
+const MARKET_LOCALES = {
+  wellness3: { GB: { en: wellness3GbEn } }
+}
+
 const brand = getBrandConfig()
 const brandKey = getBrandKey()
 const country = getCountry()
 const countryKey = getCountryKey()
 const brandOverrides = BRAND_LOCALES[brandKey] || {}
+const marketOverrides = MARKET_LOCALES[brandKey]?.[countryKey] || {}
 
 function buildMessages() {
   const out = {}
   for (const [lang, base] of Object.entries(BASE_LOCALES)) {
-    out[lang] = mergeMessages(base, brandOverrides[lang] || {})
+    out[lang] = mergeMessages(mergeMessages(base, brandOverrides[lang] || {}), marketOverrides[lang] || {})
   }
   return out
 }
@@ -77,8 +87,13 @@ export const i18n = createI18n({
   globalInjection: true
 })
 
+// e.g. 'en-GB' on Calmasoul GB; otherwise the bare language code, as before.
+function htmlLang(locale) {
+  return (locale === 'en' && getMarket()?.htmlLang) || locale
+}
+
 if (typeof document !== 'undefined') {
-  document.documentElement.setAttribute('lang', initialLocale)
+  document.documentElement.setAttribute('lang', htmlLang(initialLocale))
 }
 
 export function setLocale(locale) {
@@ -86,7 +101,7 @@ export function setLocale(locale) {
   i18n.global.locale.value = locale
   setCookie(cookieName, locale)
   if (typeof document !== 'undefined') {
-    document.documentElement.setAttribute('lang', locale)
+    document.documentElement.setAttribute('lang', htmlLang(locale))
   }
 }
 

@@ -9,8 +9,10 @@
       <div class="reveal reveal-1"><LandingFeatures /></div>
       <div class="reveal reveal-2"><LandingHowItWorks /></div>
       <div class="reveal reveal-3"><LandingPreview /></div>
-      <div class="reveal reveal-2"><LandingMetrics /></div>
-      <div class="reveal reveal-3"><LandingTestimonials /></div>
+      <!-- Outcome statistics and testimonials are claims we can't evidence:
+           hidden on regulated markets (Calmasoul GB, Ofcom). -->
+      <div v-if="!market" class="reveal reveal-2"><LandingMetrics /></div>
+      <div v-if="!market" class="reveal reveal-3"><LandingTestimonials /></div>
       <div class="reveal reveal-4"><LandingFinalCTA /></div>
     </main>
 
@@ -33,6 +35,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
+import { getMarket } from '@/config/market'
 import AppNavbarPublic   from '@/components/layout/AppNavbarPublic.vue'
 import LandingHero       from '@/components/landing/LandingHero.vue'
 import LandingFeatures   from '@/components/landing/LandingFeatures.vue'
@@ -43,6 +46,7 @@ import LandingTestimonials from '@/components/landing/LandingTestimonials.vue'
 import LandingFinalCTA   from '@/components/landing/LandingFinalCTA.vue'
 const { t } = useI18n()
 const authStore = useAuthStore()
+const market = getMarket()
 
 // Lift the floating quiz button so it parks above the footer instead of
 // overlapping it (which would block clicks on the footer links).

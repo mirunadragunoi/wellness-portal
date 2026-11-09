@@ -66,11 +66,11 @@ src/
 │
 ├── config/
 │   ├── brand.js                   # Resolver brand + country (din env / hostname / ?country=)
-│   ├── countries.js               # COUNTRIES (UK/CZ/SK/RO/LV/FR), subdomainToCountry, getCountryConfig
+│   ├── countries.js               # COUNTRIES (GB/CZ/SK/RO/LV/FR), subdomainToCountry, getCountryConfig
 │   └── brands/
-│       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", companyName "Runvas Digital", countries: UK+SK+LV+CZ
-│       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", companyName "DNA Mobile Content", countries: UK+RO
-│       └── wellness3.js           # Calmasoul — apiBase dnaperf, portalName "Calmasoul", companyName "DNA Mobile Content", countries: UK+CZ+RO+FR
+│       ├── wellness.js            # Harmonoria — apiBase rvdhub, portalName "Harmonoria", companyName "Runvas Digital", countries: GB+SK+LV+CZ
+│       ├── wellness2.js           # Innerawake — apiBase dnaperf, portalName "Innerawake", companyName "DNA Mobile Content", countries: GB+RO
+│       └── wellness3.js           # Calmasoul — apiBase dnaperf, portalName "Calmasoul", companyName "DNA Mobile Content", countries: GB+CZ+RO+FR
 │
 ├── services/
 │   └── api.js                     # `request()` — auto-injectează `portal_name` + `country` (UPPER) + `language` (lower)
@@ -113,7 +113,7 @@ Folosit în ~16 call-site-uri (HomeRecommended/HomeMomentOfDay/ExploreView/Profi
 
 **Auto-inject pe toate apelurile** (din `services/api.js`):
 - `portal_name` = brand identifier (`Harmonoria` / `Innerawake` / `Calmasoul`)
-- `country` = cod țară 2 litere UPPERCASE (`UK` / `CZ` / `SK` / `RO` / `LV` / `FR`) — `UK` e legacy, nu ISO (`GB`)
+- `country` = cod țară 2 litere UPPERCASE (`GB` / `CZ` / `SK` / `RO` / `LV` / `FR`) — Regatul Unit e `GB` din 2026-11-09 (`billing.country` id 1 redenumit din `UK`; backend-ul caută țara după cod, deci `UK` nu mai răspunde)
 - `language` = cod limbă 2 litere lowercase (`en` / `ro` / `cz` / `sk` / `lv` / `fr`) — `cz` e legacy, nu ISO (`cs`)
 
 Pentru GET: ca query params. Pentru POST/PUT: în body.
@@ -144,35 +144,35 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 
 **Detectare country** (în `src/config/brand.js → getCountryKey()`), priorități:
 1. `?country=XX` URL param (dev/test override, normalizat upper)
-2. Subdomain: `cz.` → CZ, `sk.` → SK, `ro.` → RO, `lv.` → LV, `fr.` → FR, `www.` sau apex → UK
+2. Subdomain: `cz.` → CZ, `sk.` → SK, `ro.` → RO, `lv.` → LV, `fr.` → FR, `www.`, apex, `gb.` sau `uk.` → GB
 3. Fallback: prima țară din allow-list-ul brand-ului
 
 **Matrice brand × country × limbi disponibile** (`src/config/brands/*.js` → `countries[]` + `src/config/countries.js` → `COUNTRIES`):
 
 | Brand        | Domain principal      | Subdomenii  | Country | Limbi disponibile  | Default |
 |--------------|-----------------------|-------------|---------|---------------------|---------|
-| Harmonoria   | harmonoria.com        | `www`/apex  | UK      | en, ro              | en      |
+| Harmonoria   | harmonoria.com        | `www`/apex  | GB      | en, ro              | en      |
 | Harmonoria   | harmonoria.com        | `sk.`       | SK      | sk                  | sk      |
 | Harmonoria   | harmonoria.com        | `lv.`       | LV      | lv                  | lv      |
 | Harmonoria   | harmonoria.com        | `cz.`       | CZ      | cz                  | cz      |
-| Innerawake   | innerawake.com        | `www`/apex  | UK      | en, ro              | en      |
+| Innerawake   | innerawake.com        | `www`/apex  | GB      | en, ro              | en      |
 | Innerawake   | innerawake.com        | `ro.`       | RO      | ro                  | ro      |
-| Calmasoul    | calmasoul.com         | `www`/apex  | UK      | en, ro              | en      |
+| Calmasoul    | calmasoul.com         | `gb.`, `www`/apex | GB | en (doar)       | en      |
 | Calmasoul    | calmasoul.com         | `cz.`       | CZ      | cz                  | cz      |
 | Calmasoul    | calmasoul.com         | `ro.`       | RO      | ro                  | ro      |
 | Calmasoul    | calmasoul.com         | `fr.`       | FR      | fr                  | fr      |
 
 **Înregistrare externă per instanță** (`src/config/brands/*.js → registrationUrls`):
 - Unele instanțe au un URL extern de înregistrare (landing premium) în loc de fluxul intern `/signup`. **Cheie = cod țară** (rezolvat din subdomeniu), fiindcă fiecare landing premium e o instanță de țară dedicată: Harmonoria `SK` (`sk.`) → `premium.harmonoria.com/skharm/click/`, Harmonoria `LV` (`lv.`) → `premium.harmonoria.com/lvharm/mo/`, Harmonoria `CZ` (`cz.`) → `premium.harmonoria.com/czharm/click/` (**PLACEHOLDER** — confirmă URL-ul real; vezi `TODO(CZ)` în `wellness.js`), Innerawake `RO` (`ro.`) → `subscribe.innerawake.com/trezit/`, Calmasoul `CZ` (`cz.`) → `premium.calmasoul.com/czcalm/`, Calmasoul `RO` (`ro.`) → `premium.calmasoul.com/rocalm/click/`, Calmasoul `FR` (`fr.`) → `premium.calmasoul.com/frcalm/click/` (**PLACEHOLDER** — încă nu există landing FR real; vezi `TODO(FR)` în `wellness3.js`).
-- `RO` e o **țară** (subdomeniu `ro.`), distinctă de limba `ro` disponibilă sub UK. Calmasoul RO = piață românească dedicată cu landing premium; UK+ro = doar traducerea română a instanței UK (signup intern). Analog: `FR` (Calmasoul, `fr.`) e o piață dedicată; `LV` (Harmonoria, `lv.`) o piață dedicată cu limbă proprie.
+- `RO` e o **țară** (subdomeniu `ro.`), distinctă de limba `ro` disponibilă sub GB. Calmasoul RO = piață românească dedicată cu landing premium; GB+ro = doar traducerea română a instanței GB (signup intern). Analog: `FR` (Calmasoul, `fr.`) e o piață dedicată; `LV` (Harmonoria, `lv.`) o piață dedicată cu limbă proprie.
 - Helper: `getRegistrationUrl()` în `brand.js` — întoarce URL-ul pentru brand + country activ (`getCountryKey()`) sau `null`.
 - Ruta `/signup` are `beforeEnter` care, dacă există URL extern, face `window.location.href = url`. Astfel TOATE CTA-urile care duc la `/signup` (navbar, hero, final CTA, preview, link signup din login) redirecționează automat extern.
 - `quiz-float` din LandingView (wellness/wellness3) duce la `/onboarding`, deci e tratat separat: `<a href>` extern când există URL, altfel `RouterLink` intern.
-- UK: fără URL extern → `/signup` intern. Instanță nouă = țară în `countries[]` + subdomeniu în `countries.js` + o linie (cheie = cod țară) în `registrationUrls`.
+- GB: fără URL extern → `/signup` intern. Instanță nouă = țară în `countries[]` + subdomeniu în `countries.js` + o linie (cheie = cod țară) în `registrationUrls`.
 
 **Selectorul de limbă** (`components/layout/LanguageSelector.vue`):
-- Afișat în navbar (Auth + Public) **doar dacă country are 2+ limbi** (deci doar pe UK momentan).
-- La schimbare: persist în **cookie** (`{brand-storagePrefix}-locale-{country}`, ex: `calmasoul-locale-UK`), `SameSite=Lax`, max-age 1 an.
+- Afișat în navbar (Auth + Public) **doar dacă country are 2+ limbi** (deci doar pe GB momentan).
+- La schimbare: persist în **cookie** (`{brand-storagePrefix}-locale-{country}`, ex: `harmonoria-locale-GB`), `SameSite=Lax`, max-age 1 an.
 - După select, refresh `productsStore` pentru ca traducerile catalogului să vină de la backend cu noua limbă.
 
 **Fișiere locale** (cheie = limbă, NU țară):
@@ -198,11 +198,21 @@ Pentru GET: ca query params. Pentru POST/PUT: în body.
 ```
 http://localhost:5173/?country=cz   # forțează CZ pe brand-ul curent (dacă e în allow-list)
 http://localhost:5173/?country=sk   # SK
-http://localhost:5173/?country=UK   # UK (sau orice case)
+http://localhost:5173/?country=GB   # GB (sau orice case)
 ```
 Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cade pe default.
 
 ---
+
+## Calmasoul GB (gb.calmasoul.com, DMB / Ofcom) — piață reglementată
+
+- **Un singur loc de configurare:** `src/config/markets/calmasoul-gb.js` — placeholder-ele textelor legale (`[SHORTCODE]`, `[UK PHONE NUMBER]`, `[DATE]`, `[ICO NUMBER]`, reprezentantul UK GDPR), formularea exactă a prețului, footer-ul, URL-ul paginii de plată DMB (`pay-gb.calmasoul.com`), formatul de dată `DD/MM/YYYY`, `lang="en-GB"`. O valoare goală lasă placeholder-ul vizibil, deliberat.
+- `src/config/market.js` → `getMarket()` (null peste tot în afară de wellness3 × GB) și `fillPlaceholders()`. Textele legale vin din backend cu placeholder-ele **literal** (copiate exact din documentele validate de compliance) și se completează în `LegalPageView.toHtml`.
+- Pagina nouă **`/customer-care`** (`legalKey: customer_care`, `GET /wellness/legals/customer_care`).
+- Textele landing-ului pe GB: overlay `src/brands/wellness3/i18n/markets/gb.en.json` (fără promisiuni de rezultat, CTA „Subscribe”, engleză britanică), încărcat ultimul în `i18n/index.js` (`MARKET_LOCALES`). Pe GB sunt ascunse metricile, testimonialele și „Joined by 12,000+”; prețul (`MarketPriceNotice.vue`, importat **relativ**) stă sub fiecare buton de abonare.
+- Calmasoul GB e **doar engleză** (`countryLanguages: { GB: ['en'] }` în `wellness3.js`); celelalte branduri păstrează en + ro pe GB.
+- ⚠ `www.calmasoul.com` e tot GB: același footer, aceleași pagini legale, aceeași plată.
+- **Neimplementat, deliberat:** accesul abonatului după plata DMB (`paymentReturn: null`) și bannerul de cookies.
 
 ## Navigare & auth public
 
@@ -212,7 +222,7 @@ Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cad
 
 **Flux CTA pe landing:**
 - Header „Începe" + hero „Începe Călătoria" + FinalCTA + Preview → `/signup` → `beforeEnter` redirecționează la landing premium extern (când instanța are `registrationUrl`), altfel signup intern. **Direct, fără chestionar.**
-- `quiz-float` (popup stânga jos) → MEREU `/onboarding` (chestionar). La final, `OnboardingView.finish()`: dacă `!auth.isLoggedIn` → `/signup` (deci → landing premium când există, sau signup intern UK); dacă logat → `/home`. (Userul a cerut explicit acest comportament.)
+- `quiz-float` (popup stânga jos) → MEREU `/onboarding` (chestionar). La final, `OnboardingView.finish()`: dacă `!auth.isLoggedIn` → `/signup` (deci → landing premium când există, sau signup intern GB); dacă logat → `/home`. (Userul a cerut explicit acest comportament.)
 
 **Auto-login din URL — `/dologin/:code`** (`src/auth/DoLoginView.vue`, partajat, `meta.public`):
 - Codul de la final acceptă fie **6 cifre** (`123456`), fie **prefix 2 litere mari + 6 cifre** (`RO123456`) — prefixul se ignoră (regex `^[A-Z]{2}\d{6}$` → `slice(2)`).
@@ -225,7 +235,7 @@ Override-ul prinde doar dacă country e în allow-list-ul brand-ului. Altfel cad
 - **Endpoint:** `api.unsubscribePhoneNumber({ country, language, phoneNumber, recaptchaToken })` → `GET /store/UnsubscribePhoneNumber` (cu `service` = `portal_name`). NU e sub `/wellness/`.
 - **reCAPTCHA v2** obligatoriu înainte de submit. Site key din `VITE_RECAPTCHA_SITE_KEY` (are fallback hardcodat în fișier). Widget-ul se re-randează la schimbarea temei; token-ul se resetează după fiecare submit și pe `expired-callback`.
 - **Țara formularului** = `locale === 'ro'` → `RO`, altfel `getCountryKey()`. Se poate schimba în runtime (selector limbă) → `watch` resetează inputul ca să nu rămână cifre de la țara precedentă.
-- **Validare telefon** (`phoneCountries`, doar cifre, tăiat la `length`): UK `/^7\d{9}$/`, RO `/^7\d{8}$/`, CZ `/^[67]\d{8}$/` (mobilele cehe încep cu **6 SAU 7** — fix în 9887e22), SK `/^9\d{8}$/`. Validarea e doar UX-gating pentru buton; verificarea autoritativă o face backend-ul (`error_code` 2031).
+- **Validare telefon** (`phoneCountries`, doar cifre, tăiat la `length`): GB `/^7\d{9}$/`, RO `/^7\d{8}$/`, CZ `/^[67]\d{8}$/` (mobilele cehe încep cu **6 SAU 7** — fix în 9887e22), SK `/^9\d{8}$/`. Validarea e doar UX-gating pentru buton; verificarea autoritativă o face backend-ul (`error_code` 2031).
 - **Error codes → mesaje localizate** (`legal.unsubscribe_form.*` în toate locale-urile `{en,ro,cz,sk,lv,fr}.json`). `request()` din `api.js` pune `error_code` din body pe `err.errorCode`, deci handler-ul nu vede „HTTP 500":
   | Cod | Cheie i18n | Afișare |
   |------|----------------------|----------|
@@ -268,10 +278,10 @@ Comportament cerut explicit de user: audio-ul curent NU se oprește la navigare,
 - Statistici progres (streak, ore, grafice Chart.js)
 - Articole educative (cu PDF de la API)
 - Persistență date (localStorage via Pinia)
-- Multi-country routing (subdomain → country, `?country=` dev override) — UK, SK, RO, CZ, LV, FR
+- Multi-country routing (subdomain → country, `?country=` dev override) — GB, SK, RO, CZ, LV, FR
 - Multi-language i18n (en, ro, cz, sk, lv, fr) cu selector în navbar, persist în cookie
 - User-action logging (602 launch / 603 page_view / 604 consumption) → `store.portal_event_log` via `api.logEvent` (fire-and-forget; necesită endpoint backend `POST /wellness/logEvent`)
-- Formular de dezabonare cu reCAPTCHA v2, validare telefon per țară (UK/RO/CZ/SK) și mesaje localizate pe error-code-urile backend (2057/2048/2031/2027/2053)
+- Formular de dezabonare cu reCAPTCHA v2, validare telefon per țară (GB/RO/CZ/SK) și mesaje localizate pe error-code-urile backend (2057/2048/2031/2027/2053)
 
 ### În tranziție / parțial
 - **Migrare mock → API:** multe componente încă referă `thumbnailGradient` (placeholder) în loc de `thumbnail`/`banner` reale. Pattern recurent de bug-uri "imaginile nu apar pe X".

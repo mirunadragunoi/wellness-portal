@@ -30,7 +30,10 @@
           </template>
         </div>
 
-        <div class="hero__proof">
+        <MarketPriceNotice v-if="!authStore.isLoggedIn" wellbeing />
+
+        <!-- Unverifiable social proof: not shown on regulated markets (Calmasoul GB). -->
+        <div v-if="!market" class="hero__proof">
           <div class="hero__proof-avatars">
             <span
               v-for="(avatar, idx) in proofAvatars"
@@ -53,9 +56,12 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { LANDING_IMAGES } from '@/constants/landingImages'
+import { getMarket } from '@/config/market'
+import MarketPriceNotice from './MarketPriceNotice.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
+const market = getMarket()
 
 const { heroMain, heroProof1, heroProof2, heroProof3, heroProof4 } = LANDING_IMAGES
 const proofAvatars = [heroProof1, heroProof2, heroProof3, heroProof4]

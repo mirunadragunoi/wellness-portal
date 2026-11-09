@@ -140,6 +140,14 @@ const routes = [
     meta: { public: true, legalKey: 'cookies' }
   },
   {
+    // Customer Care + complaints + refunds (Ofcom). Content from the backend
+    // (store.customercare); only Calmasoul GB has one today.
+    path: '/customer-care',
+    name: 'legal-customer-care',
+    component: () => import('@/legal/LegalPageView.vue'),
+    meta: { public: true, legalKey: 'customer_care' }
+  },
+  {
     path: '/unsubscription',
     name: 'legal-unsubscribe',
     component: () => import('@/legal/LegalPageView.vue'),

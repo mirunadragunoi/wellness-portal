@@ -51,7 +51,7 @@ function readQueryCountryOverride() {
  */
 export function getCountryKey() {
   const brand = getBrandConfig()
-  const allowed = brand.countries || ['UK']
+  const allowed = brand.countries || ['GB']
 
   const queryOverride = readQueryCountryOverride()
   if (queryOverride && allowed.includes(queryOverride) && COUNTRIES[queryOverride]) {
@@ -66,15 +66,23 @@ export function getCountryKey() {
   return allowed[0]
 }
 
+/**
+ * Active country config. A brand may narrow the languages of a country it
+ * serves (`countryLanguages`), e.g. Calmasoul GB is English only while the
+ * other brands keep en + ro on their GB (www) instance.
+ */
 export function getCountry() {
-  return getCountryConfig(getCountryKey())
+  const country = getCountryConfig(getCountryKey())
+  const languages = getBrandConfig().countryLanguages?.[country.code]
+  if (!languages) return country
+  return { ...country, languages, defaultLanguage: languages[0] }
 }
 
 /**
  * External registration ("premium landing") URL for the active brand +
  * country, or null. Keyed by COUNTRY (resolved from subdomain): each premium
  * landing is a dedicated country instance — Harmonoria SK (sk.), Calmasoul CZ
- * (cz.), Calmasoul RO (ro.). The UK instances have no entry and fall back to
+ * (cz.), Calmasoul RO (ro.). The GB instances have no entry and fall back to
  * the internal /signup flow.
  *
  * When set, signup CTAs lead here instead of the internal /signup flow.

@@ -67,7 +67,7 @@ function finish() {
   userStore.completeOnboarding(responses.value)
   // Reached from the marketing quiz popup (not logged in): send to /signup,
   // whose beforeEnter redirects to the external premium landing when the
-  // instance has one (UK falls through to the internal signup form).
+  // instance has one (GB falls through to the internal signup form).
   if (!authStore.isLoggedIn) {
     router.push({ name: 'signup' })
     return

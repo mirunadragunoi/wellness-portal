@@ -38,6 +38,7 @@
         <RouterLink to="/signup" class="btn btn-primary navbar__mobile-cta" @click="mobileOpen = false">
           {{ t('nav.cta') }}
         </RouterLink>
+        <MarketPriceNotice compact />
       </div>
     </Transition>
   </nav>
@@ -47,6 +48,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
+import MarketPriceNotice from '../landing/MarketPriceNotice.vue'
 import logoUrl from '@/assets/calmasoul-sparkle-horizontal.png'
 
 const { t } = useI18n()

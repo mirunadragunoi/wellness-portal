@@ -131,6 +131,7 @@
     "privacy": "Privacy",
     "privacy_policy": "Privacy Policy",
     "cookies_policy": "Cookies Policy",
+    "customer_care": "Customer Care",
     "unsubscribe": "Unsubscribe",
     "copy": "© 2026 All rights reserved.",
     "tagline": "Your daily companion for mindful living."
@@ -173,6 +174,10 @@
       "unsubscribe": {
         "title": "Unsubscribe",
         "summary": "Manage unsubscribe requests and communication preferences."
+      },
+      "customer_care": {
+        "title": "Customer Care",
+        "summary": "How to contact us, stop your subscription, make a complaint or ask for a refund."
       }
     },
     "unsubscribe_form": {

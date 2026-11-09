@@ -36,6 +36,7 @@
           {{ t('preview.see_all_sessions') }}
           <Icon icon="lucide:chevron-right" class="app-icon app-icon--sm" aria-hidden="true" />
         </RouterLink>
+        <MarketPriceNotice compact class="preview__price" />
       </div>
     </div>
   </section>
@@ -44,6 +45,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { LANDING_IMAGES } from '@/constants/landingImages'
+import MarketPriceNotice from './MarketPriceNotice.vue'
 
 const { t } = useI18n()
 const { preview1, preview2, preview3, preview4 } = LANDING_IMAGES
@@ -180,6 +182,8 @@ const previewCards = [
   text-align: center;
   margin-top: 40px;
 }
+
+.preview__price { margin: 14px auto 0; }
 
 .cta-btn {
   display: inline-flex;

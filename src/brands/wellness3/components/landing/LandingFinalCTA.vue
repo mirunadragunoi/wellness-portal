@@ -18,7 +18,8 @@
         </h2>
         <p class="cta-card__body">{{ t('finalCta.body') }}</p>
         <RouterLink to="/signup" class="cta-btn">{{ t('finalCta.btn') }}</RouterLink>
-        <p class="cta-card__note">{{ t('finalCta.note') }}</p>
+        <MarketPriceNotice v-if="market" class="cta-card__price" />
+        <p v-else class="cta-card__note">{{ t('finalCta.note') }}</p>
       </div>
     </div>
   </section>
@@ -27,8 +28,11 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { LANDING_IMAGES } from '@/constants/landingImages'
+import { getMarket } from '@/config/market'
+import MarketPriceNotice from './MarketPriceNotice.vue'
 
 const { t } = useI18n()
+const market = getMarket()
 const { ctaBg1, ctaBg2, ctaBg3 } = LANDING_IMAGES
 const ctaPhotos = [ctaBg1, ctaBg2, ctaBg3]
 </script>
@@ -119,6 +123,8 @@ const ctaPhotos = [ctaBg1, ctaBg2, ctaBg3]
   box-shadow: 0 0 40px rgba(167, 139, 250, 0.5), 0 0 60px rgba(45, 212, 191, 0.2);
   transform: translateY(-2px) scale(1.02);
 }
+
+.cta-card__price { margin: 14px auto 0; text-align: center; }
 
 .cta-card__note {
   font-size: 12px;

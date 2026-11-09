@@ -127,6 +127,7 @@ import { Icon } from '@iconify/vue'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
 import { getBrandConfig, getCountryKey } from '@/config/brand'
+import { fillPlaceholders } from '@/config/market'
 import AppNavbarPublic from '@/components/layout/AppNavbarPublic.vue'
 
 const route = useRoute()
@@ -174,7 +175,7 @@ const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LdDBHcqA
 // with 6 or 7; the others with the prefix shown. The backend still does the
 // authoritative format check on submit (error 2031 → invalid_format).
 const phoneCountries = [
-  { code: 'UK', label: 'United Kingdom', dialCode: '+44', hint: '7xxxxxxxxx', length: 10, pattern: /^7\d{9}$/ },
+  { code: 'GB', label: 'United Kingdom', dialCode: '+44', hint: '7xxxxxxxxx', length: 10, pattern: /^7\d{9}$/ },
   { code: 'RO', label: 'Romania', dialCode: '+40', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ },
   { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: '6xxxxxxxx', length: 9, pattern: /^[67]\d{8}$/ },
   { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: '9xxxxxxxx', length: 9, pattern: /^9\d{8}$/ }
@@ -216,6 +217,7 @@ const loaders = {
   terms: api.getLegalTerms,
   privacy: api.getLegalPrivacy,
   cookies: api.getLegalCookies,
+  customer_care: api.getLegalCustomerCare,
   unsubscribe: api.getLegalUnsubscribe
 }
 
@@ -318,7 +320,8 @@ const ANY_HTML_RE = /<[a-z][\s\S]*?>/i
  * In all cases `\n\n` becomes a new paragraph and a single `\n` becomes `<br>`.
  */
 function toHtml(content, payload = {}) {
-  const text = normalizeNewlines(replaceVariables(String(content || ''), payload)).trim()
+  // fillPlaceholders: market values for literal [PLACEHOLDERS] (Calmasoul GB); no-op elsewhere.
+  const text = normalizeNewlines(fillPlaceholders(replaceVariables(String(content || ''), payload))).trim()
   if (!text) return ''
 
   // Case 1: structured HTML — trust the backend layout.
@@ -705,6 +708,33 @@ onBeforeUnmount(() => {
 
 .legal-content :deep(a) {
   color: var(--brand-primary);
+  overflow-wrap: anywhere;
+}
+
+.legal-content :deep(li) {
+  margin-bottom: 6px;
+}
+
+/* Two-column tables (e.g. purpose / legal basis): wrap, never scroll the page. */
+.legal-content :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 18px;
+  table-layout: fixed;
+}
+
+.legal-content :deep(th),
+.legal-content :deep(td) {
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.legal-content :deep(th) {
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .unsubscribe-card {
