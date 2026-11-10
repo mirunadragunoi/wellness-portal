@@ -9,10 +9,15 @@
  * the price notice. An empty value leaves the placeholder visible as-is, so a
  * missing value stays obvious instead of disappearing.
  */
+
+// STOP shortcode (DMB, 2026-11-10). The one place it is written: the price
+// notice, the footer and the legal pages all read it through [SHORTCODE].
+const SHORTCODE = '65065'
+
 export default {
   placeholders: {
     '[UK PHONE NUMBER]': '',
-    '[SHORTCODE]': '',
+    '[SHORTCODE]': SHORTCODE,
     '[DATE]': '',              // effective date of the legal texts (all three are v1.0)
     '[ICO NUMBER]': '',        // privacy policy footer
     // UK GDPR Article 27 representative (privacy policy §1)
@@ -38,6 +43,16 @@ export default {
   // DMB-hosted payment page (live; preview = https://preview-pay-gb.calmasoul.com/).
   // Not live yet. Every subscribe CTA goes here through /signup.
   paymentUrl: 'https://pay-gb.calmasoul.com/',
+
+  // Merchant reference for ad visits (brief §2.8). A visit arriving with one of
+  // `clickParams` gets a short reference from the backend (the click ID itself
+  // is stored there, never sent to DMB), passed to the payment page as `param`
+  // and returned by DMB as `merchantref` in every notification. The URL
+  // parameter name is not confirmed by DMB yet — change it here only.
+  merchantRef: {
+    param: 'merchantref',
+    clickParams: ['gclid', 'gbraid', 'wbraid', 'fbclid']
+  },
 
   // Extension point, NOT implemented: subscriber access after payment (DMB
   // redirect with a reference, tied to the `subscribe` notification). Waits for

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { getBrandKey, getRegistrationUrl } from '@/config/brand'
+import { withMerchantRef } from '@/config/merchantRef'
 import { api } from '@/services/api'
 
 // Routes whose :id param is a store.product id — used to attach `product` to
@@ -95,10 +96,11 @@ const routes = [
     meta: { public: true, hideForAuth: true },
     // Instances with an external registration URL (e.g. Harmonoria SK,
     // Calmasoul CZ) redirect here instead of rendering the internal signup.
-    beforeEnter: () => {
+    // Calmasoul GB appends the ad visit's merchant reference (merchantRef.js).
+    beforeEnter: async () => {
       const url = getRegistrationUrl()
       if (url) {
-        window.location.href = url
+        window.location.href = await withMerchantRef(url)
         return false
       }
     }
