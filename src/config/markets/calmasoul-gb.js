@@ -44,14 +44,13 @@ export default {
   // Not live yet. Every subscribe CTA goes here through /signup.
   paymentUrl: 'https://pay-gb.calmasoul.com/',
 
-  // Merchant reference for ad visits (brief §2.8). A visit arriving with one of
-  // `clickParams` gets a short reference from the backend (the click ID itself
-  // is stored there, never sent to DMB), passed to the payment page as `param`
-  // and returned by DMB as `merchantref` in every notification. The URL
-  // parameter name is not confirmed by DMB yet — change it here only.
+  // Merchant reference (brief §2.8): the visit's traveler id `dtrv`, computed
+  // like the landings (src/config/merchantRef.js), passed to the payment page
+  // as `param` and returned by DMB as `merchantref` in every notification. The
+  // URL parameter name and the maximum length (we need ~150 characters) are not
+  // confirmed by DMB yet — the name changes here only.
   merchantRef: {
-    param: 'merchantref',
-    clickParams: ['gclid', 'gbraid', 'wbraid', 'fbclid']
+    param: 'merchantref'
   },
 
   // Extension point, NOT implemented: subscriber access after payment (DMB

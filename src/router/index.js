@@ -96,11 +96,11 @@ const routes = [
     meta: { public: true, hideForAuth: true },
     // Instances with an external registration URL (e.g. Harmonoria SK,
     // Calmasoul CZ) redirect here instead of rendering the internal signup.
-    // Calmasoul GB appends the ad visit's merchant reference (merchantRef.js).
-    beforeEnter: async () => {
+    // Calmasoul GB appends the visit's traveler id as merchant reference (merchantRef.js).
+    beforeEnter: () => {
       const url = getRegistrationUrl()
       if (url) {
-        window.location.href = await withMerchantRef(url)
+        window.location.href = withMerchantRef(url)
         return false
       }
     }

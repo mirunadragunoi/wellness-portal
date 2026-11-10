@@ -130,13 +130,6 @@ export const api = {
       params: { access_code: accessCode }
     }),
 
-  // Short merchant reference for an ad visit (Calmasoul GB): the backend keeps the
-  // click ID and returns { reference } — see src/config/merchantRef.js.
-  createClickReference: ({ click_source, click_id, entry_page, utm }) =>
-    request('POST', '/wellness/click_reference', {
-      body: { click_source, click_id, entry_page, utm }
-    }),
-
   getLegalUnsubscribe: (accessCode = null) =>
     request('GET', '/wellness/legals/unsubscribe', {
       params: { access_code: accessCode }

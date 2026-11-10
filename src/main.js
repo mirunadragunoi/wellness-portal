@@ -31,7 +31,7 @@ const t = i18n.global.t
 document.title = `${t('brand.name')} — ${t('brand.tagline')}`
 document.querySelector('meta[name="description"]')?.setAttribute('content', t('brand.description'))
 
-// Ad click ID -> merchant reference for the payment page (Calmasoul GB only).
+// Traveler id (dtrv) -> merchant reference for the payment page (Calmasoul GB only).
 captureClickReference()
 
 app.mount('#app')
