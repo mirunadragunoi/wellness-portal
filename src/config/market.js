@@ -1,13 +1,14 @@
 import { getBrandKey, getCountryKey } from './brand'
 import calmasoulGb from './markets/calmasoul-gb'
+import calmasoulSe from './markets/calmasoul-se'
 
 /**
  * Per brand × country market settings that are neither brand-wide nor
- * country-wide (regulated launches). Today only Calmasoul GB; every other
+ * country-wide (regulated launches). Today Calmasoul GB and SE; every other
  * instance gets null and behaves exactly as before.
  */
 const MARKETS = {
-  wellness3: { GB: calmasoulGb }
+  wellness3: { GB: calmasoulGb, SE: calmasoulSe }
 }
 
 export function getMarket() {

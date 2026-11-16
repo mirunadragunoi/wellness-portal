@@ -1,0 +1,64 @@
+{
+  "brand": {
+    "name": "Calmasoul",
+    "tagline": "Återhämta din själ",
+    "description": "Guidade meditationer, andningsritualer och ljud för djupt fokus — för ett lugnare nervsystem."
+  },
+  "nav": {
+    "cta": "Prenumerera"
+  },
+  "hero": {
+    "badge": "Din väg till inre ro",
+    "title_em": "stillhet",
+    "title_line2": "inom dig",
+    "subtitle": "Guidade meditationer, andningsritualer, ljud och video för avslappning och medveten närvaro i vardagen.",
+    "cta_primary": "Prenumerera",
+    "cta_secondary": "Logga in"
+  },
+  "features": {
+    "subtitle": "Enkla verktyg för avslappning och medveten närvaro, på bara några minuter om dagen.",
+    "card1_desc": "Ljudsessioner från 2 till 30 minuter, för avslappning, fokus, kvällsrutiner och medveten närvaro — på alla nivåer.",
+    "card2_desc": "Guidad andning med visuell vägledning. Box Breathing, 4-7-8 och fler, när du vill ta en paus.",
+    "card4_desc": "Berätta om dina mål och vi föreslår sessioner som passar. Rekommendationer som följer ditt humör och din stund.",
+    "tag_relief": "När du vill"
+  },
+  "howItWorks": {
+    "step2_desc": "Få personliga förslag med utvalda sessioner, bara för dig."
+  },
+  "preview": {
+    "subtitle": "Ett växande bibliotek med meditationer, sagor för sömn, ljudlandskap och mer."
+  },
+  "finalCta": {
+    "btn": "Prenumerera",
+    "btn_arrow": "Prenumerera →"
+  },
+  "footer": {
+    "copy": "© 2026 Calmasoul. Alla rättigheter förbehållna."
+  },
+  "auth": {
+    "signup_title": "Skapa ditt konto",
+    "signup_subtitle": "Ange ditt telefonnummer och din åtkomstkod för att börja din personliga resa.",
+    "login_subtitle": "Logga in med din åtkomstkod.",
+    "phone_label": "Telefonnummer",
+    "phone_placeholder": "+46 70 123 45 67",
+    "signup_btn": "Skapa konto",
+    "login_btn": "Logga in",
+    "signup_link": "Registrera dig",
+    "no_code": "Har du ingen åtkomstkod än?",
+    "no_code_info": "Åtkomstkoden följer med ditt abonnemang. Kontakta din leverantör.",
+    "invalid_code": "Ogiltig åtkomstkod. Kontrollera och försök igen."
+  },
+  "onboarding": {
+    "step2_body": "Några stilla minuter om dagen kan vara ett bra tillfälle att stanna upp och koppla av.",
+    "step4_body": "Calmasoul erbjuder guidade sessioner för avslappning, kvällsrutiner och medveten närvaro."
+  },
+  "home": {
+    "recommended_title": "Rekommenderade sessioner"
+  },
+  "learn": {
+    "subtitle": "Artiklar om lugn, återhämtning och fokus."
+  },
+  "profile": {
+    "title": "Din profil"
+  }
+}

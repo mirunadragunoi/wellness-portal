@@ -1,5 +1,6 @@
 <template>
-  <!-- Calmasoul GB (DMB / Ofcom): fixed provider block + the four regulated pages. -->
+  <!-- Regulated markets (Calmasoul GB, SE): fixed provider block + the pages
+       the market itself lists, since GB and SE do not show the same set. -->
   <footer v-if="market" class="footer footer--market">
     <div class="footer__inner footer__inner--market">
       <RouterLink to="/" class="footer__logo">
@@ -9,10 +10,9 @@
         <p v-for="(line, i) in marketLines" :key="i" class="footer__legal-line">{{ line }}</p>
       </div>
       <ul class="footer__links footer__links--market">
-        <li><RouterLink to="/terms" class="footer__link">{{ t('footer.terms_conditions') }}</RouterLink></li>
-        <li><RouterLink to="/privacy" class="footer__link">{{ t('footer.privacy_policy') }}</RouterLink></li>
-        <li><RouterLink to="/cookies-policy" class="footer__link">{{ t('footer.cookies_policy') }}</RouterLink></li>
-        <li><RouterLink to="/customer-care" class="footer__link">{{ t('footer.customer_care') }}</RouterLink></li>
+        <li v-for="link in marketLinks" :key="link.key">
+          <RouterLink :to="link.to" class="footer__link">{{ t(link.label) }}</RouterLink>
+        </li>
       </ul>
     </div>
   </footer>
@@ -48,6 +48,22 @@ const { t } = useI18n()
 const isRO = getCountryKey() === 'RO'
 const market = getMarket()
 const marketLines = market ? market.footerLines.map((line) => fillPlaceholders(line, market)) : []
+
+// Route + label per footer link a market may list, keyed as in `footerLinks`.
+const MARKET_LINKS = {
+  about: { to: '/about', label: 'footer.about' },
+  contact: { to: '/contact', label: 'footer.contact' },
+  faq: { to: '/faq', label: 'footer.faq' },
+  terms: { to: '/terms', label: 'footer.terms_conditions' },
+  privacy: { to: '/privacy', label: 'footer.privacy_policy' },
+  cookies: { to: '/cookies-policy', label: 'footer.cookies_policy' },
+  customer_care: { to: '/customer-care', label: 'footer.customer_care' },
+  unsubscribe: { to: '/unsubscription', label: 'footer.unsubscribe' }
+}
+
+const marketLinks = (market?.footerLinks || [])
+  .map((key) => (MARKET_LINKS[key] ? { key, ...MARKET_LINKS[key] } : null))
+  .filter(Boolean)
 </script>
 
 <style scoped>

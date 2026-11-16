@@ -38,6 +38,9 @@ export default {
     'Customer Care: gbcs@cc-sms.com · [UK PHONE NUMBER] · Mon to Fri, 9:00 to 17:30 UK time',
     '£4.50 per week until you text STOP to [SHORTCODE].'
   ],
+  // The four regulated pages, in the footer of every GB page. GB keeps the
+  // unsubscribe out of it: stopping is by SMS to the shortcode above.
+  footerLinks: ['terms', 'privacy', 'cookies', 'customer_care'],
   customerCareEmail: 'gbcs@cc-sms.com',
 
   // DMB-hosted payment page (live; preview = https://preview-pay-gb.calmasoul.com/).

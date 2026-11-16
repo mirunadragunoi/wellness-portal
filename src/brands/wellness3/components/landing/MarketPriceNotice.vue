@@ -5,9 +5,11 @@
        builds of the brands that don't have this file. -->
   <div v-if="market" class="price-notice" :class="{ 'price-notice--compact': compact }">
     <p class="price-notice__price">{{ price }}</p>
+    <!-- Ofcom wording, GB only: Sweden does not ask for it, so the keys are
+         absent there and the lines must not render empty. -->
     <template v-if="!compact">
-      <p class="price-notice__small">{{ market.eligibilityNotice }}</p>
-      <p v-if="wellbeing" class="price-notice__small">{{ market.wellbeingNotice }}</p>
+      <p v-if="market.eligibilityNotice" class="price-notice__small">{{ market.eligibilityNotice }}</p>
+      <p v-if="wellbeing && market.wellbeingNotice" class="price-notice__small">{{ market.wellbeingNotice }}</p>
     </template>
   </div>
 </template>

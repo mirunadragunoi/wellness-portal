@@ -172,13 +172,15 @@ const submitMessage = ref('')
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LdDBHcqAAAAADmNepiNSpPMrtRUDwY7FTRds_72'
 
 // `length` = expected digit count, `pattern` = prefix + length. CZ mobiles start
-// with 6 or 7; the others with the prefix shown. The backend still does the
+// with 6 or 7; the others with the prefix shown. SE mobiles are 07x without the
+// trunk zero, so 9 digits starting with 7. The backend still does the
 // authoritative format check on submit (error 2031 → invalid_format).
 const phoneCountries = [
   { code: 'GB', label: 'United Kingdom', dialCode: '+44', hint: '7xxxxxxxxx', length: 10, pattern: /^7\d{9}$/ },
   { code: 'RO', label: 'Romania', dialCode: '+40', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ },
   { code: 'CZ', label: 'Czech Republic', dialCode: '+420', hint: '6xxxxxxxx', length: 9, pattern: /^[67]\d{8}$/ },
-  { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: '9xxxxxxxx', length: 9, pattern: /^9\d{8}$/ }
+  { code: 'SK', label: 'Slovakia', dialCode: '+421', hint: '9xxxxxxxx', length: 9, pattern: /^9\d{8}$/ },
+  { code: 'SE', label: 'Sweden', dialCode: '+46', hint: '7xxxxxxxx', length: 9, pattern: /^7\d{8}$/ }
 ]
 
 const selectedPhoneCountry = computed(() => {
