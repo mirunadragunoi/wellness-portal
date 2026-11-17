@@ -31,27 +31,32 @@ const PRICE = '199 kr'
 // must carry both parts.
 const SHORTCODE = '72300'
 const STOP_COMMAND = 'STOPP CALMA'
+// Customer service (international 46701920915). Fills [SE TELEFONNUMMER] in the
+// legal pages from the database and is written in the footer below.
+const SUPPORT_PHONE = '070-192 09 15'
 
 export default {
   placeholders: {
     '[DATUM]': '',              // effective date of the legal texts
-    '[SE TELEFONNUMMER]': ''    // customer service phone — does not exist yet
+    '[SE TELEFONNUMMER]': SUPPORT_PHONE
   },
 
-  // First sentence copied from the terms in the database, so the page and the
-  // invoice say the same thing.
-  priceNotice: `${PRICE} per månad, moms inkluderad. Avgiften läggs på din mobilräkning eller dras från ditt förbetalda saldo. Abonnemanget förnyas varje månad till dess att du skickar ${STOP_COMMAND} till ${SHORTCODE}.`,
+  // Under every subscribe button: a short, informative price line (owner's call,
+  // 2026-11-17). The billing and stop details stay in the footer and the legal
+  // pages, not here.
+  priceNotice: `Full tillgång till allt innehåll för ${PRICE} i månaden, moms ingår.`,
 
   // Footer on every SE page.
   footerLines: [
-    'Calmasoul tillhandahålls av DNA Mobile Content Ltd, 168 Triq San Kristofru, Valletta VLT 1467, Malta.',
+    // Exact wording requested for Sweden (2026-11-17).
+    `DNA Mobile Content Ltd, 168 Triq San Kristofru, Valletta VLT 1467, Malta. Kundtjänst: ${SUPPORT_PHONE} (vardagar 9–16), secs@cc-sms.com`,
     'Organisationsnummer C 110955 · VAT MT31824004',
-    'Kundtjänst: secs@cc-sms.com · [SE TELEFONNUMMER]',
     `${PRICE} per månad till dess att du skickar ${STOP_COMMAND} till ${SHORTCODE}.`
   ],
-  // The unsubscribe form works on SE (service_unsubman is configured), so the
-  // link belongs in the footer next to the pages that come from the database.
-  footerLinks: ['about', 'faq', 'terms', 'privacy', 'cookies', 'customer_care', 'unsubscribe'],
+  // Villkor, Integritetspolicy, Cookiepolicy and Kontakt are required on SE.
+  // The unsubscribe form works on SE (service_unsubman is configured), so that
+  // link belongs here too.
+  footerLinks: ['about', 'faq', 'terms', 'privacy', 'cookies', 'contact', 'customer_care', 'unsubscribe'],
   customerCareEmail: 'secs@cc-sms.com',
 
   // No payment page: the order is placed on the premium landing with phone

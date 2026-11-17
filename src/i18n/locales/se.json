@@ -157,7 +157,7 @@
       },
       "faq": {
         "title": "Vanliga frågor",
-        "summary": "Svar på vanliga frågor om åtkomst, abonnemang och hur portalen används."
+        "summary": "Svar på vanliga frågor om åtkomst, prenumeration och hur portalen används."
       },
       "terms": {
         "title": "Allmänna villkor",
@@ -177,7 +177,7 @@
       },
       "customer_care": {
         "title": "Kundtjänst",
-        "summary": "Hur du kontaktar oss, avslutar ditt abonnemang, lämnar ett klagomål eller begär återbetalning."
+        "summary": "Hur du kontaktar oss, avslutar din prenumeration, lämnar ett klagomål eller begär återbetalning."
       }
     },
     "unsubscribe_form": {
@@ -191,8 +191,8 @@
       "submitting": "Skickar...",
       "success": "Din avregistrering har skickats.",
       "error": "Vi kunde inte skicka din avregistrering. Försök igen.",
-      "not_found": "Vi hittade inget abonnemang för det här telefonnumret.",
-      "already_canceled": "Det här numret har inget aktivt abonnemang längre.",
+      "not_found": "Vi hittade ingen prenumeration för det här telefonnumret.",
+      "already_canceled": "Det här numret har ingen aktiv prenumeration längre.",
       "invalid_format": "Telefonnumret ser inte ut att vara giltigt för det valda landet.",
       "blacklisted": "Vi kan inte behandla en förfrågan från den här anslutningen.",
       "too_many_requests": "För många förfrågningar. Försök igen om några minuter."
@@ -203,7 +203,7 @@
     "welcome_back": "Välkommen tillbaka",
     "welcome_back_quote": "Välkommen tillbaka till din övning",
     "login_visual_sub": "Dina sessioner, dina dagar i rad och dina framsteg väntar. Fortsätt precis där du slutade.",
-    "code_hint": "Använd den wellness-kod du fått med ditt abonnemang.",
+    "code_hint": "Använd den wellness-kod du fått med din prenumeration.",
     "logging_in": "Loggar in...",
     "welcome_back_visual_html": "Välkommen <span>tillbaka</span> till din övning",
     "signup_visual_html": "Börja din <span>inre</span> resa idag",
@@ -212,7 +212,7 @@
     "signup_visual_sub": "Gå med tusentals personer som hittar lugn, fokus och bättre sömn med {brand}.",
     "signup_title": "Kom igång",
     "signup_subtitle": "Åtkomst till plattformen sker med en personlig åtkomstkod. Så här fungerar det:",
-    "signup_step1": "Ditt abonnemang innehåller en personlig åtkomstkod som skickas till din telefon.",
+    "signup_step1": "Din prenumeration innehåller en personlig åtkomstkod som skickas till din telefon.",
     "signup_step2": "Ange koden på inloggningssidan för att komma åt ditt konto.",
     "signup_step3": "Gör en kort introduktion för att anpassa din upplevelse.",
     "login_title": "Välkommen tillbaka",
