@@ -23,7 +23,8 @@
 // The three values that are still moving. Written ONCE here: the price notice,
 // the footer and (for the texts that come from the database) the legal pages
 // all read them from this file, never from a translation.
-// ⚠ 199 kr is a PROPOSAL, not yet confirmed by Viatel (the database still has 49).
+// 199 kr is the final price, fixed on 2026-11-17 and matching the database (the texts
+// there were brought from the 49 placeholder to 199 by se_viatel_price_199_sek.sql).
 const PRICE = '199 kr'
 // Shared shortcode: the keyword is what routes the SMS to Calmasoul. Without
 // CALMA the message reaches another service on the same number, so every text
