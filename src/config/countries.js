@@ -10,7 +10,7 @@
  * value, `htmlLang` in config/markets/*.
  */
 export const COUNTRIES = {
-  GB: { code: 'GB', defaultLanguage: 'en', languages: ['en', 'ro'] },
+  GB: { code: 'GB', defaultLanguage: 'en', languages: ['en'] },
   CZ: { code: 'CZ', defaultLanguage: 'cz', languages: ['cz'] },
   SK: { code: 'SK', defaultLanguage: 'sk', languages: ['sk'] },
   RO: { code: 'RO', defaultLanguage: 'ro', languages: ['ro'] },
