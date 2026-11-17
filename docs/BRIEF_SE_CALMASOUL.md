@@ -170,9 +170,11 @@ din frontend, dar explică de ce vezi ambele forme dacă te uiți în bază.
 
 ---
 
-## 7. Contractul de backend (`api.rvdhub.com`)
+## 7. Contractul de backend (`api.dnaperf.com` / `api.rvdhub.com`)
 
-Toate rutele există deja și nu se schimbă pentru SE.
+Toate rutele există deja și nu se schimbă pentru SE. Cele două domenii duc pe **același** server de
+store; Calmasoul e brand DNA, deci `wellness3` folosește `api.dnaperf.com` (`apiBaseUrl` din
+`src/config/brands/wellness3.js`) — corect, nu e nimic de schimbat.
 
 | rută | note |
 |---|---|
@@ -183,7 +185,18 @@ Toate rutele există deja și nu se schimbă pentru SE.
 | `GET /wellness/products` | catalogul |
 | `/wellness/mood`, `/wellness/mood/history`, `/wellness/breathing/*`, `/wellness/progress/*`, `/wellness/favorites`, `/wellness/user/profile` | neschimbate |
 | `POST /wellness/logEvent` | **602** launch · **603** page_view · **604** consumption |
-| `/wellness/UnsubscribePhoneNumber` | formularul de dezabonare din portal **funcționează pe SE**: `service_unsubman` e configurat pe deployment 54 (pe piețele unde lipsește, ruta răspunde `2048` pe un abonament viu) |
+| `GET /store/UnsubscribePhoneNumber` | formularul de dezabonare din portal (ruta pe care o cheamă deja `src/services/api.js`, pe toate piețele — rămâne aceeași pe SE). Parametri: `service=Calmasoul`, `country=SE`, `phone_number` — numărul în 9 cifre locale (`7xxxxxxxx`) e bun, backendul acceptă și `07…`, `46…`, `+46…` și îl normalizează. **Funcționează pe SE**: `service_unsubman` e configurat pe deployment 54 (pe piețele unde lipsește, ruta răspunde `2048` pe un abonament viu). Erori prin `error_code`: `2057` deja dezabonat · `2048` nu există · `2031` format invalid · `2027` IP pe blacklist · `2053` prea multe cereri |
+
+Despre dezabonare, trei lucruri verificate în cod (RVDPlatform, `webservices/prod/store_webapi.py:943-976`,
+logica în `libraries/store/StoreWorker.py:2201`):
+
+- **`/store/`, `/wellness/` și `/football/UnsubscribePhoneNumber` sunt aceeași funcție**; diferă doar
+  forma răspunsului. `/store/` dă `{treatment, error_code, error_description}` cu HTTP 200 / **500**,
+  `/wellness/` dă `{success, message}` / `{error, error_code}` cu HTTP 200 / **400**. Rămânem pe
+  `/store/`, pe care frontendul îl tratează deja.
+- **`recaptcha_token` nu e verificat de backend** — nicio referință în RVDPlatform. Singura protecție
+  sunt limitele pe IP (`2027`, `2053`). Se poate trimite mai departe, dar nu protejează nimic.
+- `language` și `portal_name` sunt acceptați, dar ruta nu-i folosește.
 
 Pagina de **Customer Care** (`/wellness/legals/customer_care`) a apărut pe GB și SE e a doua piață
 care o are: conținut separat de „contact", cu oprirea prin SMS, reclamații și rambursări.
