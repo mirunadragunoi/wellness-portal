@@ -16,10 +16,11 @@ const SHORTCODE = '65065'
 
 export default {
   placeholders: {
-    '[UK PHONE NUMBER]': '',
+    // Customer Care line (2026-11-18), national form; international +44 330 533 0410.
+    '[UK PHONE NUMBER]': '0330 533 0410',
     '[SHORTCODE]': SHORTCODE,
     '[DATE]': '',              // effective date of the legal texts (all three are v1.0)
-    '[ICO NUMBER]': '',        // privacy policy footer
+    '[ICO NUMBER]': 'ZC302053', // privacy policy footer (ICO registration, 2026-11-18)
     // UK GDPR Article 27 representative (privacy policy §1)
     '[NAME]': '',
     '[UK POSTAL ADDRESS]': '',
