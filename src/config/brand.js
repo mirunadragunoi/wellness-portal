@@ -2,6 +2,7 @@ import wellness from './brands/wellness'
 import wellness2 from './brands/wellness2'
 import wellness3 from './brands/wellness3'
 import { COUNTRIES, subdomainToCountry, getCountryConfig } from './countries'
+import { IS_APP, native } from './platform'
 
 const BRAND_MAP = {
   wellness,
@@ -53,6 +54,12 @@ export function getCountryKey() {
   const brand = getBrandConfig()
   const allowed = brand.countries || ['GB']
 
+  // App: nu există subdomeniu, țara e fixată de build-ul aplicației (app.brand.json).
+  if (IS_APP) {
+    const fixed = String(native()?.config?.country || import.meta.env.VITE_APP_COUNTRY || '').toUpperCase()
+    if (allowed.includes(fixed) && COUNTRIES[fixed]) return fixed
+  }
+
   const queryOverride = readQueryCountryOverride()
   if (queryOverride && allowed.includes(queryOverride) && COUNTRIES[queryOverride]) {
     return queryOverride
@@ -88,6 +95,8 @@ export function getCountry() {
  * When set, signup CTAs lead here instead of the internal /signup flow.
  */
 export function getRegistrationUrl() {
+  // App: fără trimitere spre plată externă (regulile App Store / Google Play).
+  if (IS_APP) return null
   const urls = getBrandConfig().registrationUrls || {}
   return urls[getCountryKey()] || null
 }

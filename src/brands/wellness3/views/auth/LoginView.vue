@@ -15,7 +15,7 @@
           {{ loading ? '' : t('auth.login_btn') }}
         </button>
       </form>
-      <p class="auth-card__switch">
+      <p v-if="!IS_APP" class="auth-card__switch">
         {{ t('auth.no_account') }}
         <RouterLink to="/signup" class="auth-card__link">{{ t('auth.signup_link') }}</RouterLink>
       </p>
@@ -30,6 +30,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 import AppNavbarPublic from '@/components/layout/AppNavbarPublic.vue'
+import { IS_APP } from '@/config/platform'
 
 const { t }    = useI18n()
 const route    = useRoute()

@@ -7,6 +7,7 @@ import App    from './App.vue'
 import router from './router/index.js'
 import { i18n } from './i18n/index.js'
 import { captureClickReference } from './config/merchantRef.js'
+import { IS_APP } from './config/platform.js'
 
 // Global styles
 import '@/styles/variables.css'
@@ -34,4 +35,10 @@ document.querySelector('meta[name="description"]')?.setAttribute('content', t('b
 // Traveler id (dtrv) -> merchant reference for the payment page (Calmasoul GB only).
 captureClickReference()
 
-app.mount('#app')
+if (IS_APP) {
+  // App: restaurează sesiunea din Keystore/Keychain înainte de primul guard,
+  // apoi leagă deep links + access gate (src/platform/app.js, chunk separat).
+  import('./platform/app.js').then(m => m.bootstrapApp({ app, router, pinia }))
+} else {
+  app.mount('#app')
+}

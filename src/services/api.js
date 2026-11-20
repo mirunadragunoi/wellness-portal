@@ -1,5 +1,6 @@
 import { getBrandConfig, getCountryKey } from '@/config/brand'
 import { i18n } from '@/i18n'
+import { IS_APP, native } from '@/config/platform'
 
 const brand = getBrandConfig()
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || brand.apiBaseUrl).replace(/\/$/, '')
@@ -66,6 +67,11 @@ async function request(method, path, { params = {}, body = null } = {}) {
     const err = new Error(data?.error || `HTTP ${res.status}`)
     err.errorCode = data?.error_code
     err.status = res.status
+    // App: un 401 pe orice endpoint în afară de login înseamnă azi „acces expirat
+    // sau invalid” (backend-ul nu le distinge încă) → ecranul dedicat.
+    if (IS_APP && res.status === 401 && path !== '/wellness/auth/login') {
+      native()?.access.reportDenied({ status: res.status, errorCode: err.errorCode, path })
+    }
     throw err
   }
 

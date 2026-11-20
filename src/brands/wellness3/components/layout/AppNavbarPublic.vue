@@ -17,7 +17,7 @@
       <div class="navbar__actions">
         <LanguageSelector />
         <RouterLink to="/login" class="btn btn-ghost">{{ t('nav.login') }}</RouterLink>
-        <RouterLink to="/signup" class="btn btn-primary">{{ t('nav.cta') }}</RouterLink>
+        <RouterLink v-if="!IS_APP" to="/signup" class="btn btn-primary">{{ t('nav.cta') }}</RouterLink>
       </div>
 
       <button class="navbar__burger" @click="mobileOpen = !mobileOpen" :class="{ open: mobileOpen }" :aria-label="$t('common.toggle_menu')">
@@ -35,10 +35,12 @@
         <RouterLink to="/progress" class="navbar__mobile-link" @click="mobileOpen = false">{{ t('nav.progress') }}</RouterLink>
         <div class="navbar__mobile-divider" />
         <RouterLink to="/login" class="navbar__mobile-link" @click="mobileOpen = false">{{ t('nav.login') }}</RouterLink>
-        <RouterLink to="/signup" class="btn btn-primary navbar__mobile-cta" @click="mobileOpen = false">
-          {{ t('nav.cta') }}
-        </RouterLink>
-        <MarketPriceNotice compact />
+        <template v-if="!IS_APP">
+          <RouterLink to="/signup" class="btn btn-primary navbar__mobile-cta" @click="mobileOpen = false">
+            {{ t('nav.cta') }}
+          </RouterLink>
+          <MarketPriceNotice compact />
+        </template>
       </div>
     </Transition>
   </nav>
@@ -50,6 +52,7 @@ import { useI18n } from 'vue-i18n'
 import LanguageSelector from '@/components/layout/LanguageSelector.vue'
 import MarketPriceNotice from '../landing/MarketPriceNotice.vue'
 import logoUrl from '@/assets/calmasoul-sparkle-horizontal.png'
+import { IS_APP } from '@/config/platform'
 
 const { t } = useI18n()
 const scrolled    = ref(false)

@@ -3,6 +3,25 @@ import { Howl } from 'howler'
 import { usePlayerStore } from '@/stores/player'
 import { useProgressStore } from '@/stores/progress'
 import { api } from '@/services/api'
+import { IS_APP, native } from '@/config/platform'
+import { getBrandConfig } from '@/config/brand'
+
+// App: player nativ (background + lock screen) prin window.RvdMobile, cu aceeași
+// interfață ca Howl. Pe web (și dacă motorul nativ e 'web') rămâne Howler.
+function createPlayer(session, opts) {
+  if (IS_APP) {
+    const nativeHowl = native()?.audio.createHowl({
+      ...opts,
+      meta: {
+        title: session.title,
+        artist: getBrandConfig().portalName,
+        artwork: session.thumbnail || session.banner || undefined
+      }
+    })
+    if (nativeHowl) return nativeHowl
+  }
+  return new Howl(opts)
+}
 
 let howl = null
 let ticker = null
@@ -92,7 +111,7 @@ export function useAudioPlayer() {
     }
 
     mode = 'real'
-    howl = new Howl({
+    howl = createPlayer(session, {
       src: [session.audioUrl],
       html5: true,
       volume: playerStore.volume,

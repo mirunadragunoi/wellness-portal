@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 import { getBrandKey, getRegistrationUrl } from '@/config/brand'
 import { withMerchantRef } from '@/config/merchantRef'
 import { api } from '@/services/api'
+import { IS_APP } from '@/config/platform'
 
 // Routes whose :id param is a store.product id — used to attach `product` to
 // the 603 page_view event on product pages (audio meditation, yoga video).
@@ -72,8 +73,18 @@ const routes = [
     path: '/',
     name: 'landing',
     component: views.landing,
-    meta: { public: true }
+    meta: { public: true },
+    // App: landing-ul de marketing (CTA-uri de abonare, quiz-float, preț) nu apare.
+    ...(IS_APP ? { beforeEnter: () => ({ name: useAuthStore().isLoggedIn ? 'home' : 'login' }) } : {})
   },
+  ...(IS_APP
+    ? [{
+        path: '/access-expired',
+        name: 'access-expired',
+        component: () => import('@/auth/AccessExpiredView.vue'),
+        meta: { public: true }
+      }]
+    : []),
   {
     path: '/login',
     name: 'login',
@@ -98,6 +109,8 @@ const routes = [
     // Calmasoul CZ) redirect here instead of rendering the internal signup.
     // Calmasoul GB appends the visit's traveler id as merchant reference (merchantRef.js).
     beforeEnter: () => {
+      // App: abonarea nu se face în aplicație.
+      if (IS_APP) return { name: 'login' }
       const url = getRegistrationUrl()
       if (url) {
         window.location.href = withMerchantRef(url)

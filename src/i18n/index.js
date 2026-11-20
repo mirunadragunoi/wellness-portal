@@ -32,6 +32,7 @@ import wellness3GbEn from '@/brands/wellness3/i18n/markets/gb.en.json'
 import { getBrandConfig, getBrandKey, getCountry, getCountryKey } from '@/config/brand'
 import { getMarket } from '@/config/market'
 import { getCookie, setCookie } from '@/utils/cookies'
+import { RTL_SMOKE } from '@/config/platform'
 
 function mergeMessages(base, override) {
   const out = { ...base }
@@ -81,15 +82,33 @@ function readSavedLocale() {
   return country.defaultLanguage
 }
 
-const initialLocale = readSavedLocale()
+// Spike V8 (doar VITE_PLATFORM=app + VITE_RTL_SMOKE=1): locale `ar` stub = cheile
+// din `en` prefixate cu text arab (ca algoritmul bidi să le trateze RTL) + dir="rtl".
+function rtlStub(node) {
+  if (typeof node === 'string') return `عربي ${node}`
+  if (Array.isArray(node)) return node.map(rtlStub)
+  if (node && typeof node === 'object') {
+    return Object.fromEntries(Object.entries(node).map(([k, v]) => [k, rtlStub(v)]))
+  }
+  return node
+}
+
+const messages = buildMessages()
+if (RTL_SMOKE) messages.ar = rtlStub(messages.en)
+
+const initialLocale = RTL_SMOKE ? 'ar' : readSavedLocale()
 
 export const i18n = createI18n({
   legacy: false,
   locale: initialLocale,
   fallbackLocale: 'en',
-  messages: buildMessages(),
+  messages,
   globalInjection: true
 })
+
+if (RTL_SMOKE && typeof document !== 'undefined') {
+  document.documentElement.setAttribute('dir', 'rtl')
+}
 
 /**
  * What the page declares as its language: the market's value when it has one
